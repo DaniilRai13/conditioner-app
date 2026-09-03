@@ -28,6 +28,10 @@ export const links = () => [
     imageSrcSet: HERO_AVIF,
     imageSizes: HERO_SIZES,
     fetchPriority: "high",
+    // На экранах до 480px картинка скрыта (mq(xs) в Hero.module.scss),
+    // и предзагружать её там — тратить канал самых слабых устройств
+    // на то, чего они не увидят. Значение должно совпадать с брейкпоинтом xs.
+    media: "(min-width: 481px)",
   },
 ];
 
