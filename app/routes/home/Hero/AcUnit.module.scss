@@ -1,9 +1,0 @@
-@use "mixins" as *;
-
-.svg {
-  width: 100%;
-  height: auto;
-
-  // Поток воздуха уходит за нижнюю границу секции — так же, как в макете.
-  overflow: visible;
-}

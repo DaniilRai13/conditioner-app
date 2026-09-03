@@ -2,7 +2,8 @@ import { Container } from "~/components/ui/Container/Container";
 import { Button } from "~/components/ui/Button/Button";
 import { IconBox } from "~/components/ui/IconBox/IconBox";
 import { advantages } from "~/data/advantages";
-import { AcUnit } from "./AcUnit";
+import heroLarge from "~/assets/hero-unit-1440.webp";
+import heroSmall from "~/assets/hero-unit-720.webp";
 import styles from "./Hero.module.scss";
 
 export function Hero() {
@@ -31,9 +32,23 @@ export function Hero() {
             </div>
           </div>
 
-          <div className={styles.media}>
-            <AcUnit />
-          </div>
+          {/*
+            Это LCP-элемент страницы, поэтому:
+            fetchPriority="high" и никакого lazy — иначе браузер отложит
+            загрузку и метрика просядет; width/height заданы, чтобы вёрстка
+            не прыгала при подгрузке.
+          */}
+          <img
+            className={styles.image}
+            src={heroLarge}
+            srcSet={`${heroSmall} 720w, ${heroLarge} 1440w`}
+            sizes="(max-width: 1024px) 92vw, 50vw"
+            width={1440}
+            height={810}
+            alt="Настенная сплит-система с потоком холодного воздуха"
+            fetchPriority="high"
+            decoding="async"
+          />
         </div>
       </Container>
 
