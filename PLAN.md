@@ -763,7 +763,8 @@ app/routes/services/         app/components/ui/Button/
 **Что всё равно делаем сами:**
 - `sitemap.xml` — скрипт `gen-sitemap.ts` в `postbuild`, обходит роуты + слаги из Supabase.
 - OG-картинки — статические, по одной на раздел.
-- Оптимизация изображений — `npm run images`: WASM-кодеки → WebP + srcset.
+- Оптимизация изображений — `npm run images`: WASM-кодеки → AVIF + WebP, четыре ширины,
+  <picture> с srcset и preload LCP-картинки из `links` роута.
 - Ленивая загрузка — `loading="lazy"` + явные `width`/`height`.
 
 > **Следствие `ssr: false`:** в роутах **нельзя** использовать `action` и `headers` —

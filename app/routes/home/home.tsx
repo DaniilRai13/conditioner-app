@@ -1,5 +1,6 @@
 import type { MetaFunction } from "react-router";
 import { Hero } from "./Hero/Hero";
+import { HERO_AVIF, HERO_SIZES } from "./Hero/heroImage";
 import { QuizTeaser } from "./QuizTeaser/QuizTeaser";
 import { SolutionsPreview } from "./SolutionsPreview/SolutionsPreview";
 import { ServicesPreview } from "./ServicesPreview/ServicesPreview";
@@ -11,6 +12,24 @@ import { Section } from "~/components/ui/Section/Section";
 import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
 import { site } from "~/config/site";
 import styles from "./home.module.scss";
+
+/**
+ * Предзагрузка LCP-картинки. Без неё браузер найдёт <img> только после
+ * разбора разметки — на медленной сети это заметные полсекунды к LCP.
+ *
+ * Тип указан явно: браузеры без поддержки AVIF просто проигнорируют
+ * эту ссылку и возьмут WebP из <picture>. Лишней загрузки не будет.
+ */
+export const links = () => [
+  {
+    rel: "preload",
+    as: "image",
+    type: "image/avif",
+    imageSrcSet: HERO_AVIF,
+    imageSizes: HERO_SIZES,
+    fetchPriority: "high",
+  },
+];
 
 export const meta: MetaFunction = () => [
   { title: `${site.name} — установка кондиционеров в Минске и области` },

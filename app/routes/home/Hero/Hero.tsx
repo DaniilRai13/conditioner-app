@@ -2,8 +2,15 @@ import { Container } from "~/components/ui/Container/Container";
 import { Button } from "~/components/ui/Button/Button";
 import { IconBox } from "~/components/ui/IconBox/IconBox";
 import { advantages } from "~/data/advantages";
-import heroLarge from "~/assets/hero-unit-1440.webp";
-import heroSmall from "~/assets/hero-unit-720.webp";
+import {
+  HERO_ALT,
+  HERO_AVIF,
+  HERO_FALLBACK,
+  HERO_HEIGHT,
+  HERO_SIZES,
+  HERO_WEBP,
+  HERO_WIDTH,
+} from "./heroImage";
 import styles from "./Hero.module.scss";
 
 export function Hero() {
@@ -38,19 +45,21 @@ export function Hero() {
             Это LCP-элемент страницы, поэтому:
             fetchPriority="high" и никакого lazy — иначе браузер отложит
             загрузку и метрика просядет; width/height заданы, чтобы вёрстка
-            не прыгала при подгрузке.
+            не прыгала при подгрузке. Предзагрузка — в `links` роута.
           */}
-          <img
-            className={styles.image}
-            src={heroLarge}
-            srcSet={`${heroSmall} 720w, ${heroLarge} 1440w`}
-            sizes="(max-width: 1024px) 92vw, 50vw"
-            width={1440}
-            height={810}
-            alt="Настенная сплит-система с потоком холодного воздуха"
-            fetchPriority="high"
-            decoding="async"
-          />
+          <picture>
+            <source type="image/avif" srcSet={HERO_AVIF} sizes={HERO_SIZES} />
+            <source type="image/webp" srcSet={HERO_WEBP} sizes={HERO_SIZES} />
+            <img
+              className={styles.image}
+              src={HERO_FALLBACK}
+              width={HERO_WIDTH}
+              height={HERO_HEIGHT}
+              alt={HERO_ALT}
+              fetchPriority="high"
+              decoding="async"
+            />
+          </picture>
         </div>
 
         <ul className={styles.list}>
