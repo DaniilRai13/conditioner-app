@@ -16,8 +16,15 @@ import webp1440 from "~/assets/hero-unit-1440.webp";
  * Ошибка здесь не ломает вёрстку, но заставляет браузер скачивать не тот
  * размер — и незаметно съедает весь выигрыш от srcset.
  */
-export const HERO_SIZES =
-  "(max-width: 640px) 130vw, (max-width: 1024px) 70vw, 48vw";
+export const HERO_SIZES = [
+  "(max-width: 640px) 130vw",
+  "(max-width: 1024px) 70vw",
+  // Контейнер упирается в 1200px, картинка — половина от него.
+  // Без этой строки на широких мониторах браузер считал бы по вьюпорту
+  // и тянул лишний размер.
+  "(min-width: 1400px) 600px",
+  "48vw",
+].join(", ");
 
 export const HERO_AVIF = [
   `${avif480} 480w`,

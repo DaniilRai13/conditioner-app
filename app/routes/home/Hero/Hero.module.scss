@@ -10,9 +10,17 @@
   background:
     radial-gradient(70% 55% at 75% 35%, #fff 0%, transparent 65%),
     linear-gradient(180deg, #fdfeff 0%, var(--bg) 100%);
+
+    @include mq(lg) {
+    padding-bottom: 3rem;
+  }
 }
 
 .grid {
+  // Система координат для картинки на десктопе. Ниже 1024 отдаём эту роль
+  // .hero: там картинка должна доставать и до полосы преимуществ,
+  // а она лежит уже за пределами сетки.
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
   gap: 2.5rem;
@@ -20,8 +28,9 @@
   padding-block: 4.5rem 3.5rem;
 
   @include mq(lg) {
+    position: static;
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 0rem;
     padding-block: 2.5rem;
   }
 }
@@ -47,10 +56,6 @@
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.03em;
-
-  @include mq(lg) {
-    max-width: none;
-  }
 
   @include mq(md) {
     font-size: 2.25rem;
@@ -80,28 +85,33 @@
 
 // --- изображение ---
 
-// Ширины заданы в vw и обязаны совпадать с HERO_SIZES в heroImage.ts —
-// иначе браузер выберет по srcset не тот файл.
+// Картинка выведена из потока на всех экранах: она декоративная и не должна
+// растягивать секцию. Правая колонка сетки при этом сохраняется пустой —
+// именно она держит текст в левой половине.
 //
-// До 1024 картинка выходит из потока и ложится ПОД текст: иначе hero
-// растягивается на два экрана, а до кнопок нужно доскроллить.
+// Ширины обязаны совпадать с HERO_SIZES в heroImage.ts, иначе браузер
+// выберет по srcset не тот файл.
 .image {
-  width: 100%;
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  right: 0;
+  width: 50%;
   height: auto;
-  min-width: 0;
+  transform: translateY(-50%);
 
+  // Декорация: не должна перехватывать клики по тексту под ней.
+  pointer-events: none;
+
+  // Ниже 1024 ложится под текст, отсчёт идёт уже от .hero.
   @include mq(lg) {
-    position: absolute;
-    z-index: 0;
     top: 4.5rem;
     right: -6%;
     width: 70vw;
-
-    // Декорация: не должна перехватывать клики по тексту под ней.
-    pointer-events: none;
+    transform: none;
   }
 
-  // На телефоне опускаем ещё ниже — под заголовок, кнопки и полосу преимуществ.
+  // На телефоне опускается ещё ниже — под заголовок, кнопки и полосу преимуществ.
   @include mq(sm) {
     top: auto;
     right: -18%;
