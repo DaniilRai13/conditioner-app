@@ -1,9 +1,9 @@
 import type { MetaFunction } from "react-router";
 import { Phone, Clock, MapPin, Send } from "lucide-react";
-import { PageHeader } from "~/components/layout/PageHeader";
-import { Section } from "~/components/ui/Section";
-import { Card } from "~/components/ui/Card";
-import { LeadForm } from "~/components/forms/LeadForm";
+import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
+import { Section } from "~/components/ui/Section/Section";
+import { Card } from "~/components/ui/Card/Card";
+import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
 import { coverage } from "~/data/about";
 import { site } from "~/config/site";
 import styles from "./contacts.module.scss";

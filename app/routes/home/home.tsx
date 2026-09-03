@@ -1,13 +1,13 @@
 import type { MetaFunction } from "react-router";
-import { Hero } from "~/components/sections/Hero";
-import { QuizTeaser } from "~/components/sections/QuizTeaser";
-import { SolutionsPreview } from "~/components/sections/SolutionsPreview";
-import { ServicesPreview } from "~/components/sections/ServicesPreview";
-import { WhyMe } from "~/components/sections/WhyMe";
+import { Hero } from "~/components/sections/Hero/Hero";
+import { QuizTeaser } from "~/components/sections/QuizTeaser/QuizTeaser";
+import { SolutionsPreview } from "~/components/sections/SolutionsPreview/SolutionsPreview";
+import { ServicesPreview } from "~/components/sections/ServicesPreview/ServicesPreview";
+import { WhyMe } from "~/components/sections/WhyMe/WhyMe";
 import { Proof } from "~/components/sections/Proof";
-import { Faq } from "~/components/sections/Faq";
-import { Section } from "~/components/ui/Section";
-import { LeadForm } from "~/components/forms/LeadForm";
+import { Faq } from "~/components/sections/Faq/Faq";
+import { Section } from "~/components/ui/Section/Section";
+import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
 import { site } from "~/config/site";
 import styles from "./home.module.scss";
 

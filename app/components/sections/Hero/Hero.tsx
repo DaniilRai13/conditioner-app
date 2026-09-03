@@ -1,6 +1,6 @@
-import { Container } from "~/components/ui/Container";
-import { Button } from "~/components/ui/Button";
-import { IconBox } from "~/components/ui/IconBox";
+import { Container } from "~/components/ui/Container/Container";
+import { Button } from "~/components/ui/Button/Button";
+import { IconBox } from "~/components/ui/IconBox/IconBox";
 import { advantages } from "~/data/advantages";
 import styles from "./Hero.module.scss";
 

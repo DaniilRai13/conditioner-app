@@ -1,7 +1,7 @@
 import { ArrowRight } from "lucide-react";
-import { Section } from "~/components/ui/Section";
-import { Card } from "~/components/ui/Card";
-import { IconBox } from "~/components/ui/IconBox";
+import { Section } from "~/components/ui/Section/Section";
+import { Card } from "~/components/ui/Card/Card";
+import { IconBox } from "~/components/ui/IconBox/IconBox";
 import { services } from "~/data/services";
 import styles from "./ServicesPreview.module.scss";
 

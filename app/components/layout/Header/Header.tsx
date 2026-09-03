@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router";
 import { Menu, X, Phone } from "lucide-react";
-import { Container } from "~/components/ui/Container";
-import { Button } from "~/components/ui/Button";
-import { Logo } from "./Logo";
+import { Container } from "~/components/ui/Container/Container";
+import { Button } from "~/components/ui/Button/Button";
+import { Logo } from "../Logo/Logo";
 import { nav, site } from "~/config/site";
 import styles from "./Header.module.scss";
 

@@ -1,6 +1,6 @@
 import { ArrowRight } from "lucide-react";
-import { Section } from "~/components/ui/Section";
-import { Card } from "~/components/ui/Card";
+import { Section } from "~/components/ui/Section/Section";
+import { Card } from "~/components/ui/Card/Card";
 import { solutions, areaLabel } from "~/data/solutions";
 import { PRICE_MODE } from "~/config/pricing";
 import styles from "./SolutionsPreview.module.scss";

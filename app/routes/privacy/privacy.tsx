@@ -1,6 +1,6 @@
 import type { MetaFunction } from "react-router";
-import { PageHeader } from "~/components/layout/PageHeader";
-import { Section } from "~/components/ui/Section";
+import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
+import { Section } from "~/components/ui/Section/Section";
 import { site } from "~/config/site";
 import styles from "./privacy.module.scss";
 

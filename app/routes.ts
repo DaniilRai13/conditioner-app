@@ -4,7 +4,7 @@ import { type RouteConfig, index, route } from "@react-router/dev/routes";
 // Портфолио и отзывы пока не заведены: они выключены флагом
 // FEATURES.showPortfolio / showReviews до появления контента.
 export default [
-  index("routes/home.tsx"),
+  index("routes/home/home.tsx"),
 
   route("catalog", "routes/catalog.tsx"),
   route("catalog/:category", "routes/catalog-category.tsx"),
@@ -13,16 +13,16 @@ export default [
   route("solutions", "routes/solutions.tsx"),
   route("solutions/:slug", "routes/solution.tsx"),
 
-  route("services", "routes/services.tsx"),
-  route("services/:slug", "routes/service.tsx"),
-  route("price", "routes/price.tsx"),
+  route("services", "routes/service/services.tsx"),
+  route("services/:slug", "routes/service/service.tsx"),
+  route("price", "routes/price/price.tsx"),
 
-  route("articles", "routes/articles.tsx"),
-  route("articles/:slug", "routes/article.tsx"),
+  route("articles", "routes/article/articles.tsx"),
+  route("articles/:slug", "routes/article/article.tsx"),
 
-  route("about", "routes/about.tsx"),
-  route("contacts", "routes/contacts.tsx"),
-  route("privacy", "routes/privacy.tsx"),
+  route("about", "routes/about/about.tsx"),
+  route("contacts", "routes/contacts/contacts.tsx"),
+  route("privacy", "routes/privacy/privacy.tsx"),
 
-  route("*", "routes/not-found.tsx"),
+  route("*", "routes/not-found/not-found.tsx"),
 ] satisfies RouteConfig;

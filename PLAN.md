@@ -674,15 +674,15 @@ conditioner-app/
 ├─ app/
 │  ├─ root.tsx             ✅ html/head/body, шрифт, глобальные стили, ErrorBoundary
 │  ├─ routes.ts            ✅ карта сайта из §4
-│  ├─ routes/              ✅ 15 файлов-роутов (пока заглушки, кроме home)
+│  ├─ routes/              ✅ 15 роутов (см. правило совместного хранения ниже)
 │  ├─ styles/              ✅ index.scss, _tokens, _mixins, _breakpoints, _reset
 │  ├─ components/
-│  │  ├─ ui/               ✅ Button, Container. Дальше: Card, Badge, Input, Modal, Accordion
-│  │  ├─ layout/           ✅ PageStub. Дальше: Header, Footer, MobileMenu, Breadcrumbs
-│  │  ├─ sections/         Hero, Advantages, Steps, CtaBanner, Faq, Reviews
+│  │  ├─ ui/               ✅ Button, Container, Card, Section, IconBox
+│  │  ├─ layout/           ✅ Header, Footer, Logo, Breadcrumbs, PageHeader, PageStub
+│  │  ├─ sections/         ✅ Hero, QuizTeaser, SolutionsPreview, ServicesPreview, WhyMe, Faq, Proof
 │  │  ├─ catalog/          ProductCard, ProductGrid, Filters, Specs
 │  │  ├─ quiz/             Quiz, QuizStep, QuizOption, QuizProgress, QuizResult
-│  │  └─ forms/            LeadForm, CallbackModal
+│  │  └─ forms/            ✅ LeadForm. Дальше: CallbackModal
 │  ├─ data/                seed.json (снапшот для локальной разработки), services.ts, faq.ts
 │  ├─ lib/                 supabase.ts, queries.ts, format.ts, seo.ts, filters.ts,
 │  │                       quiz.ts (логика подбора + тесты)
@@ -696,6 +696,30 @@ conditioner-app/
 │  └─ gen-sitemap.ts       генерация sitemap.xml после билда
 └─ public/                 icons/, robots.txt
 ```
+
+### Правило совместного хранения файлов
+
+Связанные файлы лежат в одной папке, названной по сущности. Имена файлов внутри
+сохраняются — никаких `index.tsx`, иначе во вкладках редактора десяток одинаковых
+названий.
+
+```
+app/routes/service/          app/components/ui/Button/
+├─ service.tsx               ├─ Button.tsx
+├─ service.module.scss       └─ Button.module.scss
+├─ services.tsx
+└─ services.module.scss
+```
+
+Два уточнения, без которых правило вырождается:
+
+1. **Папка нужна только там, где есть что группировать.** Один-единственный файл
+   лежит плоско: `routes/catalog.tsx`, `components/sections/Proof.tsx`. Появятся
+   стили — появится и папка.
+2. **Родственные роуты кладутся файлами в общую папку, а не папка в папку.**
+   Список и деталь раздела живут вместе: `service/services.tsx` (список `/services`)
+   и `service/service.tsx` (деталь `/services/:slug`). Вложенность
+   `service/services/services.tsx` — это про один и тот же раздел трижды.
 
 **Что даёт framework mode из коробки** (и что не надо писать руками):
 - Метатеги — экспорт `meta` из роута, попадают в статический HTML. `react-helmet-async` не нужен.

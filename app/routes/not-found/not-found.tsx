@@ -1,7 +1,7 @@
 import type { MetaFunction } from "react-router";
 import { Link } from "react-router";
-import { Container } from "~/components/ui/Container";
-import { Button } from "~/components/ui/Button";
+import { Container } from "~/components/ui/Container/Container";
+import { Button } from "~/components/ui/Button/Button";
 import { solutions, areaLabel } from "~/data/solutions";
 import { site } from "~/config/site";
 import styles from "./not-found.module.scss";

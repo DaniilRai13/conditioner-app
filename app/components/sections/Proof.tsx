@@ -1,4 +1,4 @@
-import { Section } from "~/components/ui/Section";
+import { Section } from "~/components/ui/Section/Section";
 import { FEATURES } from "~/config/site";
 
 /**

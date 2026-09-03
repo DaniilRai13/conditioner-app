@@ -1,5 +1,5 @@
 import type { MetaFunction } from "react-router";
-import { PageStub } from "~/components/layout/PageStub";
+import { PageStub } from "~/components/layout/PageStub/PageStub";
 
 export const meta: MetaFunction = () => [
   { title: "Каталог кондиционеров — Климат Лайн" },

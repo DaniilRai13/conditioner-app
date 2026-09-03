@@ -1,5 +1,5 @@
-import { Container } from "~/components/ui/Container";
-import { IconBox } from "~/components/ui/IconBox";
+import { Container } from "~/components/ui/Container/Container";
+import { IconBox } from "~/components/ui/IconBox/IconBox";
 import { brandPoints } from "~/data/advantages";
 import { steps } from "~/data/steps";
 import styles from "./WhyMe.module.scss";

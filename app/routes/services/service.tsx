@@ -1,10 +1,10 @@
 import { Link } from "react-router";
 import { Check, Plus, Clock, ShieldCheck } from "lucide-react";
 import type { Route } from "./+types/service";
-import { PageHeader } from "~/components/layout/PageHeader";
-import { Section } from "~/components/ui/Section";
-import { Card } from "~/components/ui/Card";
-import { LeadForm } from "~/components/forms/LeadForm";
+import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
+import { Section } from "~/components/ui/Section/Section";
+import { Card } from "~/components/ui/Card/Card";
+import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
 import { services, getService } from "~/data/services";
 import { site } from "~/config/site";
 import styles from "./service.module.scss";

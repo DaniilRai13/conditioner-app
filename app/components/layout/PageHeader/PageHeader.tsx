@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { Container } from "~/components/ui/Container";
-import { Breadcrumbs, type Crumb } from "./Breadcrumbs";
+import { Container } from "~/components/ui/Container/Container";
+import { Breadcrumbs, type Crumb } from "../Breadcrumbs/Breadcrumbs";
 import styles from "./PageHeader.module.scss";
 
 type Props = {

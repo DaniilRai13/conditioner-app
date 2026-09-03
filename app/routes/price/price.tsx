@@ -1,8 +1,8 @@
 import type { MetaFunction } from "react-router";
 import { Check, Plus } from "lucide-react";
-import { PageHeader } from "~/components/layout/PageHeader";
-import { Section } from "~/components/ui/Section";
-import { LeadForm } from "~/components/forms/LeadForm";
+import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
+import { Section } from "~/components/ui/Section/Section";
+import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
 import {
   installRows,
   PRICES_CONFIRMED,

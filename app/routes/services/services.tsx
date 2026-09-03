@@ -1,11 +1,11 @@
 import type { MetaFunction } from "react-router";
 import { ArrowRight } from "lucide-react";
-import { PageHeader } from "~/components/layout/PageHeader";
-import { Section } from "~/components/ui/Section";
-import { Card } from "~/components/ui/Card";
-import { IconBox } from "~/components/ui/IconBox";
-import { WhyMe } from "~/components/sections/WhyMe";
-import { LeadForm } from "~/components/forms/LeadForm";
+import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
+import { Section } from "~/components/ui/Section/Section";
+import { Card } from "~/components/ui/Card/Card";
+import { IconBox } from "~/components/ui/IconBox/IconBox";
+import { WhyMe } from "~/components/sections/WhyMe/WhyMe";
+import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
 import { services } from "~/data/services";
 import { site } from "~/config/site";
 import styles from "./services.module.scss";

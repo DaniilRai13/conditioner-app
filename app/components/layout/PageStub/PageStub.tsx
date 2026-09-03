@@ -1,5 +1,5 @@
-import { Container } from "~/components/ui/Container";
-import { Button } from "~/components/ui/Button";
+import { Container } from "~/components/ui/Container/Container";
+import { Button } from "~/components/ui/Button/Button";
 import styles from "./PageStub.module.scss";
 
 type Props = {

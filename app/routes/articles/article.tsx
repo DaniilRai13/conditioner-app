@@ -1,9 +1,9 @@
 import { Link } from "react-router";
 import type { Route } from "./+types/article";
-import { PageHeader } from "~/components/layout/PageHeader";
-import { Section } from "~/components/ui/Section";
-import { Button } from "~/components/ui/Button";
-import { LeadForm } from "~/components/forms/LeadForm";
+import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
+import { Section } from "~/components/ui/Section/Section";
+import { Button } from "~/components/ui/Button/Button";
+import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
 import { articles, getArticle, formatDate } from "~/data/articles";
 import { site } from "~/config/site";
 import styles from "./article.module.scss";

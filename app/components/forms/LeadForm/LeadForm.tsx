@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router";
-import { Button } from "~/components/ui/Button";
+import { Button } from "~/components/ui/Button/Button";
 import { leadSchema, formatPhone, type LeadInput } from "~/lib/lead-schema";
 import { site } from "~/config/site";
 import styles from "./LeadForm.module.scss";

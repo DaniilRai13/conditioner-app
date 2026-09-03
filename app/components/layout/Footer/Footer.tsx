@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { Phone, Clock, MapPin } from "lucide-react";
-import { Container } from "~/components/ui/Container";
-import { Logo } from "./Logo";
+import { Container } from "~/components/ui/Container/Container";
+import { Logo } from "../Logo/Logo";
 import { nav, site, FEATURES } from "~/config/site";
 import styles from "./Footer.module.scss";
 

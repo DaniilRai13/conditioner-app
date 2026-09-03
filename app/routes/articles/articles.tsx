@@ -1,8 +1,8 @@
 import type { MetaFunction } from "react-router";
 import { ArrowRight } from "lucide-react";
-import { PageHeader } from "~/components/layout/PageHeader";
-import { Section } from "~/components/ui/Section";
-import { Card } from "~/components/ui/Card";
+import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
+import { Section } from "~/components/ui/Section/Section";
+import { Card } from "~/components/ui/Card/Card";
 import { articles, formatDate } from "~/data/articles";
 import { site } from "~/config/site";
 import styles from "./articles.module.scss";

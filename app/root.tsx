@@ -8,8 +8,8 @@ import {
 } from "react-router";
 
 import type { Route } from "./+types/root";
-import { Header } from "./components/layout/Header";
-import { Footer } from "./components/layout/Footer";
+import { Header } from "~/components/layout/Header/Header";
+import { Footer } from "~/components/layout/Footer/Footer";
 import { site } from "./config/site";
 
 // Шрифт ставится локально, без запроса к Google Fonts — иначе теряем LCP.
