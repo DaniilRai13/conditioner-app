@@ -1,0 +1,40 @@
+// Дизайн-токены — CSS custom properties, а не SCSS-переменные:
+// живут в рантайме, видны в девтулзах, переопределяются в медиазапросе.
+//
+// Файл содержит :root {} и поэтому подключается РОВНО ОДИН РАЗ — в index.scss.
+// Никогда не делайте `@use "tokens"` из *.module.scss: блок продублируется
+// в бандле столько раз, сколько компонентов.
+
+:root {
+  // --- цвет ---
+  --brand-600: #3b5bfe; // основной синий: кнопки, ссылки, акценты
+  --brand-700: #2f49d8; // hover
+  --brand-50: #eef2ff; // подложки блоков, иконки
+  --ink-900: #0f172a; // заголовки
+  --ink-600: #475569; // основной текст
+  --ink-400: #94a3b8; // подписи, мелочь
+  --surface: #ffffff; // карточки
+  --bg: #f8faff; // фон страницы, чуть голубоватый
+  --border: #e6eaf5;
+
+  // --- радиусы ---
+  --radius-card: 16px;
+  --radius-banner: 20px;
+  --radius-control: 10px;
+  --radius-pill: 999px;
+
+  // --- тени ---
+  --shadow-card: 0 1px 2px rgb(15 23 42 / 4%), 0 8px 24px rgb(15 23 42 / 4%);
+
+  // --- раскладка ---
+  --container: 1200px;
+  --gutter: 24px;
+  --section-gap: 96px;
+
+  // --- типографика ---
+  --font-sans: "Manrope Variable", "Manrope", system-ui, -apple-system,
+    "Segoe UI", roboto, sans-serif;
+
+  // --- прочее ---
+  --transition: 160ms ease;
+}

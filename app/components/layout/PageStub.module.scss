@@ -1,0 +1,30 @@
+@use "mixins" as *;
+
+.stub {
+  @include section-gap;
+}
+
+.badge {
+  display: inline-block;
+  margin-bottom: 16px;
+  padding: 4px 12px;
+  background: var(--brand-50);
+  border-radius: var(--radius-pill);
+  color: var(--brand-600);
+  font-weight: 600;
+
+  @include text-preset(caption);
+}
+
+.title {
+  margin-bottom: 12px;
+
+  @include text-preset(h1);
+}
+
+.note {
+  max-width: 60ch;
+  margin-bottom: 32px;
+
+  @include text-preset(body);
+}
