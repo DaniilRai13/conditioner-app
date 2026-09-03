@@ -11,14 +11,11 @@ import {
   HERO_WEBP,
   HERO_WIDTH,
 } from "./heroImage";
-import { HeroGallery } from "./HeroGallery";
 import styles from "./Hero.module.scss";
 
 export function Hero() {
   return (
     <section className={styles.hero}>
-      <HeroGallery />
-
       <Container>
         <div className={styles.grid}>
           <div className={styles.content}>

@@ -5,14 +5,44 @@
   // overflow скрывает её выносы за края — иначе появится горизонтальная прокрутка.
   position: relative;
   overflow: hidden;
+  background: linear-gradient(180deg, #fdfeff 0%, var(--bg) 100%);
+}
 
-  // Мягкий световой градиент от белого к бледно-голубому, как в макете.
+// Свет и глубина фона собраны на псевдоэлементах, а не на самой секции:
+// так их три слоя, они не мешают друг другу и ничего не весят.
+// Оба лежат ниже картинки (z-index 2) и текста (z-index 3).
+
+// Слой 1 — свет: белое пятно за блоком и холодное свечение под ним,
+// намёк на поток воздуха.
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
   background:
-    radial-gradient(70% 55% at 75% 35%, #fff 0%, transparent 65%),
-    linear-gradient(180deg, #fdfeff 0%, var(--bg) 100%);
+    radial-gradient(46% 58% at 74% 34%, rgb(255 255 255 / 95%) 0%, transparent 70%),
+    radial-gradient(38% 46% at 80% 64%, rgb(59 91 254 / 13%) 0%, transparent 72%),
+    radial-gradient(52% 44% at 14% 8%, rgb(59 91 254 / 7%) 0%, transparent 70%);
+  pointer-events: none;
+}
 
-    @include mq(lg) {
-    padding-bottom: 3rem;
+// Слой 2 — сетка стены. Растворяется маской к краям, поэтому читается
+// только за кондиционером и не превращает фон в миллиметровку.
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(90deg, rgb(59 91 254 / 7%) 0 1px, transparent 1px 5.5rem),
+    repeating-linear-gradient(0deg, rgb(59 91 254 / 7%) 0 1px, transparent 1px 5.5rem);
+  mask-image: radial-gradient(58% 68% at 74% 42%, #000 0%, transparent 76%);
+  pointer-events: none;
+
+  // Safari до 15.4 понимает только префиксную форму.
+  -webkit-mask-image: radial-gradient(58% 68% at 74% 42%, #000 0%, transparent 76%);
+
+  @include mq(sm) {
+    // На телефоне картинка внизу и сетка за ней смотрелась бы мусором.
+    display: none;
   }
 }
 
