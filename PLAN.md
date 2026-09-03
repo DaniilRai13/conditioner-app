@@ -704,7 +704,7 @@ conditioner-app/
 названий.
 
 ```
-app/routes/service/          app/components/ui/Button/
+app/routes/services/         app/components/ui/Button/
 ├─ service.tsx               ├─ Button.tsx
 ├─ service.module.scss       └─ Button.module.scss
 ├─ services.tsx
@@ -717,9 +717,9 @@ app/routes/service/          app/components/ui/Button/
    лежит плоско: `routes/catalog.tsx`, `components/sections/Proof.tsx`. Появятся
    стили — появится и папка.
 2. **Родственные роуты кладутся файлами в общую папку, а не папка в папку.**
-   Список и деталь раздела живут вместе: `service/services.tsx` (список `/services`)
-   и `service/service.tsx` (деталь `/services/:slug`). Вложенность
-   `service/services/services.tsx` — это про один и тот же раздел трижды.
+   Список и деталь раздела живут вместе: `services/services.tsx` (список `/services`)
+   и `services/service.tsx` (деталь `/services/:slug`). Вложенность
+   `services/services/services.tsx` — это про один и тот же раздел трижды.
 
 **Что даёт framework mode из коробки** (и что не надо писать руками):
 - Метатеги — экспорт `meta` из роута, попадают в статический HTML. `react-helmet-async` не нужен.

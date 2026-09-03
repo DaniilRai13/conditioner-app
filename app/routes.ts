@@ -13,12 +13,12 @@ export default [
   route("solutions", "routes/solutions.tsx"),
   route("solutions/:slug", "routes/solution.tsx"),
 
-  route("services", "routes/service/services.tsx"),
-  route("services/:slug", "routes/service/service.tsx"),
+  route("services", "routes/services/services.tsx"),
+  route("services/:slug", "routes/services/service.tsx"),
   route("price", "routes/price/price.tsx"),
 
-  route("articles", "routes/article/articles.tsx"),
-  route("articles/:slug", "routes/article/article.tsx"),
+  route("articles", "routes/articles/articles.tsx"),
+  route("articles/:slug", "routes/articles/article.tsx"),
 
   route("about", "routes/about/about.tsx"),
   route("contacts", "routes/contacts/contacts.tsx"),
