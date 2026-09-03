@@ -1,13 +1,13 @@
 @use "mixins" as *;
 
 .nav {
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
 }
 
 .list {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 0.375rem;
   align-items: center;
   margin: 0;
   color: var(--ink-400);
@@ -17,7 +17,7 @@
 
 .item {
   display: inline-flex;
-  gap: 6px;
+  gap: 0.375rem;
   align-items: center;
 }
 

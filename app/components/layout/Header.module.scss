@@ -5,22 +5,22 @@
   z-index: 20;
   top: 0;
   background: rgb(248 250 255 / 88%);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(0.5rem);
   border-bottom: 1px solid transparent;
   transition: border-color var(--transition);
 }
 
 .inner {
   display: flex;
-  gap: 24px;
+  gap: 1.5rem;
   align-items: center;
   justify-content: space-between;
-  min-height: 72px;
+  min-height: 4.5rem;
 }
 
 .nav {
   display: flex;
-  gap: 28px;
+  gap: 1.75rem;
   align-items: center;
 
   @include mq(lg) {
@@ -30,7 +30,7 @@
 
 .link {
   color: var(--ink-600);
-  font-size: 15px;
+  font-size: 0.9375rem;
   text-decoration: none;
   transition: color var(--transition);
 
@@ -48,7 +48,7 @@
 
 .actions {
   display: flex;
-  gap: 8px;
+  gap: 0.5rem;
   align-items: center;
 }
 
@@ -64,8 +64,8 @@
   display: none;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 2.75rem;
+  height: 2.75rem;
   background: transparent;
   border: 1px solid var(--border);
   border-radius: var(--radius-control);
@@ -91,15 +91,15 @@
 .mobileInner {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.5rem;
   min-height: 100dvh;
-  padding-block: 20px 32px;
+  padding-block: 1.25rem 2rem;
 }
 
 .close {
   align-self: flex-end;
-  width: 44px;
-  height: 44px;
+  width: 2.75rem;
+  height: 2.75rem;
   background: transparent;
   border: 1px solid var(--border);
   border-radius: var(--radius-control);
@@ -112,15 +112,15 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 4px;
-  margin-top: 16px;
+  gap: 0.25rem;
+  margin-top: 1rem;
 }
 
 .mobileLink {
-  padding: 14px 0;
+  padding: 0.875rem 0;
   border-bottom: 1px solid var(--border);
   color: var(--ink-900);
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 600;
   text-decoration: none;
 
@@ -129,11 +129,11 @@
 
 .call {
   display: flex;
-  gap: 10px;
+  gap: 0.625rem;
   align-items: center;
   justify-content: center;
-  margin-top: 24px;
-  padding: 16px;
+  margin-top: 1.5rem;
+  padding: 1rem;
   background: var(--brand-600);
   border-radius: var(--radius-control);
   color: #fff;

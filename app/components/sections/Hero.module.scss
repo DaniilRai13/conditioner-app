@@ -1,22 +1,22 @@
 @use "mixins" as *;
 
 .hero {
-  padding-block: 72px 56px;
+  padding-block: 4.5rem 3.5rem;
 
   @include mq(md) {
-    padding-block: 40px;
+    padding-block: 2.5rem;
   }
 }
 
 .grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 40px;
+  gap: 2.5rem;
   align-items: center;
 
   @include mq(lg) {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 2rem;
   }
 }
 
@@ -25,7 +25,7 @@
 }
 
 .kicker {
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
   color: var(--brand-600);
   font-weight: 600;
 
@@ -33,14 +33,14 @@
 }
 
 .title {
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
 
   @include text-preset(h1);
 }
 
 .lead {
   max-width: 48ch;
-  margin-bottom: 32px;
+  margin-bottom: 2rem;
 
   @include text-preset(body);
 }
@@ -48,7 +48,7 @@
 .actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 0.75rem;
 
   @include mq(xs) {
     flex-direction: column;
@@ -71,12 +71,12 @@
 .advantages {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-  margin: 56px 0 0;
+  gap: 1.5rem;
+  margin: 3.5rem 0 0;
 
   @include mq(lg) {
     grid-template-columns: repeat(2, 1fr);
-    margin-top: 40px;
+    margin-top: 2.5rem;
   }
 
   @include mq(xxs) {
@@ -86,7 +86,7 @@
 
 .advantage {
   display: flex;
-  gap: 12px;
+  gap: 0.75rem;
   align-items: flex-start;
 }
 
@@ -98,9 +98,9 @@
 
 .advantageTitle {
   color: var(--ink-900);
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 600;
-  line-height: 22px;
+  line-height: 1.467;
 }
 
 .advantageNote {

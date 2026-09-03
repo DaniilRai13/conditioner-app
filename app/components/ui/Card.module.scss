@@ -3,12 +3,12 @@
 .card {
   display: flex;
   flex-direction: column;
-  padding: 24px;
+  padding: 1.5rem;
 
   @include card;
 
   @include mq(md) {
-    padding: 20px;
+    padding: 1.25rem;
   }
 }
 

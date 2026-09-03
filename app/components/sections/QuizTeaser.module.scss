@@ -1,25 +1,25 @@
 @use "mixins" as *;
 
 .section {
-  padding-block: 24px;
+  padding-block: 1.5rem;
 }
 
 .box {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
-  gap: 40px;
+  gap: 2.5rem;
   align-items: center;
-  padding: 40px;
+  padding: 2.5rem;
   background: var(--brand-50);
   border-radius: var(--radius-banner);
 
   @include mq(lg) {
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 1.75rem;
   }
 
   @include mq(md) {
-    padding: 24px;
+    padding: 1.5rem;
   }
 }
 
@@ -29,8 +29,8 @@
 
 .badge {
   display: inline-block;
-  margin-bottom: 12px;
-  padding: 4px 12px;
+  margin-bottom: 0.75rem;
+  padding: 0.25rem 0.75rem;
   background: var(--surface);
   border-radius: var(--radius-pill);
   color: var(--brand-600);
@@ -40,14 +40,14 @@
 }
 
 .title {
-  margin-bottom: 12px;
+  margin-bottom: 0.75rem;
 
   @include text-preset(h2);
 }
 
 .lead {
   max-width: 46ch;
-  margin-bottom: 24px;
+  margin-bottom: 1.5rem;
 
   @include text-preset(body);
 }
@@ -55,22 +55,22 @@
 .questions {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0.625rem;
   margin: 0;
 }
 
 .question {
   display: flex;
-  gap: 12px;
+  gap: 0.75rem;
   align-items: center;
-  padding: 14px 18px;
+  padding: 0.875rem 1.125rem;
   background: var(--surface);
   border-radius: var(--radius-control);
   color: var(--ink-900);
   font-weight: 500;
 
   @include mq(md) {
-    padding: 12px 14px;
+    padding: 0.75rem 0.875rem;
   }
 }
 
@@ -79,11 +79,11 @@
   flex: none;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 1.5rem;
+  height: 1.5rem;
   background: var(--brand-600);
   border-radius: var(--radius-pill);
   color: #fff;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 700;
 }

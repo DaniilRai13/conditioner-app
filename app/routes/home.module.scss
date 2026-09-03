@@ -7,19 +7,19 @@
 .contactBox {
   display: grid;
   grid-template-columns: 0.85fr 1.15fr;
-  gap: 40px;
-  padding: 40px;
+  gap: 2.5rem;
+  padding: 2.5rem;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-banner);
 
   @include mq(lg) {
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 1.75rem;
   }
 
   @include mq(md) {
-    padding: 24px;
+    padding: 1.5rem;
   }
 }
 
@@ -28,7 +28,7 @@
 }
 
 .contactTitle {
-  margin-bottom: 12px;
+  margin-bottom: 0.75rem;
 
   @include text-preset(h2);
 }

@@ -7,20 +7,20 @@
 .banner {
   display: grid;
   grid-template-columns: 0.9fr 1.1fr;
-  gap: 40px;
+  gap: 2.5rem;
   align-items: center;
-  padding: 40px;
+  padding: 2.5rem;
   background: var(--brand-600);
   border-radius: var(--radius-banner);
   color: #fff;
 
   @include mq(lg) {
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 1.75rem;
   }
 
   @include mq(md) {
-    padding: 24px;
+    padding: 1.5rem;
   }
 }
 
@@ -29,7 +29,7 @@
 }
 
 .bannerTitle {
-  margin-bottom: 12px;
+  margin-bottom: 0.75rem;
   color: #fff;
 
   @include text-preset(h2);
@@ -45,7 +45,7 @@
 .points {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 1.25rem;
   margin: 0;
 
   @include mq(md) {
@@ -60,12 +60,12 @@
 .point {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0.375rem;
 }
 
 .pointTitle {
-  margin-top: 4px;
-  font-size: 15px;
+  margin-top: 0.25rem;
+  font-size: 0.9375rem;
   font-weight: 600;
 }
 
@@ -78,19 +78,19 @@
 // --- как я работаю ---
 
 .stepsTitle {
-  margin: 64px 0 32px;
+  margin: 4rem 0 2rem;
 
   @include text-preset(h2);
 
   @include mq(md) {
-    margin: 40px 0 24px;
+    margin: 2.5rem 0 1.5rem;
   }
 }
 
 .steps {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 20px;
+  gap: 1.25rem;
   margin: 0;
   counter-reset: step;
 
@@ -107,16 +107,16 @@
   display: flex;
   position: relative;
   flex-direction: column;
-  gap: 6px;
+  gap: 0.375rem;
 }
 
 .stepNumber {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  margin-bottom: 6px;
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 0.375rem;
   background: var(--brand-50);
   border-radius: var(--radius-pill);
   color: var(--brand-600);
@@ -125,7 +125,7 @@
 
 .stepName {
   color: var(--ink-900);
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 600;
 }
 

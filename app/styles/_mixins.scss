@@ -11,7 +11,7 @@
   padding-inline: var(--gutter);
 
   @include mq(md) {
-    padding-inline: 16px;
+    padding-inline: 1rem;
   }
 }
 
@@ -36,38 +36,41 @@
 
 // Типографические пресеты из PLAN.md §3.
 @mixin text-preset($name) {
+  // line-height — безразмерный. В rem или px он наследуется как жёсткая
+  // величина: потомок с другим кеглем получит чужую межстрочную.
+  // Коэффициенты подобраны так, чтобы совпасть с исходным макетом.
   @if $name == h1 {
-    font-size: 48px;
+    font-size: 3rem; // 48px
     font-weight: 700;
-    line-height: 56px;
+    line-height: 1.167; // 56px
     letter-spacing: -0.02em;
 
     @include mq(md) {
-      font-size: 32px;
-      line-height: 40px;
+      font-size: 2rem; // 32px
+      line-height: 1.25; // 40px
     }
   } @else if $name == h2 {
-    font-size: 32px;
+    font-size: 2rem; // 32px
     font-weight: 700;
-    line-height: 40px;
+    line-height: 1.25; // 40px
     letter-spacing: -0.01em;
 
     @include mq(md) {
-      font-size: 24px;
-      line-height: 32px;
+      font-size: 1.5rem; // 24px
+      line-height: 1.333; // 32px
     }
   } @else if $name == h3 {
-    font-size: 20px;
+    font-size: 1.25rem; // 20px
     font-weight: 600;
-    line-height: 28px;
+    line-height: 1.4; // 28px
   } @else if $name == body {
-    font-size: 16px;
+    font-size: 1rem; // 16px
     font-weight: 400;
-    line-height: 26px;
+    line-height: 1.625; // 26px
   } @else if $name == caption {
-    font-size: 14px;
+    font-size: 0.875rem; // 14px
     font-weight: 400;
-    line-height: 22px;
+    line-height: 1.571; // 22px
   } @else {
     @error "text-preset: неизвестный пресет `#{$name}`. Доступны: h1, h2, h3, body, caption.";
   }
@@ -77,6 +80,6 @@
   padding-block: var(--section-gap);
 
   @include mq(md) {
-    padding-block: 56px;
+    padding-block: var(--section-gap-sm);
   }
 }

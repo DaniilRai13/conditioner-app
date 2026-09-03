@@ -27,9 +27,13 @@
   --shadow-card: 0 1px 2px rgb(15 23 42 / 4%), 0 8px 24px rgb(15 23 42 / 4%);
 
   // --- раскладка ---
-  --container: 1200px;
-  --gutter: 24px;
-  --section-gap: 96px;
+  --container: 75rem;
+  --gutter: 1.5rem;
+  // Вертикальный ритм секций. Мобильное значение обязано быть МЕНЬШЕ
+  // десктопного — иначе на телефоне страница станет разреженнее, чем
+  // на большом экране. Оба живут здесь, а не в миксине.
+  --section-gap: 3rem;
+  --section-gap-sm: 2rem;
 
   // --- типографика ---
   --font-sans: "Manrope Variable", "Manrope", system-ui, -apple-system,

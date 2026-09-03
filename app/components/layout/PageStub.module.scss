@@ -6,8 +6,8 @@
 
 .badge {
   display: inline-block;
-  margin-bottom: 16px;
-  padding: 4px 12px;
+  margin-bottom: 1rem;
+  padding: 0.25rem 0.75rem;
   background: var(--brand-50);
   border-radius: var(--radius-pill);
   color: var(--brand-600);
@@ -17,14 +17,14 @@
 }
 
 .title {
-  margin-bottom: 12px;
+  margin-bottom: 0.75rem;
 
   @include text-preset(h1);
 }
 
 .note {
   max-width: 60ch;
-  margin-bottom: 32px;
+  margin-bottom: 2rem;
 
   @include text-preset(body);
 }

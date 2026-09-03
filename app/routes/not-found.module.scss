@@ -6,20 +6,20 @@
 
 .code {
   color: var(--brand-600);
-  font-size: 64px;
+  font-size: 4rem;
   font-weight: 800;
   line-height: 1;
 }
 
 .title {
-  margin: 12px 0;
+  margin: 0.75rem 0;
 
   @include text-preset(h1);
 }
 
 .lead {
   max-width: 56ch;
-  margin-bottom: 32px;
+  margin-bottom: 2rem;
 
   @include text-preset(body);
 }
@@ -27,26 +27,26 @@
 .actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 48px;
+  gap: 0.75rem;
+  margin-bottom: 3rem;
 }
 
 .suggestTitle {
   display: block;
-  margin-bottom: 12px;
+  margin-bottom: 0.75rem;
   color: var(--ink-900);
 }
 
 .list {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 0.5rem;
   margin: 0;
 }
 
 .link {
   display: inline-block;
-  padding: 8px 14px;
+  padding: 0.5rem 0.875rem;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-pill);
@@ -63,7 +63,7 @@
 }
 
 .call {
-  margin-top: 40px;
+  margin-top: 2.5rem;
   color: var(--ink-400);
 
   @include text-preset(caption);

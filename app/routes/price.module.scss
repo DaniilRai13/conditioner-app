@@ -16,11 +16,11 @@
 .table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 520px;
+  min-width: 32.5rem;
 
   th,
   td {
-    padding: 14px 20px;
+    padding: 0.875rem 1.25rem;
     text-align: left;
   }
 
@@ -57,8 +57,8 @@
 }
 
 .notice {
-  margin-top: 16px;
-  padding: 16px 20px;
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
   background: var(--brand-50);
   border-radius: var(--radius-control);
   color: var(--ink-600);
@@ -69,22 +69,22 @@
 .columns {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 40px;
+  gap: 2.5rem;
 
   @include mq(md) {
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 1.75rem;
   }
 }
 
 .subTitle {
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
 
   @include text-preset(h3);
 }
 
 .subNote {
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
   color: var(--ink-400);
 
   @include text-preset(caption);
@@ -93,13 +93,13 @@
 .list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0.625rem;
   margin: 0;
 }
 
 .item {
   display: flex;
-  gap: 10px;
+  gap: 0.625rem;
   align-items: flex-start;
 
   @include text-preset(body);
@@ -107,12 +107,12 @@
 
 .check {
   flex: none;
-  margin-top: 4px;
+  margin-top: 0.25rem;
   color: var(--brand-600);
 }
 
 .plus {
   flex: none;
-  margin-top: 4px;
+  margin-top: 0.25rem;
   color: var(--ink-400);
 }

@@ -6,13 +6,13 @@
 
 .columns {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
-  gap: 40px;
+  grid-template-columns: minmax(0, 1fr) 21.25rem;
+  gap: 2.5rem;
   align-items: start;
 
   @include mq(lg) {
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 1.75rem;
   }
 }
 
@@ -21,17 +21,17 @@
 }
 
 .blockTitle {
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
 
   @include text-preset(h3);
 
   &:not(:first-child) {
-    margin-top: 40px;
+    margin-top: 2.5rem;
   }
 }
 
 .note {
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
   color: var(--ink-400);
 
   @include text-preset(caption);
@@ -40,13 +40,13 @@
 .checks {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0.625rem;
   margin: 0;
 }
 
 .check {
   display: flex;
-  gap: 10px;
+  gap: 0.625rem;
   align-items: flex-start;
 
   @include text-preset(body);
@@ -54,20 +54,20 @@
 
 .checkIcon {
   flex: none;
-  margin-top: 4px;
+  margin-top: 0.25rem;
   color: var(--brand-600);
 }
 
 .plusIcon {
   flex: none;
-  margin-top: 4px;
+  margin-top: 0.25rem;
   color: var(--ink-400);
 }
 
 .steps {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 1.25rem;
   margin: 0;
 
   @include mq(md) {
@@ -82,16 +82,16 @@
 .step {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0.25rem;
 }
 
 .stepNumber {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  margin-bottom: 6px;
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 0.375rem;
   background: var(--brand-50);
   border-radius: var(--radius-pill);
   color: var(--brand-600);
@@ -100,7 +100,7 @@
 
 .stepName {
   color: var(--ink-900);
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 600;
 }
 
@@ -114,7 +114,7 @@
 
 .aside {
   position: sticky;
-  top: 96px;
+  top: 6rem;
 
   @include mq(lg) {
     position: static;
@@ -122,12 +122,12 @@
 }
 
 .factCard {
-  gap: 20px;
+  gap: 1.25rem;
 }
 
 .fact {
   display: flex;
-  gap: 12px;
+  gap: 0.75rem;
   align-items: flex-start;
 
   svg {
@@ -139,7 +139,7 @@
   b {
     display: block;
     color: var(--ink-900);
-    font-size: 15px;
+    font-size: 0.9375rem;
   }
 }
 
@@ -152,7 +152,7 @@
 }
 
 .priceLink {
-  padding-top: 16px;
+  padding-top: 1rem;
   border-top: 1px solid var(--border);
   font-weight: 600;
 
@@ -165,18 +165,18 @@
 .faq {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0.75rem;
 }
 
 .faqItem {
-  padding: 4px 20px;
+  padding: 0.25rem 1.25rem;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
 }
 
 .faqQuestion {
-  padding-block: 16px;
+  padding-block: 1rem;
   color: var(--ink-900);
   font-weight: 600;
   cursor: pointer;
@@ -185,7 +185,7 @@
 }
 
 .faqAnswer {
-  padding-bottom: 16px;
+  padding-bottom: 1rem;
   color: var(--ink-600);
 
   @include text-preset(body);
@@ -200,7 +200,7 @@
 .otherGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 1.25rem;
 
   @include mq(md) {
     grid-template-columns: 1fr;
@@ -208,7 +208,7 @@
 }
 
 .otherCard {
-  gap: 8px;
+  gap: 0.5rem;
 
   b {
     color: var(--ink-900);

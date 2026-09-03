@@ -7,7 +7,7 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 1.25rem;
 
   @include mq(lg) {
     grid-template-columns: repeat(2, 1fr);
@@ -19,7 +19,7 @@
 }
 
 .card {
-  gap: 12px;
+  gap: 0.75rem;
 }
 
 .title {
@@ -37,7 +37,7 @@
 
 .more {
   display: inline-flex;
-  gap: 6px;
+  gap: 0.375rem;
   align-items: center;
   color: var(--brand-600);
   font-weight: 600;

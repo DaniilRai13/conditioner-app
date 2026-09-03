@@ -2,7 +2,7 @@
 
 .button {
   display: inline-flex;
-  gap: 8px;
+  gap: 0.5rem;
   align-items: center;
   justify-content: center;
   border: 1px solid transparent;
@@ -25,15 +25,15 @@
 }
 
 .md {
-  padding: 12px 20px;
-  font-size: 15px;
-  line-height: 20px;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.9375rem;
+  line-height: 1.333;
 }
 
 .lg {
-  padding: 16px 28px;
-  font-size: 16px;
-  line-height: 24px;
+  padding: 1rem 1.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
 
   @include mq(xs) {
     width: 100%;
