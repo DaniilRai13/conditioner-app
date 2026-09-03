@@ -2,6 +2,7 @@ import { Container } from "~/components/ui/Container/Container";
 import { Button } from "~/components/ui/Button/Button";
 import { IconBox } from "~/components/ui/IconBox/IconBox";
 import { advantages } from "~/data/advantages";
+import { AcUnit } from "./AcUnit";
 import styles from "./Hero.module.scss";
 
 export function Hero() {
@@ -30,11 +31,8 @@ export function Hero() {
             </div>
           </div>
 
-          {/* TODO: заглушка под фото сплит-системы. Пока это градиент,
-              имитирующий поток воздуха из макета. */}
-          <div className={styles.media} aria-hidden>
-            <div className={styles.unit} />
-            <div className={styles.airflow} />
+          <div className={styles.media}>
+            <AcUnit />
           </div>
         </div>
       </Container>
