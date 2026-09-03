@@ -22,7 +22,7 @@
   // а она лежит уже за пределами сетки.
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.05fr);
   gap: 2.5rem;
   align-items: center;
   padding-block: 4.5rem 3.5rem;
@@ -37,7 +37,7 @@
 
 .content {
   position: relative;
-  z-index: 1;
+  z-index: 3;
   min-width: 0;
 }
 
@@ -93,10 +93,10 @@
 // выберет по srcset не тот файл.
 .image {
   position: absolute;
-  z-index: 0;
-  top: 50%;
+  z-index: 2;
+  top: 60%;
   right: 0;
-  width: 50%;
+  width: 57%;
   height: auto;
   transform: translateY(-50%);
 
@@ -126,7 +126,7 @@
 
 .list {
   position: relative;
-  z-index: 1;
+  z-index: 3;
   display: flex;
   flex-wrap: wrap;
   gap: 1.25rem 2.5rem;
