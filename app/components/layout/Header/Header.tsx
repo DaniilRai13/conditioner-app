@@ -39,24 +39,27 @@ export function Header() {
       <Container className={styles.inner}>
         <Logo />
 
-        <nav className={styles.nav} aria-label="Основное меню">
-          {nav.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className={({ isActive }) =>
-                isActive ? `${styles.link} ${styles.active}` : styles.link
-              }
-            >
-              {item.label}
-            </NavLink>
-          ))}
-        </nav>
+        {/* Меню и кнопка — одна группа справа, как в макете.
+            Раньше они стояли по разным краям и визуально не связывались. */}
+        <div className={styles.right}>
+          <nav className={styles.nav} aria-label="Основное меню">
+            {nav.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  isActive ? `${styles.link} ${styles.active}` : styles.link
+                }
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
 
-        <div className={styles.actions}>
           <Button to="/contacts" className={styles.cta}>
             Связаться
           </Button>
+
           <button
             type="button"
             className={styles.burger}
@@ -89,10 +92,15 @@ export function Header() {
               ))}
             </nav>
 
-            <a className={styles.call} href={site.phoneHref}>
-              <Phone size={18} aria-hidden />
-              {site.phone}
-            </a>
+            <div className={styles.mobileActions}>
+              <Button to="/contacts" size="lg">
+                Связаться
+              </Button>
+              <a className={styles.call} href={site.phoneHref}>
+                <Phone size={18} aria-hidden />
+                {site.phone}
+              </a>
+            </div>
           </Container>
         </div>
       )}

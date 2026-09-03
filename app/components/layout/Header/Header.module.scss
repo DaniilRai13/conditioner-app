@@ -18,6 +18,17 @@
   min-height: 4.5rem;
 }
 
+// Меню и кнопка «Связаться» — одна группа у правого края.
+.right {
+  display: flex;
+  gap: 1.75rem;
+  align-items: center;
+
+  @include mq(lg) {
+    gap: 0.5rem;
+  }
+}
+
 .nav {
   display: flex;
   gap: 1.75rem;
@@ -46,16 +57,8 @@
   font-weight: 600;
 }
 
-.actions {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
 .cta {
-  border-radius: var(--radius-pill);
-
-  @include mq(sm) {
+  @include mq(xxs) {
     display: none;
   }
 }
@@ -132,13 +135,20 @@
   gap: 0.625rem;
   align-items: center;
   justify-content: center;
-  margin-top: 1.5rem;
   padding: 1rem;
-  background: var(--brand-600);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: var(--radius-control);
-  color: #fff;
+  color: var(--ink-900);
   font-weight: 600;
   text-decoration: none;
 
   @include focus-ring;
+}
+
+.mobileActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
 }

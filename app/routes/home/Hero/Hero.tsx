@@ -12,12 +12,14 @@ export function Hero() {
       <Container>
         <div className={styles.grid}>
           <div className={styles.content}>
-            {/* Ключевая фраза ушла из H1 в надзаголовок по макету.
-                Компенсируем её присутствием в <title> и description роута. */}
-            <p className={styles.kicker}>
+            {/* Ключевая фраза остаётся в H1: это второй по весу сигнал после
+                <title>, а сайт живёт с локального поиска. Слоган из макета
+                вынесен в надзаголовок — он ничего не теряет от того,
+                что стоит обычным абзацем. */}
+            <p className={styles.kicker}>Кондиционеры для вашего комфорта</p>
+            <h1 className={styles.title}>
               Продажа и установка кондиционеров в Минске и области
-            </p>
-            <h1 className={styles.title}>Кондиционеры для вашего комфорта</h1>
+            </h1>
             <p className={styles.lead}>
               Подберу, привезу и профессионально установлю кондиционер в ваш дом
               или офис.
@@ -50,23 +52,19 @@ export function Hero() {
             decoding="async"
           />
         </div>
-      </Container>
 
-      <div className={styles.advantages}>
-        <Container>
-          <ul className={styles.list}>
-            {advantages.map((item) => (
-              <li key={item.title} className={styles.advantage}>
-                <IconBox name={item.icon} shape="circle" />
-                <span className={styles.advantageText}>
-                  <b className={styles.advantageTitle}>{item.title}</b>
-                  <span className={styles.advantageNote}>{item.text}</span>
-                </span>
-              </li>
-            ))}
-          </ul>
-        </Container>
-      </div>
+        <ul className={styles.list}>
+          {advantages.map((item) => (
+            <li key={item.title} className={styles.advantage}>
+              <IconBox name={item.icon} size="sm" />
+              <span className={styles.advantageText}>
+                <b className={styles.advantageTitle}>{item.title}</b>
+                <span className={styles.advantageNote}>{item.text}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </Container>
     </section>
   );
 }

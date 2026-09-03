@@ -6,6 +6,8 @@ import {
   User,
   Wallet,
   Headphones,
+  Sparkles,
+  Timer,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -24,6 +26,8 @@ export const icons = {
   user: User,
   wallet: Wallet,
   headphones: Headphones,
+  sparkles: Sparkles,
+  timer: Timer,
 } satisfies Record<string, LucideIcon>;
 
 export type IconName = keyof typeof icons;

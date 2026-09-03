@@ -27,15 +27,16 @@
 
 .kicker {
   margin-bottom: 1.25rem;
-  color: var(--ink-600);
+  color: var(--brand-600);
+  font-weight: 600;
 
   @include text-preset(caption);
 }
 
 .title {
-  max-width: 14ch;
+  max-width: 20ch;
   margin-bottom: 1.5rem;
-  font-size: 3.5rem;
+  font-size: 3rem;
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.03em;
@@ -81,51 +82,46 @@
 }
 
 // --- полоса преимуществ ---
-
-.advantages {
-  border-top: 1px solid var(--border);
-  padding-block: 2.5rem;
-
-  @include mq(md) {
-    padding-block: 1.75rem;
-  }
-}
+// Компактная строка сразу под кнопками, без разделительной линии:
+// в макете это подпись к hero, а не самостоятельная секция.
 
 .list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem 2.5rem;
   margin: 0;
+  padding-bottom: 3rem;
 
-  @include mq(md) {
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
+  @include mq(lg) {
+    padding-bottom: 2rem;
+  }
+
+  @include mq(xxs) {
+    gap: 1rem;
   }
 }
 
 .advantage {
   display: flex;
-  gap: 0.875rem;
-  align-items: flex-start;
+  gap: 0.625rem;
+  align-items: center;
 }
 
 .advantageText {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
   min-width: 0;
 }
 
 .advantageTitle {
   color: var(--ink-900);
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1.375;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 .advantageNote {
-  max-width: 32ch;
   color: var(--ink-400);
-
-  @include text-preset(caption);
+  font-size: 0.75rem;
+  line-height: 1.4;
 }

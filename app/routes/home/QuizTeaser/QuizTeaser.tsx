@@ -1,12 +1,15 @@
+import { Plus, ArrowRight } from "lucide-react";
 import { Container } from "~/components/ui/Container/Container";
 import { Button } from "~/components/ui/Button/Button";
+import { IconBox } from "~/components/ui/IconBox/IconBox";
 import styles from "./QuizTeaser.module.scss";
 
 const QUESTIONS = [
   "Какая площадь помещения?",
   "Что охлаждаем?",
-  "Нужно ли греться зимой?",
-  "Ориентир по бюджету?",
+  "Нужен ли обогрев зимой?",
+  "Сколько окон в комнате?",
+  "Остались вопросы?",
 ];
 
 /**
@@ -21,27 +24,33 @@ export function QuizTeaser() {
       <Container>
         <div className={styles.box}>
           <div className={styles.content}>
-            <p className={styles.badge}>Подбор за 4 вопроса</p>
+            <p className={styles.badge}>
+              <IconBox name="sparkles" size="sm" />
+              Поможем с выбором
+            </p>
             <h2 className={styles.title}>
               Не знаете, какой кондиционер нужен?
             </h2>
             <p className={styles.lead}>
-              Ответьте на четыре вопроса — предложу три модели под ваше
-              помещение и бюджет. Без звонка и без ввода телефона.
+              Ответьте на несколько вопросов, и мы подберём для вас оптимальное
+              решение за 1 минуту
             </p>
-            <Button to="/solutions" size="lg" variant="secondary">
-              Пока посмотреть готовые решения
+            <Button to="/solutions" variant="secondary" className={styles.cta}>
+              Подобрать за 1 минуту
+              <ArrowRight size={16} aria-hidden />
             </Button>
           </div>
 
-          <ol className={styles.questions}>
-            {QUESTIONS.map((q, i) => (
+          <ul className={styles.questions}>
+            {QUESTIONS.map((q) => (
               <li key={q} className={styles.question}>
-                <span className={styles.number}>{i + 1}</span>
+                <span className={styles.marker}>
+                  <Plus size={14} strokeWidth={2.5} aria-hidden />
+                </span>
                 {q}
               </li>
             ))}
-          </ol>
+          </ul>
         </div>
       </Container>
     </section>
