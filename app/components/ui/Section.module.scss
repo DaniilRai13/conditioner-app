@@ -1,0 +1,47 @@
+@use "mixins" as *;
+
+.section {
+  @include section-gap;
+}
+
+.head {
+  margin-bottom: 40px;
+
+  @include mq(md) {
+    margin-bottom: 24px;
+  }
+}
+
+.title {
+  @include text-preset(h2);
+}
+
+.lead {
+  max-width: 60ch;
+  margin-top: 12px;
+
+  @include text-preset(body);
+}
+
+// Синий баннер: сам блок скруглён и лежит внутри обычного ритма страницы,
+// поэтому отступы переносим с секции на внутреннюю подложку.
+.brand {
+  padding-block: 0;
+
+  > :global(div) {
+    padding-block: 0;
+  }
+
+  .head,
+  & {
+    color: #fff;
+  }
+
+  .title {
+    color: #fff;
+  }
+
+  .lead {
+    color: rgb(255 255 255 / 80%);
+  }
+}

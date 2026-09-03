@@ -1,0 +1,110 @@
+@use "mixins" as *;
+
+.hero {
+  padding-block: 72px 56px;
+
+  @include mq(md) {
+    padding-block: 40px;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 40px;
+  align-items: center;
+
+  @include mq(lg) {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+.content {
+  min-width: 0;
+}
+
+.kicker {
+  margin-bottom: 16px;
+  color: var(--brand-600);
+  font-weight: 600;
+
+  @include text-preset(caption);
+}
+
+.title {
+  margin-bottom: 20px;
+
+  @include text-preset(h1);
+}
+
+.lead {
+  max-width: 48ch;
+  margin-bottom: 32px;
+
+  @include text-preset(body);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  @include mq(xs) {
+    flex-direction: column;
+  }
+}
+
+.media {
+  aspect-ratio: 4 / 3;
+  background:
+    radial-gradient(120% 90% at 70% 20%, var(--brand-50), transparent 70%),
+    var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-banner);
+
+  @include mq(lg) {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+.advantages {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin: 56px 0 0;
+
+  @include mq(lg) {
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 40px;
+  }
+
+  @include mq(xxs) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.advantage {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.advantageText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.advantageTitle {
+  color: var(--ink-900);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 22px;
+}
+
+.advantageNote {
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}

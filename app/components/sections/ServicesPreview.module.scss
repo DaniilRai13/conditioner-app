@@ -1,0 +1,43 @@
+@use "mixins" as *;
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+
+  @include mq(lg) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include mq(xxs) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  gap: 12px;
+}
+
+.title {
+  color: var(--ink-900);
+
+  @include text-preset(h3);
+}
+
+.text {
+  flex: 1;
+  color: var(--ink-600);
+
+  @include text-preset(caption);
+}
+
+.more {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: 4px;
+  color: var(--brand-600);
+  font-weight: 600;
+
+  @include text-preset(caption);
+}

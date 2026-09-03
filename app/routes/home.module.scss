@@ -1,77 +1,40 @@
 @use "mixins" as *;
 
-.hero {
-  padding-block: 80px 64px;
-
-  @include mq(md) {
-    padding-block: 48px 40px;
-  }
+.contact {
+  padding-top: 0;
 }
 
-.kicker {
-  margin-bottom: 16px;
-  color: var(--brand-600);
-  font-weight: 600;
-
-  @include text-preset(caption);
-}
-
-.title {
-  max-width: 18ch;
-  margin-bottom: 20px;
-
-  @include text-preset(h1);
-}
-
-.lead {
-  max-width: 52ch;
-  margin-bottom: 32px;
-
-  @include text-preset(body);
-}
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-
-  @include mq(xs) {
-    flex-direction: column;
-  }
-}
-
-.advantages {
-  padding-bottom: 64px;
-}
-
-.list {
+.contactBox {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-  margin: 0;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 40px;
+  padding: 40px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-banner);
 
   @include mq(lg) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @include mq(xs) {
     grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  @include mq(md) {
+    padding: 24px;
   }
 }
 
-.item {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+.contactHead {
+  min-width: 0;
 }
 
-.itemTitle {
-  color: var(--ink-900);
-  font-weight: 600;
+.contactTitle {
+  margin-bottom: 12px;
+
+  @include text-preset(h2);
 }
 
-.itemText {
-  color: var(--ink-400);
+.contactLead {
+  max-width: 40ch;
 
-  @include text-preset(caption);
+  @include text-preset(body);
 }

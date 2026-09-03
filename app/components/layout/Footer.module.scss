@@ -1,0 +1,95 @@
+@use "mixins" as *;
+
+.footer {
+  margin-top: 24px;
+  padding-block: 56px 32px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+  gap: 40px;
+
+  @include mq(lg) {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+
+  @include mq(xs) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.about {
+  max-width: 40ch;
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-style: normal;
+}
+
+.colTitle {
+  margin-bottom: 2px;
+  color: var(--ink-900);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.link {
+  color: var(--ink-600);
+  text-decoration: none;
+
+  @include text-preset(caption);
+  @include focus-ring;
+
+  &:hover {
+    color: var(--brand-600);
+  }
+}
+
+.contact {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--ink-600);
+  text-decoration: none;
+
+  @include text-preset(caption);
+  @include focus-ring;
+
+  svg {
+    flex: none;
+    color: var(--brand-600);
+  }
+}
+
+a.contact:hover {
+  color: var(--brand-600);
+}
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  justify-content: space-between;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}

@@ -1,0 +1,136 @@
+@use "mixins" as *;
+
+.section {
+  @include section-gap;
+}
+
+.banner {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 40px;
+  align-items: center;
+  padding: 40px;
+  background: var(--brand-600);
+  border-radius: var(--radius-banner);
+  color: #fff;
+
+  @include mq(lg) {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  @include mq(md) {
+    padding: 24px;
+  }
+}
+
+.bannerHead {
+  min-width: 0;
+}
+
+.bannerTitle {
+  margin-bottom: 12px;
+  color: #fff;
+
+  @include text-preset(h2);
+}
+
+.bannerLead {
+  max-width: 40ch;
+  color: rgb(255 255 255 / 80%);
+
+  @include text-preset(body);
+}
+
+.points {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin: 0;
+
+  @include mq(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include mq(xxs) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.point {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pointTitle {
+  margin-top: 4px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.pointText {
+  color: rgb(255 255 255 / 70%);
+
+  @include text-preset(caption);
+}
+
+// --- как я работаю ---
+
+.stepsTitle {
+  margin: 64px 0 32px;
+
+  @include text-preset(h2);
+
+  @include mq(md) {
+    margin: 40px 0 24px;
+  }
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  margin: 0;
+  counter-reset: step;
+
+  @include mq(lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include mq(sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.step {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stepNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-bottom: 6px;
+  background: var(--brand-50);
+  border-radius: var(--radius-pill);
+  color: var(--brand-600);
+  font-weight: 700;
+}
+
+.stepName {
+  color: var(--ink-900);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.stepText {
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}

@@ -1,0 +1,144 @@
+@use "mixins" as *;
+
+.header {
+  position: sticky;
+  z-index: 20;
+  top: 0;
+  background: rgb(248 250 255 / 88%);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--transition);
+}
+
+.inner {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 72px;
+}
+
+.nav {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+
+  @include mq(lg) {
+    display: none;
+  }
+}
+
+.link {
+  color: var(--ink-600);
+  font-size: 15px;
+  text-decoration: none;
+  transition: color var(--transition);
+
+  @include focus-ring;
+
+  &:hover {
+    color: var(--brand-600);
+  }
+}
+
+.active {
+  color: var(--brand-600);
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.cta {
+  border-radius: var(--radius-pill);
+
+  @include mq(sm) {
+    display: none;
+  }
+}
+
+.burger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  color: var(--ink-900);
+
+  @include focus-ring;
+
+  @include mq(lg) {
+    display: inline-flex;
+  }
+}
+
+// --- мобильная шторка ---
+
+.mobile {
+  position: fixed;
+  z-index: 30;
+  inset: 0;
+  background: var(--bg);
+  overflow-y: auto;
+}
+
+.mobileInner {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 100dvh;
+  padding-block: 20px 32px;
+}
+
+.close {
+  align-self: flex-end;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  color: var(--ink-900);
+
+  @include focus-ring;
+}
+
+.mobileNav {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 16px;
+}
+
+.mobileLink {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink-900);
+  font-size: 20px;
+  font-weight: 600;
+  text-decoration: none;
+
+  @include focus-ring;
+}
+
+.call {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24px;
+  padding: 16px;
+  background: var(--brand-600);
+  border-radius: var(--radius-control);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+
+  @include focus-ring;
+}

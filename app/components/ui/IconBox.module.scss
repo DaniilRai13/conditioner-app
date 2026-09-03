@@ -1,0 +1,20 @@
+@use "mixins" as *;
+
+.box {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--brand-50);
+  border-radius: var(--radius-control);
+  color: var(--brand-600);
+}
+
+.onBrand {
+  @extend .box;
+
+  background: rgb(255 255 255 / 14%);
+  color: #fff;
+}

@@ -1,6 +1,13 @@
 import type { MetaFunction } from "react-router";
-import { Container } from "~/components/ui/Container";
-import { Button } from "~/components/ui/Button";
+import { Hero } from "~/components/sections/Hero";
+import { QuizTeaser } from "~/components/sections/QuizTeaser";
+import { SolutionsPreview } from "~/components/sections/SolutionsPreview";
+import { ServicesPreview } from "~/components/sections/ServicesPreview";
+import { WhyMe } from "~/components/sections/WhyMe";
+import { Proof } from "~/components/sections/Proof";
+import { Faq } from "~/components/sections/Faq";
+import { Section } from "~/components/ui/Section";
+import { LeadForm } from "~/components/forms/LeadForm";
 import { site } from "~/config/site";
 import styles from "./home.module.scss";
 
@@ -13,49 +20,38 @@ export const meta: MetaFunction = () => [
   },
 ];
 
+// Семь секций (PLAN.md §4). Порядок не случайный: квиз стоит вторым,
+// пока внимание максимально, а FAQ идёт перед формой — снимает последние
+// возражения ровно перед тем, как просить контакты.
 export default function Home() {
   return (
     <main>
-      <section className={styles.hero}>
-        <Container>
-          <p className={styles.kicker}>Комфорт в вашем доме и офисе</p>
-          <h1 className={styles.title}>
-            Продажа и установка кондиционеров в Минске и области
-          </h1>
-          <p className={styles.lead}>
-            Подберу, поставлю и настрою кондиционер под ваши задачи. Работает
-            один специалист — без посредников и лишних наценок.
-          </p>
-          <div className={styles.actions}>
-            <Button to="/catalog" size="lg">
-              Подобрать кондиционер
-            </Button>
-            <Button to="/contacts" size="lg" variant="secondary">
-              Получить консультацию
-            </Button>
-          </div>
-        </Container>
-      </section>
+      <Hero />
+      <QuizTeaser />
+      <SolutionsPreview />
+      <ServicesPreview />
+      <WhyMe />
+      <Proof />
 
-      <section className={styles.advantages}>
-        <Container>
-          <ul className={styles.list}>
-            {ADVANTAGES.map((item) => (
-              <li key={item.title} className={styles.item}>
-                <b className={styles.itemTitle}>{item.title}</b>
-                <span className={styles.itemText}>{item.text}</span>
-              </li>
-            ))}
-          </ul>
-        </Container>
-      </section>
+      <Section
+        title="Частые вопросы"
+        lead="Собрал то, о чём спрашивают чаще всего. Если вашего вопроса тут нет — напишите, отвечу лично."
+      >
+        <Faq />
+      </Section>
+
+      <Section id="lead" className={styles.contact}>
+        <div className={styles.contactBox}>
+          <div className={styles.contactHead}>
+            <h2 className={styles.contactTitle}>Оставьте заявку</h2>
+            <p className={styles.contactLead}>
+              Перезвоню, уточню детали и назову точную стоимость. Замер и
+              консультация — бесплатно.
+            </p>
+          </div>
+          <LeadForm source="home" />
+        </div>
+      </Section>
     </main>
   );
 }
-
-const ADVANTAGES = [
-  { title: "Один специалист", text: "от подбора до установки" },
-  { title: "Честные цены", text: "без скрытых наценок" },
-  { title: "Качественный монтаж", text: "с гарантией" },
-  { title: "Поддержка и сервис", text: "после установки" },
-];

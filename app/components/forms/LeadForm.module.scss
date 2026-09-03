@@ -1,0 +1,116 @@
+@use "mixins" as *;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+
+  @include mq(sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  color: var(--ink-900);
+  font-weight: 600;
+
+  @include text-preset(caption);
+}
+
+.optional {
+  color: var(--ink-400);
+  font-weight: 400;
+}
+
+.input,
+.textarea {
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  color: var(--ink-900);
+  transition: border-color var(--transition);
+
+  @include focus-ring;
+
+  &::placeholder {
+    color: var(--ink-400);
+  }
+
+  &[aria-invalid="true"] {
+    border-color: #dc2626;
+  }
+}
+
+.textarea {
+  resize: vertical;
+}
+
+.honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.consent {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  color: var(--ink-600);
+
+  @include text-preset(caption);
+
+  input {
+    margin-top: 3px;
+    flex: none;
+    accent-color: var(--brand-600);
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.note {
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}
+
+.error {
+  color: #dc2626;
+
+  @include text-preset(caption);
+}
+
+.done {
+  padding: 32px;
+  background: var(--brand-50);
+  border-radius: var(--radius-card);
+}
+
+.doneTitle {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--ink-900);
+
+  @include text-preset(h3);
+}

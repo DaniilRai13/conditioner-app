@@ -1,0 +1,24 @@
+@use "mixins" as *;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+
+  @include card;
+
+  @include mq(md) {
+    padding: 20px;
+  }
+}
+
+.linked {
+  color: inherit;
+  text-decoration: none;
+
+  @include focus-ring;
+
+  &:hover {
+    border-color: var(--brand-600);
+  }
+}

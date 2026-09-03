@@ -8,6 +8,8 @@ import {
 } from "react-router";
 
 import type { Route } from "./+types/root";
+import { Header } from "./components/layout/Header";
+import { Footer } from "./components/layout/Footer";
 import { site } from "./config/site";
 
 // Шрифт ставится локально, без запроса к Google Fonts — иначе теряем LCP.
@@ -35,7 +37,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <>
+      <Header />
+      <Outlet />
+      <Footer />
+    </>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

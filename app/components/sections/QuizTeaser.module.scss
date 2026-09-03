@@ -1,0 +1,89 @@
+@use "mixins" as *;
+
+.section {
+  padding-block: 24px;
+}
+
+.box {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
+  align-items: center;
+  padding: 40px;
+  background: var(--brand-50);
+  border-radius: var(--radius-banner);
+
+  @include mq(lg) {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  @include mq(md) {
+    padding: 24px;
+  }
+}
+
+.content {
+  min-width: 0;
+}
+
+.badge {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 4px 12px;
+  background: var(--surface);
+  border-radius: var(--radius-pill);
+  color: var(--brand-600);
+  font-weight: 600;
+
+  @include text-preset(caption);
+}
+
+.title {
+  margin-bottom: 12px;
+
+  @include text-preset(h2);
+}
+
+.lead {
+  max-width: 46ch;
+  margin-bottom: 24px;
+
+  @include text-preset(body);
+}
+
+.questions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+}
+
+.question {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 18px;
+  background: var(--surface);
+  border-radius: var(--radius-control);
+  color: var(--ink-900);
+  font-weight: 500;
+
+  @include mq(md) {
+    padding: 12px 14px;
+  }
+}
+
+.number {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: var(--brand-600);
+  border-radius: var(--radius-pill);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
