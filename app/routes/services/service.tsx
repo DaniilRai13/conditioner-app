@@ -4,6 +4,7 @@ import type { Route } from "./+types/service";
 import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
 import { Section } from "~/components/ui/Section/Section";
 import { Card } from "~/components/ui/Card/Card";
+import { Faq } from "~/components/sections/Faq/Faq";
 import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
 import { services, getService } from "~/data/services";
 import { site } from "~/config/site";
@@ -25,16 +26,6 @@ export function meta({ loaderData }: Route.MetaArgs) {
 
 export default function ServicePage({ loaderData }: Route.ComponentProps) {
   const { service } = loaderData;
-
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: service.faq.map((f) => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
 
   return (
     <main>
@@ -111,18 +102,7 @@ export default function ServicePage({ loaderData }: Route.ComponentProps) {
       </Section>
 
       <Section title="Вопросы по услуге">
-        <div className={styles.faq}>
-          {service.faq.map((f) => (
-            <details key={f.q} className={styles.faqItem}>
-              <summary className={styles.faqQuestion}>{f.q}</summary>
-              <p className={styles.faqAnswer}>{f.a}</p>
-            </details>
-          ))}
-        </div>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-        />
+        <Faq items={service.faq} />
       </Section>
 
       <Section title="Оставьте заявку" lead="Перезвоню и назову точную стоимость по вашей задаче.">

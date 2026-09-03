@@ -674,12 +674,12 @@ conditioner-app/
 ├─ app/
 │  ├─ root.tsx             ✅ html/head/body, шрифт, глобальные стили, ErrorBoundary
 │  ├─ routes.ts            ✅ карта сайта из §4
-│  ├─ routes/              ✅ 15 роутов (см. правило совместного хранения ниже)
+│  ├─ routes/              ✅ 15 роутов + их собственные компоненты (см. правило ниже)
 │  ├─ styles/              ✅ index.scss, _tokens, _mixins, _breakpoints, _reset
 │  ├─ components/
 │  │  ├─ ui/               ✅ Button, Container, Card, Section, IconBox
 │  │  ├─ layout/           ✅ Header, Footer, Logo, Breadcrumbs, PageHeader, PageStub
-│  │  ├─ sections/         ✅ Hero, QuizTeaser, SolutionsPreview, ServicesPreview, WhyMe, Faq, Proof
+│  │  ├─ sections/         ✅ WhyMe, Faq — только то, что нужно нескольким роутам
 │  │  ├─ catalog/          ProductCard, ProductGrid, Filters, Specs
 │  │  ├─ quiz/             Quiz, QuizStep, QuizOption, QuizProgress, QuizResult
 │  │  └─ forms/            ✅ LeadForm. Дальше: CallbackModal
@@ -710,6 +710,28 @@ app/routes/services/         app/components/ui/Button/
 ├─ services.tsx
 └─ services.module.scss
 ```
+
+### Куда класть компонент
+
+Решает **число потребителей**, а не то, как компонент выглядит:
+
+| Потребителей | Где живёт | Примеры |
+|---|---|---|
+| Один роут | Внутри папки этого роута | `routes/home/Hero/`, `routes/home/QuizTeaser/` |
+| Несколько роутов | `components/sections/` | `WhyMe`, `Faq` |
+| Везде, примитив дизайн-системы | `components/ui/` | `Button`, `Card`, `Section`, `IconBox` |
+| Обвязка страницы | `components/layout/` | `Header`, `Footer`, `PageHeader`, `Breadcrumbs` |
+| Фича с данными и логикой | `features/<имя>/` | `catalog`, `quiz` — появятся на этапе 3 |
+
+**Поднимаем наверх по факту второго потребителя, а не заранее.** `Hero` и
+`SolutionsPreview` лежали в `components/sections/`, хотя используются только
+главной — это лишний уровень между компонентом и единственным местом,
+где он нужен.
+
+Обратное тоже верно: **компонент, который читает данные напрямую из `data/`,
+переиспользовать нельзя.** `Faq` жёстко брал `data/faq.ts`, поэтому на странице
+услуги пришлось написать такую же разметку заново. Теперь вопросы приходят пропсом,
+и один компонент обслуживает и главную, и услуги, и будущие страницы решений.
 
 Два уточнения, без которых правило вырождается:
 

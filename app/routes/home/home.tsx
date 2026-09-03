@@ -1,11 +1,12 @@
 import type { MetaFunction } from "react-router";
-import { Hero } from "~/components/sections/Hero/Hero";
-import { QuizTeaser } from "~/components/sections/QuizTeaser/QuizTeaser";
-import { SolutionsPreview } from "~/components/sections/SolutionsPreview/SolutionsPreview";
-import { ServicesPreview } from "~/components/sections/ServicesPreview/ServicesPreview";
+import { Hero } from "./Hero/Hero";
+import { QuizTeaser } from "./QuizTeaser/QuizTeaser";
+import { SolutionsPreview } from "./SolutionsPreview/SolutionsPreview";
+import { ServicesPreview } from "./ServicesPreview/ServicesPreview";
 import { WhyMe } from "~/components/sections/WhyMe/WhyMe";
-import { Proof } from "~/components/sections/Proof";
+import { Proof } from "./Proof";
 import { Faq } from "~/components/sections/Faq/Faq";
+import { faq } from "~/data/faq";
 import { Section } from "~/components/ui/Section/Section";
 import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
 import { site } from "~/config/site";
@@ -37,7 +38,7 @@ export default function Home() {
         title="Частые вопросы"
         lead="Собрал то, о чём спрашивают чаще всего. Если вашего вопроса тут нет — напишите, отвечу лично."
       >
-        <Faq />
+        <Faq items={faq} />
       </Section>
 
       <Section id="lead" className={styles.contact}>

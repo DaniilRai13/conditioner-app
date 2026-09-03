@@ -160,37 +160,6 @@
   @include focus-ring;
 }
 
-// --- FAQ ---
-
-.faq {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.faqItem {
-  padding: 0.25rem 1.25rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-card);
-}
-
-.faqQuestion {
-  padding-block: 1rem;
-  color: var(--ink-900);
-  font-weight: 600;
-  cursor: pointer;
-
-  @include focus-ring;
-}
-
-.faqAnswer {
-  padding-bottom: 1rem;
-  color: var(--ink-600);
-
-  @include text-preset(body);
-}
-
 // --- другие услуги ---
 
 .other {
