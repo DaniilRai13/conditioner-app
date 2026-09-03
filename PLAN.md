@@ -22,10 +22,9 @@
 
 | Решение | Выбор | Почему |
 |---|---|---|
-| Сборка | **Vite 8 + React 19 + TypeScript** | Привычный стек, быстрый dev. |
-| Роутинг | **React Router 7** (`react-router-dom`) | Обычный декларативный роутинг, без файловой магии. |
-| Пререндер | **`vite-react-ssg`** | На билде раскладывает все роуты в готовые HTML-файлы. Чистый SPA брать нельзя: Яндекс рендерит JS медленнее и менее надёжно, чем Google, а сайт живёт с локального поиска. |
-| Стилизация | **SCSS + CSS Modules** (`*.module.scss`) | Стили скоупятся автоматически, имена классов не конфликтуют. Vite поддерживает из коробки — нужен только пакет `sass-embedded`. |
+| Сборка | **Vite 8 + React 19 + TypeScript** | Привычный стек, быстрый dev. Версия Vite закреплена жёстко — см. ниже. |
+| Роутинг и пререндер | **React Router 8, framework mode** (`@react-router/dev`) | `ssr: false` + `prerender` раскладывает роуты в готовые HTML. Официально, поддерживается командой Remix. Чистый SPA брать нельзя: Яндекс рендерит JS медленнее и менее надёжно, чем Google, а сайт живёт с локального поиска. |
+| Стилизация | **SCSS + CSS Modules** (`*.module.scss`) | Стили скоупятся автоматически, имена классов не конфликтуют. Пакет `sass` (чистый JS), **не `sass-embedded`** — внутри второго `dart.exe`, см. ограничение ниже. |
 | Данные | **Supabase** (Postgres + Storage + Auth) | Товары, отзывы, портфолио, заявки. Даёт готовую авторизацию и хранилище картинок для админки (этап 6). |
 | Отдача каталога | Фетч из Supabase **на этапе билда** → пререндер | Клиент получает статику, поисковики — готовый HTML. Supabase дёргается при сборке, а не у посетителя. |
 | Формы | Serverless-функция хостинга → **Telegram Bot API** | Токен бота нельзя держать в клиенте, нужен хоть какой-то сервер. |
@@ -40,14 +39,47 @@
 `next/image` тоже не аргумент: картинки товаров мы всё равно жмём в WebP скриптом
 импорта через `sharp` (§5).
 
-> **Риск:** `vite-react-ssg` — версия 0.x, небольшой мейнтейнер. Если подведёт,
-> запасной вариант — свой пререндер-скрипт на Playwright по списку роутов
-> (собрать HTML после гидрации и разложить по папкам). Проверяем библиотеку
-> на этапе 0, пока проект пустой.
+### Почему не vite-react-ssg
+Сначала взяли его, но **README самой библиотеки отправляет к React Router**:
+«React Router v7 now has built-in SSG support… we recommend using its official SSG
+capabilities». Плюс это версия 0.x с небольшим мейнтейнером. Официальный пререндер
+снимает этот риск и даёт `meta` экспортом из роута — `react-helmet-async` не нужен.
+
+> Попутно выяснилось: `react-router-dom` — устаревший пакет-обёртка, он отстаёт
+> на мажор (7.x против 8.x). Актуальный называется просто **`react-router`**.
+
+### ⚠ Ограничение машины: Smart App Control
+
+На рабочей машине включён **Smart App Control** (`VerifiedAndReputablePolicyState = 1`).
+Он блокирует нативные бинарники по **репутации конкретного файла**, исключений
+не поддерживает, а выключается необратимо — только переустановкой Windows.
+
+Что это значит на практике:
+
+| Пакет | Статус |
+|---|---|
+| `rolldown@1.1.5` (в составе `vite@8.1.5`) | **работает** — файл уже набрал репутацию |
+| `rolldown@1.2.7` (в составе `vite@8.2.2`) | **заблокирован** — слишком свежий |
+| `esbuild` | заблокирован |
+| `sass-embedded` (`dart.exe`) | не проверялся, риск тот же → берём `sass` |
+| `lightningcss` | работает |
+
+**Поэтому версия Vite закреплена точно: `"vite": "8.1.5"`, без каретки.**
+Обновление до 8.2.x подтянет `rolldown@1.2.7` и сборка перестанет запускаться
+с ошибкой «Cannot find native binding», которая уводит в ложный след про баг npm.
+Перед любым апгрейдом Vite — проверять, грузится ли новый биндинг:
+
+```bash
+node -e "require('./node_modules/@rolldown/binding-win32-x64-msvc/rolldown-binding.win32-x64-msvc.node')"
+```
+
+Тот же принцип подтверждён на соседнем проекте `alex-build`: там `vite@8.1.5`
+и чистый `sass`, и сборка проходит.
 
 ### Версии на старте (проверено 2026-09-03)
-`vite@8.2.2` · `react-router-dom@7.18.3` · `sass-embedded@1.103.1` · `vite-react-ssg@0.9.2`
-`react-hook-form@7.87.0` · `zod@4.5.4` · `@hookform/resolvers@5.9.1`
+`vite@8.1.5` (закреплено) · `react-router@8.3.1` · `@react-router/dev@8.3.1`
+`react@19.2.8` · `sass@1.103.1` · `react-hook-form@7.87.0` · `zod@4.5.4`
+`@hookform/resolvers@5.9.1` · `@supabase/supabase-js@2.115.0`
 
 ---
 
@@ -83,14 +115,20 @@
 ### Организация стилей
 
 ```
-src/styles/
-├─ index.scss          # точка входа: reset + токены + базовая типографика
+app/styles/
+├─ index.scss          # точка входа: токены + reset. Подключается в root.tsx
 ├─ _tokens.scss        # :root { --brand-600: ... } — CSS custom properties
 ├─ _breakpoints.scss   # $breakpoints (SCSS map) + миксин mq()
-├─ _mixins.scss        # container, text-preset, focus-ring, card
+├─ _mixins.scss        # @forward "breakpoints" + container, card, focus-ring, text-preset
 └─ _reset.scss
 ```
 Рядом с компонентами — `Button.module.scss`, `Hero.module.scss` и т.д.
+
+В `vite.config.ts` прописан `css.preprocessorOptions.scss.loadPaths: ["app/styles"]` —
+поэтому в модулях пишем короткое `@use "mixins" as *;` вместо `"../../styles/mixins"`.
+`additionalData` сознательно **не используем**: он подставился бы и в сам `_mixins.scss`,
+дав циклический импорт. А `_mixins.scss` делает `@forward "breakpoints"`, так что
+один импорт даёт и миксины, и `mq()`.
 
 **Токены — CSS custom properties, а не SCSS-переменные.** SCSS-переменные исчезают
 при компиляции; кастомные свойства живут в рантайме — видны в девтулзах,
@@ -609,49 +647,56 @@ Database Webhook в Supabase → build hook хостинга. В админке 
 
 ## 6. Структура проекта
 
+Структура задана framework mode: точка входа — `app/root.tsx`, карта роутов —
+`app/routes.ts`. Отмечено ✅ то, что уже написано на этапе 0.
+
 ```
 conditioner-app/
 ├─ PLAN.md
-├─ vite.config.ts
-├─ index.html
+├─ react-router.config.ts  ✅ ssr:false + prerender
+├─ vite.config.ts          ✅ плагин reactRouter + loadPaths для SCSS
 ├─ api/
-│  └─ lead.ts            # serverless-функция: приём заявок → Telegram
-├─ src/
-│  ├─ main.tsx           # входная точка vite-react-ssg
-│  ├─ routes.tsx         # объявление роутов + getStaticPaths для /catalog/[slug]
-│  ├─ styles/            # index.scss, _tokens, _mixins, _breakpoints, _reset
-│  ├─ pages/             # Home, Catalog, CatalogCategory, Product,
-│  │                     # Solutions, SolutionDetail, Services, ServiceDetail, Price,
-│  │                     # Articles, ArticleDetail, About, Contacts, Privacy, NotFound,
-│  │                     # Portfolio + Reviews (за флагом), Admin (этап 6)
+│  └─ lead.ts              serverless-функция: заявка → Supabase + Telegram
+├─ app/
+│  ├─ root.tsx             ✅ html/head/body, шрифт, глобальные стили, ErrorBoundary
+│  ├─ routes.ts            ✅ карта сайта из §4
+│  ├─ routes/              ✅ 15 файлов-роутов (пока заглушки, кроме home)
+│  ├─ styles/              ✅ index.scss, _tokens, _mixins, _breakpoints, _reset
 │  ├─ components/
-│  │  ├─ ui/             # Button, Card, Badge, Input, Modal, Accordion, Section
-│  │  ├─ layout/         # RootLayout, Header, Footer, MobileMenu, Container, Breadcrumbs
-│  │  ├─ sections/       # Hero, Advantages, WhyMe, Steps, CtaBanner, Faq, Reviews
-│  │  ├─ catalog/        # ProductCard, ProductGrid, Filters, Specs
-│  │  ├─ quiz/           # Quiz, QuizStep, QuizOption, QuizProgress, QuizResult
-│  │  ├─ seo/            # Seo.tsx — метатеги и JSON-LD (react-helmet-async)
-│  │  └─ forms/          # LeadForm, CallbackModal
-│  ├─ data/              # seed.json (снапшот для локальной разработки), services.ts, faq.ts
-│  ├─ lib/               # supabase.ts (клиент), queries.ts, format.ts, seo.ts,
-│  │                     # filters.ts, quiz.ts (логика подбора + тесты)
-│  ├─ types/             # database.ts (сгенерирован), product.ts, lead.ts
-│  └─ config/            # site.ts (контакты, соцсети, FEATURES), pricing.ts
+│  │  ├─ ui/               ✅ Button, Container. Дальше: Card, Badge, Input, Modal, Accordion
+│  │  ├─ layout/           ✅ PageStub. Дальше: Header, Footer, MobileMenu, Breadcrumbs
+│  │  ├─ sections/         Hero, Advantages, Steps, CtaBanner, Faq, Reviews
+│  │  ├─ catalog/          ProductCard, ProductGrid, Filters, Specs
+│  │  ├─ quiz/             Quiz, QuizStep, QuizOption, QuizProgress, QuizResult
+│  │  └─ forms/            LeadForm, CallbackModal
+│  ├─ data/                seed.json (снапшот для локальной разработки), services.ts, faq.ts
+│  ├─ lib/                 supabase.ts, queries.ts, format.ts, seo.ts, filters.ts,
+│  │                       quiz.ts (логика подбора + тесты)
+│  ├─ types/               database.ts (сгенерирован), product.ts, lead.ts
+│  └─ config/              ✅ site.ts (контакты, FEATURES), pricing.ts
 ├─ supabase/
-│  ├─ migrations/        # схема таблиц и RLS-политики в git
-│  └─ seed.sql           # наполнение чистой базы
+│  ├─ migrations/          схема таблиц и RLS-политики в git
+│  └─ seed.sql             наполнение чистой базы
 ├─ scripts/
-│  ├─ import-catalog.ts  # выгрузка товаров с swcomfortair.by → Supabase
-│  └─ gen-sitemap.ts     # генерация sitemap.xml после билда
-└─ public/               # catalog/, portfolio/, icons/, robots.txt
+│  ├─ import-catalog.ts    выгрузка товаров с swcomfortair.by → Supabase
+│  └─ gen-sitemap.ts       генерация sitemap.xml после билда
+└─ public/                 icons/, robots.txt
 ```
 
-**Что делаем руками вместо Next:**
-- Метатеги и JSON-LD — `react-helmet-async` (`vite-react-ssg` вшивает их в статический HTML).
-- `sitemap.xml` — скрипт `gen-sitemap.ts` в `postbuild`, обходит список роутов + слаги товаров.
-- OG-картинки — одна статическая на сайт + по одной на раздел, рисуем заранее.
-- Оптимизация изображений — в скрипте импорта (`sharp` → WebP, 800/400) и вручную для контента.
-- Ленивая загрузка картинок — обычный `loading="lazy"` + явные `width`/`height`.
+**Что даёт framework mode из коробки** (и что не надо писать руками):
+- Метатеги — экспорт `meta` из роута, попадают в статический HTML. `react-helmet-async` не нужен.
+- Данные на сборке — `loader` пререндеренного роута выполняется в момент билда.
+- Типы роутов — `react-router typegen` генерирует `./+types/*`, руками не пишем.
+
+**Что всё равно делаем сами:**
+- `sitemap.xml` — скрипт `gen-sitemap.ts` в `postbuild`, обходит роуты + слаги из Supabase.
+- OG-картинки — статические, по одной на раздел.
+- Оптимизация изображений — в скрипте импорта (`sharp` → WebP, 800/400).
+- Ленивая загрузка — `loading="lazy"` + явные `width`/`height`.
+
+> **Следствие `ssr: false`:** в роутах **нельзя** использовать `action` и `headers` —
+> рантайм-сервера нет. Заявки поэтому уходят в отдельную serverless-функцию (§8),
+> а не в route action. Это ограничение проверено, не теоретическое.
 
 ---
 
@@ -911,3 +956,4 @@ type Lead = {
 | 2026-09-03 | Переработана карта сайта: индекс `/solutions`, каталог разведён на `/catalog/[category]` и `/product/[slug]`, добавлены `/price`, `/articles`, `/404`. Портфолио и отзывы — под флаг. Свои транслитерированные слаги. Меню сокращено до 5 пунктов. |
 | 2026-09-03 | Расписана страница решения: состав блоков, расчёт мощности, «что входит в цену», чем решения отличаются друг от друга. Тип `Solution` расширен. |
 | 2026-09-03 | Убрана отдельная страница `/quiz` — квиз живёт секцией на главной, ссылка якорем. Добавлено правило canonical для параметров квиза. |
+| 2026-09-03 | Этап 0 закрыт. Стек: **React Router 8 framework mode** вместо vite-react-ssg, `sass` вместо `sass-embedded`. Vite закреплён на 8.1.5 из-за Smart App Control. Пререндер проверен: 9 страниц с готовым HTML. |
