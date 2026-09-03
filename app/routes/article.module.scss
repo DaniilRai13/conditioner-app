@@ -1,0 +1,102 @@
+@use "mixins" as *;
+
+.meta {
+  margin-top: 12px;
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}
+
+.top {
+  padding-top: 0;
+}
+
+.body {
+  max-width: 68ch;
+
+  h2 {
+    margin: 40px 0 12px;
+
+    @include text-preset(h3);
+  }
+
+  p {
+    margin-bottom: 14px;
+
+    @include text-preset(body);
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding-left: 20px;
+    list-style: disc;
+
+    @include text-preset(body);
+  }
+}
+
+.lead {
+  color: var(--ink-900);
+  font-size: 19px !important;
+  font-weight: 500;
+  line-height: 30px !important;
+}
+
+.cta {
+  max-width: 68ch;
+  margin-top: 48px;
+  padding: 28px;
+  background: var(--brand-50);
+  border-radius: var(--radius-banner);
+
+  @include mq(md) {
+    padding: 20px;
+  }
+}
+
+.ctaTitle {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--ink-900);
+
+  @include text-preset(h3);
+}
+
+.ctaText {
+  margin-bottom: 20px;
+  color: var(--ink-600);
+
+  @include text-preset(body);
+}
+
+.others {
+  padding-block: 0;
+}
+
+.otherList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+}
+
+.otherLink {
+  display: inline-block;
+  padding: 10px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  color: var(--ink-600);
+  text-decoration: none;
+
+  @include text-preset(caption);
+  @include focus-ring;
+
+  &:hover {
+    border-color: var(--brand-600);
+    color: var(--brand-600);
+  }
+}

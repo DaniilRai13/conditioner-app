@@ -1,0 +1,127 @@
+@use "mixins" as *;
+
+.top {
+  padding-top: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 40px;
+  align-items: start;
+
+  @include mq(lg) {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+
+  @include mq(xs) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  gap: 6px;
+  padding: 20px;
+}
+
+.label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+
+  svg {
+    color: var(--brand-600);
+  }
+}
+
+.value {
+  color: var(--ink-900);
+  font-size: 18px;
+  font-weight: 700;
+  text-decoration: none;
+
+  @include focus-ring;
+}
+
+a.value:hover {
+  color: var(--brand-600);
+}
+
+.hint {
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}
+
+.coverage {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0 4px;
+
+  li {
+    padding: 3px 10px;
+    background: var(--brand-50);
+    border-radius: var(--radius-pill);
+    color: var(--brand-600);
+    font-size: 13px;
+  }
+}
+
+.formBox {
+  padding: 32px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-banner);
+
+  @include mq(md) {
+    padding: 20px;
+  }
+}
+
+.formTitle {
+  margin-bottom: 8px;
+
+  @include text-preset(h3);
+}
+
+.formLead {
+  margin-bottom: 24px;
+  color: var(--ink-600);
+
+  @include text-preset(caption);
+}
+
+.mapSection {
+  padding-top: 0;
+}
+
+.map {
+  aspect-ratio: 21 / 9;
+  background:
+    radial-gradient(80% 60% at 50% 50%, var(--brand-50), transparent 70%),
+    var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-banner);
+
+  @include mq(md) {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+.legal {
+  margin-top: 20px;
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}

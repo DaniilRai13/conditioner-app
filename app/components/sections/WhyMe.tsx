@@ -27,7 +27,7 @@ export function WhyMe() {
           <ul className={styles.points}>
             {brandPoints.map((p) => (
               <li key={p.title} className={styles.point}>
-                <IconBox icon={p.icon} tone="onBrand" />
+                <IconBox name={p.icon} tone="onBrand" />
                 <b className={styles.pointTitle}>{p.title}</b>
                 <span className={styles.pointText}>{p.text}</span>
               </li>

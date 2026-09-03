@@ -1,4 +1,6 @@
 import type { Config } from "@react-router/dev/config";
+import { services } from "./app/data/services";
+import { articles } from "./app/data/articles";
 
 export default {
   // Рантайм-сервера нет: сайт целиком уезжает на CDN статикой.
@@ -8,11 +10,17 @@ export default {
 
   // Лоадеры пререндеренных роутов выполняются на этапе сборки —
   // сюда же попадёт фетч каталога из Supabase (PLAN.md §5.2).
+  //
+  // getStaticPaths() отдаёт только статические роуты. Динамические
+  // (:slug) нужно перечислить руками: иначе они уедут в SPA-фолбэк
+  // и потеряют пререндер, а вместе с ним и SEO.
   async prerender({ getStaticPaths }) {
     return [
       ...getStaticPaths(),
-      // TODO: динамические пути из Supabase — категории, товары,
-      // решения, статьи. Появятся на этапе 3.
+      ...services.map((s) => `/services/${s.slug}`),
+      ...articles.map((a) => `/articles/${a.slug}`),
+      // TODO: /solutions/:slug, /catalog/:category, /product/:slug —
+      // появятся из Supabase на этапе 3.
     ];
   },
 } satisfies Config;

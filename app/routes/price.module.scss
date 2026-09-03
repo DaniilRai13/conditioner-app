@@ -1,0 +1,118 @@
+@use "mixins" as *;
+
+.top {
+  padding-top: 0;
+}
+
+// Таблица прокручивается внутри себя: на узких экранах страница
+// не должна ехать горизонтально целиком.
+.tableWrap {
+  overflow-x: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 520px;
+
+  th,
+  td {
+    padding: 14px 20px;
+    text-align: left;
+  }
+
+  th {
+    color: var(--ink-400);
+    font-weight: 600;
+    white-space: nowrap;
+
+    @include text-preset(caption);
+  }
+
+  tbody tr {
+    border-top: 1px solid var(--border);
+  }
+
+  td {
+    color: var(--ink-600);
+  }
+
+  td b {
+    color: var(--ink-900);
+  }
+}
+
+.price {
+  color: var(--ink-900);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.onRequest {
+  color: var(--ink-400);
+  font-weight: 400;
+}
+
+.notice {
+  margin-top: 16px;
+  padding: 16px 20px;
+  background: var(--brand-50);
+  border-radius: var(--radius-control);
+  color: var(--ink-600);
+
+  @include text-preset(caption);
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+
+  @include mq(md) {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+.subTitle {
+  margin-bottom: 8px;
+
+  @include text-preset(h3);
+}
+
+.subNote {
+  margin-bottom: 16px;
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+}
+
+.item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+
+  @include text-preset(body);
+}
+
+.check {
+  flex: none;
+  margin-top: 4px;
+  color: var(--brand-600);
+}
+
+.plus {
+  flex: none;
+  margin-top: 4px;
+  color: var(--ink-400);
+}

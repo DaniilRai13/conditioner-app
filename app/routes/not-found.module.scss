@@ -1,0 +1,70 @@
+@use "mixins" as *;
+
+.page {
+  @include section-gap;
+}
+
+.code {
+  color: var(--brand-600);
+  font-size: 64px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.title {
+  margin: 12px 0;
+
+  @include text-preset(h1);
+}
+
+.lead {
+  max-width: 56ch;
+  margin-bottom: 32px;
+
+  @include text-preset(body);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 48px;
+}
+
+.suggestTitle {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--ink-900);
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+}
+
+.link {
+  display: inline-block;
+  padding: 8px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  color: var(--ink-600);
+  text-decoration: none;
+
+  @include text-preset(caption);
+  @include focus-ring;
+
+  &:hover {
+    border-color: var(--brand-600);
+    color: var(--brand-600);
+  }
+}
+
+.call {
+  margin-top: 40px;
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}

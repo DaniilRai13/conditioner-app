@@ -1,0 +1,222 @@
+@use "mixins" as *;
+
+.top {
+  padding-top: 0;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 40px;
+  align-items: start;
+
+  @include mq(lg) {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+.main {
+  min-width: 0;
+}
+
+.blockTitle {
+  margin-bottom: 16px;
+
+  @include text-preset(h3);
+
+  &:not(:first-child) {
+    margin-top: 40px;
+  }
+}
+
+.note {
+  margin-bottom: 16px;
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}
+
+.checks {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+}
+
+.check {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+
+  @include text-preset(body);
+}
+
+.checkIcon {
+  flex: none;
+  margin-top: 4px;
+  color: var(--brand-600);
+}
+
+.plusIcon {
+  flex: none;
+  margin-top: 4px;
+  color: var(--ink-400);
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin: 0;
+
+  @include mq(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include mq(xxs) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stepNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-bottom: 6px;
+  background: var(--brand-50);
+  border-radius: var(--radius-pill);
+  color: var(--brand-600);
+  font-weight: 700;
+}
+
+.stepName {
+  color: var(--ink-900);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.stepText {
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}
+
+// --- боковая карточка ---
+
+.aside {
+  position: sticky;
+  top: 96px;
+
+  @include mq(lg) {
+    position: static;
+  }
+}
+
+.factCard {
+  gap: 20px;
+}
+
+.fact {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+
+  svg {
+    flex: none;
+    margin-top: 2px;
+    color: var(--brand-600);
+  }
+
+  b {
+    display: block;
+    color: var(--ink-900);
+    font-size: 15px;
+  }
+}
+
+.factText {
+  display: block;
+  margin-top: 2px;
+  color: var(--ink-600);
+
+  @include text-preset(caption);
+}
+
+.priceLink {
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-weight: 600;
+
+  @include text-preset(caption);
+  @include focus-ring;
+}
+
+// --- FAQ ---
+
+.faq {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.faqItem {
+  padding: 4px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+}
+
+.faqQuestion {
+  padding-block: 16px;
+  color: var(--ink-900);
+  font-weight: 600;
+  cursor: pointer;
+
+  @include focus-ring;
+}
+
+.faqAnswer {
+  padding-bottom: 16px;
+  color: var(--ink-600);
+
+  @include text-preset(body);
+}
+
+// --- другие услуги ---
+
+.other {
+  padding-top: 0;
+}
+
+.otherGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+
+  @include mq(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.otherCard {
+  gap: 8px;
+
+  b {
+    color: var(--ink-900);
+  }
+}
+
+.otherText {
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}

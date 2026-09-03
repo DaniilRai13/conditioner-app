@@ -1,0 +1,37 @@
+@use "mixins" as *;
+
+.nav {
+  margin-bottom: 20px;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin: 0;
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}
+
+.item {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.link {
+  color: var(--ink-400);
+  text-decoration: none;
+
+  @include focus-ring;
+
+  &:hover {
+    color: var(--brand-600);
+  }
+}
+
+.sep {
+  color: var(--border);
+}

@@ -14,7 +14,7 @@ export function ServicesPreview() {
       <div className={styles.grid}>
         {services.map((s) => (
           <Card key={s.slug} to={`/services/${s.slug}`} className={styles.card}>
-            <IconBox icon={s.icon} />
+            <IconBox name={s.icon} />
             <b className={styles.title}>{s.title}</b>
             <span className={styles.text}>{s.short}</span>
             <span className={styles.more}>

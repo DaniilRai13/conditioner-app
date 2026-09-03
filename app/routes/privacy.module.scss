@@ -1,0 +1,36 @@
+@use "mixins" as *;
+
+.top {
+  padding-top: 0;
+}
+
+.doc {
+  max-width: 72ch;
+
+  h2 {
+    margin: 40px 0 12px;
+
+    @include text-preset(h3);
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  p {
+    margin-bottom: 12px;
+
+    @include text-preset(body);
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+    padding-left: 20px;
+    list-style: disc;
+
+    @include text-preset(body);
+  }
+}

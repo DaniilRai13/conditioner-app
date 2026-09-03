@@ -1,0 +1,68 @@
+@use "mixins" as *;
+
+.top {
+  padding-top: 0;
+}
+
+.intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: 40px;
+  align-items: start;
+
+  @include mq(lg) {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.paragraph {
+  max-width: 62ch;
+
+  @include text-preset(body);
+}
+
+.photo {
+  aspect-ratio: 4 / 5;
+  background:
+    radial-gradient(100% 80% at 50% 20%, var(--brand-50), transparent 70%),
+    var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-banner);
+
+  @include mq(lg) {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+.principles {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+
+  @include mq(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.principle {
+  gap: 8px;
+}
+
+.principleTitle {
+  color: var(--ink-900);
+
+  @include text-preset(h3);
+}
+
+.principleText {
+  color: var(--ink-600);
+
+  @include text-preset(body);
+}

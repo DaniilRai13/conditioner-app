@@ -36,7 +36,7 @@ export function Hero() {
         <ul className={styles.advantages}>
           {advantages.map((item) => (
             <li key={item.title} className={styles.advantage}>
-              <IconBox icon={item.icon} />
+              <IconBox name={item.icon} />
               <span className={styles.advantageText}>
                 <b className={styles.advantageTitle}>{item.title}</b>
                 <span className={styles.advantageNote}>{item.text}</span>

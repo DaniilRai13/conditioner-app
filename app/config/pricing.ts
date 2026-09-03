@@ -23,6 +23,22 @@ export const INSTALL_PRICE = {
 
 export const PRICE_MODE: "split" | "turnkey" = "split";
 
+/**
+ * Пока false — на странице цен вместо чисел стоит «по запросу».
+ * Публиковать выдуманный прайс нельзя: клиент приедет с этой цифрой,
+ * а она ничем не подтверждена. Включаем, когда заказчик пришлёт реальный.
+ */
+export const PRICES_CONFIRMED = false;
+
+/** Строки прайса на монтаж. Мощность в BTU — так их маркируют производители. */
+export const installRows = [
+  { btu: "07", kw: "2,0", area: "до 20 м²", price: INSTALL_PRICE.upTo25m2 },
+  { btu: "09", kw: "2,6", area: "до 25 м²", price: INSTALL_PRICE.upTo25m2 },
+  { btu: "12", kw: "3,5", area: "до 35 м²", price: INSTALL_PRICE.upTo50m2 },
+  { btu: "18", kw: "5,3", area: "до 50 м²", price: INSTALL_PRICE.upTo50m2 },
+  { btu: "24", kw: "7,0", area: "до 70 м²", price: INSTALL_PRICE.over50m2 },
+] as const;
+
 /** Округление цены «от» вверх, до кратного. */
 export const PRICE_ROUNDING = 50;
 

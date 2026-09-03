@@ -1,0 +1,20 @@
+@use "mixins" as *;
+
+.header {
+  padding-block: 32px 40px;
+
+  @include mq(md) {
+    padding-block: 24px 28px;
+  }
+}
+
+.title {
+  @include text-preset(h1);
+}
+
+.lead {
+  max-width: 62ch;
+  margin-top: 16px;
+
+  @include text-preset(body);
+}
