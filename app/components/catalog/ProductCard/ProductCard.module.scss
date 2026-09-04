@@ -67,14 +67,15 @@
 
 .badge {
   position: absolute;
-  top: 0.5rem;
-  left: 0.5rem;
+  top: 0;
+  left: 0;
   padding: 0.1875rem 0.5rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-pill);
-  color: var(--ink-400);
-  font-size: 0.75rem;
+  background: var(--border);
+  border-radius: 0 0 var(--radius-control) 0;
+  color: var(--ink-600);
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  white-space: nowrap;
 }
 
 .brand {
@@ -155,6 +156,10 @@
 // --- горизонтальный вариант: картинка слева, текст справа ---
 
 @mixin horizontal {
+  // Система координат для бейджа: он должен встать в угол карточки,
+  // а не поверх картинки шириной в пять рем.
+  position: relative;
+
   // Пропорции — через переменную, а не селектором .row .media: иначе
   // правило вариантов пропорций перебивало бы её по порядку в файле.
   --media-aspect: 1 / 1;
@@ -165,9 +170,20 @@
   padding: 0.875rem;
 
   .media {
+    // static, чтобы бейдж отсчитывался от карточки. Overflow здесь
+    // его не режет: обрезка действует только на потомков, чей контейнер
+    // лежит внутри неё, а у бейджа он теперь снаружи.
+    position: static;
     flex: none;
     width: 6.5rem;
     margin-bottom: 0;
+  }
+
+  .badge {
+    top: 0;
+    right: 0;
+    left: auto;
+    border-radius: 0 0 0 var(--radius-control);
   }
 
   .body {
