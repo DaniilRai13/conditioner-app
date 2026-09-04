@@ -144,10 +144,15 @@
   // На телефоне опускается ещё ниже — под заголовок, кнопки и полосу преимуществ.
   @include mq(sm) {
     top: auto;
-    right: -18%;
-    bottom: -1.5rem;
+    right: -9%;
+    bottom: 1.5rem;
     width: 130vw;
   }
+  @include mq(xs) {
+   display: none;
+  }
+
+  
 }
 
 // --- полоса преимуществ ---
