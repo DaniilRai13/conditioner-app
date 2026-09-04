@@ -2,6 +2,8 @@
 
 .card {
   height: 100%;
+  // Иначе элемент сетки не может стать уже своего содержимого.
+  min-width: 0;
   display: flex;
   flex-direction: column;
   padding: 1rem 1rem 1.25rem;
@@ -188,7 +190,11 @@
     margin-bottom: 0.625rem;
   }
 
+  // Перенос обязателен: цена с подписью и бейдж «Инвертор» вместе шире,
+  // чем остаётся места под текст на узком экране.
   .footer {
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
     align-items: center;
   }
 
@@ -200,6 +206,22 @@
     align-items: baseline;
     font-size: 1.0625rem;
     white-space: nowrap;
+  }
+
+  // Но запрет переноса не должен наследоваться на подпись: вместе
+  // с числом она становилась неразрывной строкой и распирала карточку.
+  .priceNote {
+    white-space: normal;
+  }
+
+  @include mq(xxs) {
+    .media {
+      width: 5rem;
+    }
+
+    .price {
+      font-size: 1rem;
+    }
   }
 }
 
