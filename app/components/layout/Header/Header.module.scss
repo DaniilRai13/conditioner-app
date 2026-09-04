@@ -82,62 +82,75 @@
 }
 
 // --- мобильная шторка ---
+//
+// Панель справа поверх затемнения, как в alex-build. Полностью экран
+// закрывает только на телефонах: на планшете сквозь затемнение видно
+// страницу, и понятно, что меню — это слой поверх, а не переход.
+//
+// Движение целиком на framer-motion (app/lib/animations.ts): вход, выход
+// и очерёдность пунктов. Здесь только раскладка и цвета.
 
-.mobile {
+.overlay {
   position: fixed;
-  z-index: 30;
+  z-index: 39;
   inset: 0;
-  background: var(--bg);
-  overflow-y: auto;
-  animation: appear 180ms ease;
+  background: rgb(0 0 0 / 45%);
 }
 
-// Появление гасится глобально при prefers-reduced-motion (см. _reset.scss).
-@keyframes appear {
-  from {
-    opacity: 0;
-    transform: translateY(-0.5rem);
+.panel {
+  position: fixed;
+  z-index: 40;
+  inset: 0 0 0 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand-600);
+
+  @include mq(md) {
+    inset: 0 0 0 30%;
+  }
+
+  @include mq(sm) {
+    inset: 0;
   }
 }
 
-.mobileInner {
-  display: flex;
-  flex-direction: column;
-  min-height: 100dvh;
-  padding-block: 1rem 2rem;
-}
-
-.mobileTop {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 3.5rem;
-}
-
 .close {
-  flex: none;
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
   width: 2.75rem;
   height: 2.75rem;
   background: transparent;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-control);
-  color: var(--ink-900);
+  border: none;
+  color: #fff;
 
   @include focus-ring;
 }
 
+.panelInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 20rem;
+  padding: 1rem;
+}
+
 .mobileNav {
   display: flex;
-  flex: 1;
   flex-direction: column;
-  margin-top: 1.5rem;
+  align-items: center;
+  margin-bottom: 2rem;
 }
 
 .mobileLink {
-  padding: 1rem 0;
-  border-bottom: 1px solid var(--border);
-  color: var(--ink-900);
-  font-size: 1.25rem;
+  // NavLink рендерит инлайновый <a>: вертикальный padding на нём
+  // не раздвигал бы соседей.
+  display: block;
+  padding: 0.5rem 0;
+  color: #fff;
+  font-size: 1.75rem;
   font-weight: 600;
   text-decoration: none;
 
@@ -145,7 +158,26 @@
 }
 
 .mobileActive {
+  text-decoration: underline;
+  text-underline-offset: 0.375rem;
+}
+
+.mobileActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+// Инверсия основной кнопки: на фирменном фоне синяя кнопка потерялась бы.
+.mobileCta {
+  background: #fff;
   color: var(--brand-600);
+
+  &:hover {
+    background: rgb(255 255 255 / 88%);
+    color: var(--brand-600);
+  }
 }
 
 .call {
@@ -154,26 +186,19 @@
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: rgb(255 255 255 / 12%);
+  border: 1px solid rgb(255 255 255 / 32%);
   border-radius: var(--radius-control);
-  color: var(--ink-900);
+  color: #fff;
   font-weight: 600;
   text-decoration: none;
 
   @include focus-ring;
 }
 
-.mobileActions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
-}
-
 .hours {
   margin-top: 0.25rem;
-  color: var(--ink-400);
+  color: rgb(255 255 255 / 72%);
   text-align: center;
 
   @include text-preset(caption);

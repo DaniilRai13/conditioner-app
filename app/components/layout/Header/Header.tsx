@@ -1,18 +1,29 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { NavLink, useLocation } from "react-router";
 import { Menu, X, Phone } from "lucide-react";
 import { Container } from "~/components/ui/Container/Container";
 import { Button } from "~/components/ui/Button/Button";
 import { Logo } from "../Logo/Logo";
 import { headerNav, site } from "~/config/site";
+import {
+  overlayVariants,
+  menuVariants,
+  navVariants,
+  navItemVariants,
+} from "~/lib/animations";
 import styles from "./Header.module.scss";
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const location = useLocation();
   const burgerRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
+
+  // Портал бьёт в document.body, которого нет во время пререндера.
+  useEffect(() => setMounted(true), []);
 
   // Закрываем меню при переходе: без этого после клика по пункту
   // остаётся открытая шторка поверх новой страницы.
@@ -127,60 +138,102 @@ export function Header() {
       {/* Шторка уезжает в body, а не остаётся внутри <header>.
           У шапки backdrop-filter, а он создаёт containing block для
           position: fixed — внутри неё inset: 0 меряется от шапки,
-          и меню схлопывается в полоску высотой 4.5rem. */}
-      {open &&
+          и меню схлопывается в полоску высотой 4.5rem.
+
+          AnimatePresence должен быть смонтирован постоянно, иначе он не
+          успеет проиграть выход. Поэтому в портал уходит он сам,
+          а не результат проверки open. */}
+      {mounted &&
         createPortal(
-          <div
-            ref={dialogRef}
-            className={styles.mobile}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Меню"
-          >
-            <Container className={styles.mobileInner}>
-              {/* Логотип остаётся на месте: без него при открытии меню
-                бренд пропадает, и шторка выглядит чужой страницей. */}
-              <div className={styles.mobileTop}>
-                <Logo />
-                <button
-                  type="button"
-                  className={styles.close}
-                  aria-label="Закрыть меню"
-                  onClick={() => setOpen(false)}
-                >
-                  <X size={24} aria-hidden />
-                </button>
-              </div>
+          <MotionConfig reducedMotion="user">
+            <AnimatePresence>
+              {open && (
+                <>
+                  {/* Затемнение кликабельно: закрыть промахом мимо панели —
+                      привычный жест, и он быстрее, чем целиться в крестик. */}
+                  <motion.div
+                    className={styles.overlay}
+                    variants={overlayVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    onClick={() => setOpen(false)}
+                    aria-hidden
+                  />
 
-              <nav className={styles.mobileNav} aria-label="Основное меню">
-                {headerNav.map((item) => (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    end={item.to === "/"}
-                    className={({ isActive }) =>
-                      isActive
-                        ? `${styles.mobileLink} ${styles.mobileActive}`
-                        : styles.mobileLink
-                    }
+                  <motion.div
+                    ref={dialogRef}
+                    className={styles.panel}
+                    variants={menuVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Меню"
                   >
-                    {item.label}
-                  </NavLink>
-                ))}
-              </nav>
+                    <button
+                      type="button"
+                      className={styles.close}
+                      aria-label="Закрыть меню"
+                      onClick={() => setOpen(false)}
+                    >
+                      <X size={30} aria-hidden />
+                    </button>
 
-              <div className={styles.mobileActions}>
-                <Button to="/contacts" size="lg">
-                  Связаться
-                </Button>
-                <a className={styles.call} href={site.phoneHref}>
-                  <Phone size={18} aria-hidden />
-                  {site.phone}
-                </a>
-                <span className={styles.hours}>{site.workHours}</span>
-              </div>
-            </Container>
-          </div>,
+                    <motion.div
+                      className={styles.panelInner}
+                      variants={navVariants}
+                      initial="hidden"
+                      animate="visible"
+                    >
+                      <nav
+                        className={styles.mobileNav}
+                        aria-label="Основное меню"
+                      >
+                        {headerNav.map((item) => (
+                          <motion.div key={item.to} variants={navItemVariants}>
+                            <NavLink
+                              to={item.to}
+                              end={item.to === "/"}
+                              className={({ isActive }) =>
+                                isActive
+                                  ? `${styles.mobileLink} ${styles.mobileActive}`
+                                  : styles.mobileLink
+                              }
+                            >
+                              {item.label}
+                            </NavLink>
+                          </motion.div>
+                        ))}
+                      </nav>
+
+                      <motion.div
+                        className={styles.mobileActions}
+                        variants={navItemVariants}
+                      >
+                        <Button
+                          to="/contacts"
+                          size="lg"
+                          className={styles.mobileCta}
+                        >
+                          Связаться
+                        </Button>
+                        {/* Телефон оставлен, хотя в alex-build его нет: там
+                            сайт ведёт в форму, а тут звонок — основной
+                            способ оставить заявку. */}
+                        <a className={styles.call} href={site.phoneHref}>
+                          <Phone size={18} aria-hidden />
+                          {site.phone}
+                        </a>
+                        <span className={styles.hours}>{site.workHours}</span>
+                      </motion.div>
+                    </motion.div>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
+          </MotionConfig>,
           document.body,
         )}
     </header>

@@ -86,7 +86,7 @@ node -e "require('./node_modules/@rolldown/binding-win32-x64-msvc/rolldown-bindi
 ### Версии на старте (проверено 2026-09-03)
 `vite@8.1.5` (закреплено) · `react-router@8.3.1` · `@react-router/dev@8.3.1`
 `react@19.2.8` · `sass@1.103.1` · `react-hook-form@7.87.0` · `zod@4.5.4`
-`@hookform/resolvers@5.9.1` · `@supabase/supabase-js@2.115.0`
+`@hookform/resolvers@5.9.1` · `@supabase/supabase-js@2.115.0` · `framer-motion@12.43.0`
 
 ---
 

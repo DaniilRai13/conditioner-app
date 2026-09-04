@@ -1885,7 +1885,7 @@
     "type": "mobile",
     "price": 960,
     "inStock": true,
-    "image": "/catalog/ballu-orbis-bpac-07-or-n6.webp",
+    "image": "/catalog/ballu-orbis-bpac-07-or-n6.jpeg",
     "specs": {
       "areaM2": 18,
       "coolingKw": 2,
@@ -2096,7 +2096,7 @@
     "type": "mobile",
     "price": 2640,
     "inStock": false,
-    "image": "/catalog/ballu-bpac-20-ce-20y.webp",
+    "image": "/catalog/ballu-bpac-20-ce-20y.jpeg",
     "specs": {
       "areaM2": 55,
       "coolingKw": 6,

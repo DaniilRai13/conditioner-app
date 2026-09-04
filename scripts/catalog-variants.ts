@@ -29,8 +29,12 @@ console.log(`Мастеров: ${masters.length}\n`);
 
 let total = 0;
 for (const path of masters as string[]) {
-  const base = path.replace("/catalog/", "").replace(/\.webp$/, "");
-  const image = await decodeImage(await readFile(`${IMAGE_DIR}/${base}.webp`));
+  // Расширение мастера не фиксируем: снимок мог быть пересохранён в редакторе
+  // как jpeg или png, и подстраиваться под скрипт незачем — формат
+  // распознаётся по сигнатуре файла, а не по имени.
+  const file = path.replace("/catalog/", "");
+  const base = file.replace(/\.[a-z]+$/i, "");
+  const image = await decodeImage(await readFile(`${IMAGE_DIR}/${file}`));
   const bytes = await writeVariants(image, {
     outDir: IMAGE_DIR,
     base,
