@@ -40,7 +40,10 @@ export default function CatalogCategory({ loaderData }: Route.ComponentProps) {
       <PageHeader
         title={`${category.h1} в Минске`}
         lead={category.lead}
-        crumbs={[{ label: "Каталог", to: "/catalog" }, { label: category.title }]}
+        crumbs={[
+          { label: "Каталог", to: "/catalog" },
+          { label: category.title },
+        ]}
       />
 
       <Section className={styles.top}>
@@ -60,7 +63,11 @@ export default function CatalogCategory({ loaderData }: Route.ComponentProps) {
       <Section title="Другие категории" className={styles.others}>
         <nav className={styles.links} aria-label="Другие категории">
           {others.map((c) => (
-            <Link key={c.slug} to={`/catalog/${c.slug}`} className={styles.link}>
+            <Link
+              key={c.slug}
+              to={`/catalog/${c.slug}`}
+              className={styles.link}
+            >
               {c.title}
             </Link>
           ))}

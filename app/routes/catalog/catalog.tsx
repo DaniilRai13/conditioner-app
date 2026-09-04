@@ -45,7 +45,11 @@ export default function Catalog({ loaderData }: Route.ComponentProps) {
       <Section className={styles.top}>
         <nav className={styles.categories} aria-label="Категории каталога">
           {categories.map((c) => (
-            <Link key={c.slug} to={`/catalog/${c.slug}`} className={styles.category}>
+            <Link
+              key={c.slug}
+              to={`/catalog/${c.slug}`}
+              className={styles.category}
+            >
               <b>{c.title}</b>
               <span>{c.count} моделей</span>
             </Link>
