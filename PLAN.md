@@ -1036,7 +1036,44 @@ type Lead = {
 
 ---
 
-## 13. Журнал изменений плана
+## 13. Что изучить по стеку
+
+Проект написан на **framework mode** React Router — это не тот роутинг, который
+объявляется через `<Routes><Route/></Routes>`. Ссылки проверены 2026-09-04.
+
+- [ ] **[Три режима React Router](https://reactrouter.com/start/modes)** — начать отсюда.
+      `<Routes>` это declarative mode, есть ещё data mode и framework mode. Станет понятно,
+      что framework mode — не новый синтаксис, а другой уровень: маршруты объявлены
+      данными в `app/routes.ts`, чтобы сборщик прочитал их **до запуска приложения**
+      и разложил страницы по HTML-файлам. С JSX-разметкой так нельзя — её надо выполнить.
+- [ ] **[Route Module](https://reactrouter.com/start/framework/route-module)** — самая
+      важная. Файл роута не просто компонент, а модуль с несколькими ролями:
+      компонент рисует, `loader` даёт данные, `meta` отвечает за метатеги.
+      Роутер читает их по именам экспортов.
+- [ ] [Routing](https://reactrouter.com/start/framework/routing) — `index()`, `route()`,
+      вложенность. У нас это `app/routes.ts`.
+- [ ] [Data Loading](https://reactrouter.com/start/framework/data-loading) — откуда
+      берётся `loaderData` в пропсах компонента.
+- [ ] [Rendering](https://reactrouter.com/start/framework/rendering) — SSR, SPA
+      и пререндер. Наш `ssr: false` описан там.
+- [ ] **[Pre-rendering](https://reactrouter.com/how-to/pre-rendering)** — на этом стоит
+      весь сайт, отсюда взят `react-router.config.ts`.
+- [ ] [Переезд с component routes](https://reactrouter.com/upgrading/component-routes) —
+      путь от `<Routes>` к текущему устройству, показывает что во что превращается.
+
+**Живые примеры в проекте**, чтобы читать доки со сверкой:
+
+| Что смотреть | Файл |
+|---|---|
+| Простой роут без данных | `app/routes/about/about.tsx` |
+| Лоадер и параметр URL | `app/routes/catalog/catalog-category.tsx` |
+| Все экспорты сразу: `loader`, `links`, `meta`, компонент | `app/routes/home/home.tsx` |
+| Корень с `Outlet` и `ErrorBoundary` | `app/root.tsx` |
+| Сгенерированные типы — откуда `Route.ComponentProps` знает форму данных | `.react-router/types/` |
+
+---
+
+## 14. Журнал изменений плана
 
 | Дата | Что изменилось |
 |---|---|
