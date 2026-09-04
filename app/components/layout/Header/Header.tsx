@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router";
 import { Menu, X, Phone } from "lucide-react";
 import { Container } from "~/components/ui/Container/Container";
@@ -10,6 +10,8 @@ import styles from "./Header.module.scss";
 export function Header() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const burgerRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   // Закрываем меню при переходе: без этого после клика по пункту
   // остаётся открытая шторка поверх новой страницы.
@@ -25,13 +27,55 @@ export function Header() {
     };
   }, [open]);
 
+  /**
+   * Управление фокусом. При открытии он уходит внутрь шторки, при закрытии
+   * возвращается на кнопку — иначе после Escape человек с клавиатуры
+   * оказывается в начале страницы и не понимает, где он был.
+   *
+   * Плюс ловушка: Tab не должен уводить на страницу, скрытую под шторкой.
+   */
   useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    if (!open) {
+      burgerRef.current?.focus();
+      return;
+    }
+
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    const focusable = () =>
+      Array.from(
+        dialog.querySelectorAll<HTMLElement>(
+          "a[href], button:not([disabled]), [tabindex]:not([tabindex='-1'])"
+        )
+      );
+
+    focusable()[0]?.focus();
+
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (e.key !== "Tab") return;
+
+      const items = focusable();
+      if (items.length === 0) return;
+
+      const first = items[0];
+      const last = items[items.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
   return (
@@ -61,6 +105,7 @@ export function Header() {
           </Button>
 
           <button
+            ref={burgerRef}
             type="button"
             className={styles.burger}
             aria-label="Открыть меню"
@@ -73,20 +118,39 @@ export function Header() {
       </Container>
 
       {open && (
-        <div className={styles.mobile} role="dialog" aria-label="Меню">
+        <div
+          ref={dialogRef}
+          className={styles.mobile}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Меню"
+        >
           <Container className={styles.mobileInner}>
-            <button
-              type="button"
-              className={styles.close}
-              aria-label="Закрыть меню"
-              onClick={() => setOpen(false)}
-            >
-              <X size={24} aria-hidden />
-            </button>
+            {/* Логотип остаётся на месте: без него при открытии меню
+                бренд пропадает, и шторка выглядит чужой страницей. */}
+            <div className={styles.mobileTop}>
+              <Logo />
+              <button
+                type="button"
+                className={styles.close}
+                aria-label="Закрыть меню"
+                onClick={() => setOpen(false)}
+              >
+                <X size={24} aria-hidden />
+              </button>
+            </div>
 
             <nav className={styles.mobileNav} aria-label="Основное меню">
               {nav.map((item) => (
-                <NavLink key={item.to} to={item.to} className={styles.mobileLink}>
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${styles.mobileLink} ${styles.mobileActive}`
+                      : styles.mobileLink
+                  }
+                >
                   {item.label}
                 </NavLink>
               ))}
@@ -100,6 +164,7 @@ export function Header() {
                 <Phone size={18} aria-hidden />
                 {site.phone}
               </a>
+              <span className={styles.hours}>{site.workHours}</span>
             </div>
           </Container>
         </div>

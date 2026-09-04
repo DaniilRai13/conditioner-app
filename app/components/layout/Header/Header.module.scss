@@ -89,18 +89,33 @@
   inset: 0;
   background: var(--bg);
   overflow-y: auto;
+  animation: appear 180ms ease;
+}
+
+// Появление гасится глобально при prefers-reduced-motion (см. _reset.scss).
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
 }
 
 .mobileInner {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
   min-height: 100dvh;
-  padding-block: 1.25rem 2rem;
+  padding-block: 1rem 2rem;
+}
+
+.mobileTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 3.5rem;
 }
 
 .close {
-  align-self: flex-end;
+  flex: none;
   width: 2.75rem;
   height: 2.75rem;
   background: transparent;
@@ -115,12 +130,11 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 0.25rem;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 
 .mobileLink {
-  padding: 0.875rem 0;
+  padding: 1rem 0;
   border-bottom: 1px solid var(--border);
   color: var(--ink-900);
   font-size: 1.25rem;
@@ -128,6 +142,10 @@
   text-decoration: none;
 
   @include focus-ring;
+}
+
+.mobileActive {
+  color: var(--brand-600);
 }
 
 .call {
@@ -151,4 +169,12 @@
   flex-direction: column;
   gap: 0.75rem;
   margin-top: 1.5rem;
+}
+
+.hours {
+  margin-top: 0.25rem;
+  color: var(--ink-400);
+  text-align: center;
+
+  @include text-preset(caption);
 }
