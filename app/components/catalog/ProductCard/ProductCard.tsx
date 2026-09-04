@@ -64,35 +64,19 @@ export function ProductCard({
     .filter(Boolean)
     .join(" ");
 
-  // В горизонтальной раскладке картинка всегда маленькая, в вертикальной —
-  // во всю ширину колонки. Точнее без контейнерных запросов не сказать.
-  const sizes =
-    layout === "row"
-      ? "7rem"
-      : "(max-width: 640px) 90vw, (max-width: 1024px) 44vw, 22vw";
-
   return (
     <Link to={`/product/${product.slug}`} className={className}>
       <div className={styles.media}>
         {image ? (
-          <picture>
-            <source
-              type="image/avif"
-              srcSet={`${image}-400.avif 400w, ${image}-800.avif 800w`}
-              sizes={sizes}
-            />
-            <img
-              className={styles.image}
-              src={`${image}-400.webp`}
-              srcSet={`${image}-400.webp 400w, ${image}-800.webp 800w`}
-              sizes={sizes}
-              alt={name}
-              width={400}
-              height={400}
-              loading={eager ? "eager" : "lazy"}
-              decoding="async"
-            />
-          </picture>
+          <img
+            className={styles.image}
+            src={image}
+            alt={name}
+            width={800}
+            height={800}
+            loading={eager ? "eager" : "lazy"}
+            decoding="async"
+          />
         ) : (
           <div className={styles.noImage} aria-hidden />
         )}

@@ -12,7 +12,8 @@
     "lint:css": "stylelint \"app/**/*.scss\"",
     "format": "prettier --write \"app/**/*.{ts,tsx,scss}\"",
     "check:quiz": "node scripts/check-quiz.ts",
-    "import:catalog": "node scripts/import-catalog.ts"
+    "import:catalog": "node scripts/import-catalog.ts",
+    "catalog:variants": "node scripts/catalog-variants.ts"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.3.0",

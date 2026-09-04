@@ -7,7 +7,8 @@ import {
   stripSupplierPitch,
   typeFromCategory,
 } from "./lib/normalize.ts";
-import { initCodecs, decodeImage, writeVariants } from "./lib/images.ts";
+import { createHash } from "node:crypto";
+import { initCodecs, decodeImage, writeMaster } from "./lib/images.ts";
 import { MARKUP } from "../app/config/pricing.ts";
 import type { Product, ProductTier } from "../app/types/product.ts";
 
@@ -89,7 +90,6 @@ type ApiProduct = {
  * под них не написать.
  */
 const IMAGE_DIR = "public/catalog";
-const IMAGE_WIDTHS = [400, 800];
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -151,12 +151,17 @@ function buildSlug(
 }
 
 /**
- * Качает главное фото товара и раскладывает в avif+webp двух ширин.
- * Возвращает базовый путь без размера и расширения, либо null.
+ * Одна картинка на товар, в полном разрешении и без вариантов.
+ * Возвращает путь вида `/catalog/<slug>.webp`, либо null.
+ *
+ * Это мастер-файл: его правят руками (водяной знак поставщика),
+ * а размеры и форматы для сайта потом собирает `catalog:variants`.
  *
  * Хотлинк на чужой домен не используем: имена файлов у поставщика
  * кириллические, и их в любой момент могут переименовать или убрать.
  */
+const imagesByHash = new Map<string, string>();
+
 async function importImage(
   src: string | undefined,
   slug: string
@@ -167,13 +172,21 @@ async function importImage(
     if (!res.ok) return null;
 
     const buffer = Buffer.from(await res.arrayBuffer());
+
+    // Производитель снимает одну фотографию на всю серию: у 07, 09 и 18 BTU
+    // корпус один и тот же. Второй раз тот же файл не пишем — иначе браузер
+    // качает побайтово одинаковые картинки по разным адресам, а чистить
+    // водяной знак пришлось бы на каждой копии отдельно.
+    const hash = createHash("md5").update(buffer).digest("hex");
+    const seen = imagesByHash.get(hash);
+    if (seen) return seen;
+
     const image = await decodeImage(buffer);
-    await writeVariants(image, {
-      outDir: IMAGE_DIR,
-      base: slug,
-      widths: IMAGE_WIDTHS,
-    });
-    return `/catalog/${slug}`;
+    await writeMaster(image, { outDir: IMAGE_DIR, base: slug });
+
+    const path = `/catalog/${slug}.webp`;
+    imagesByHash.set(hash, path);
+    return path;
   } catch (e) {
     // Не глушим молча: без этого товар просто оказывается без картинки,
     // и причину приходится искать вручную.

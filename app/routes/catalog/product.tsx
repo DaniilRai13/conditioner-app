@@ -110,24 +110,15 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
         <div className={styles.columns}>
           <div className={styles.gallery}>
             {product.image ? (
-              <picture>
-                <source
-                  type="image/avif"
-                  srcSet={`${product.image}-400.avif 400w, ${product.image}-800.avif 800w`}
-                  sizes="(max-width: 640px) 20rem, (max-width: 1024px) 38vw, 40vw"
-                />
-                <img
-                  className={styles.image}
-                  src={`${product.image}-800.webp`}
-                  srcSet={`${product.image}-400.webp 400w, ${product.image}-800.webp 800w`}
-                  sizes="(max-width: 640px) 20rem, (max-width: 1024px) 38vw, 40vw"
-                  alt={product.name}
-                  width={800}
-                  height={800}
-                  fetchPriority="high"
-                  decoding="async"
-                />
-              </picture>
+              <img
+                className={styles.image}
+                src={product.image}
+                alt={product.name}
+                width={800}
+                height={800}
+                fetchPriority="high"
+                decoding="async"
+              />
             ) : (
               <div className={styles.noImage} aria-hidden />
             )}
@@ -183,6 +174,23 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
         </div>
       </Section>
 
+        {Object.keys(specs.extra).length > 0 && (
+          <Section title="Все характеристики" className={styles.specsSection}>
+            <details className={styles.specsDetails}>
+              <summary className={styles.specsSummary}>
+                Показать полную таблицу ({Object.keys(specs.extra).length} параметров)
+              </summary>
+              <dl className={styles.specsTable}>
+                {Object.entries(specs.extra).map(([name, value]) => (
+                  <div key={name} className={styles.specsRow}>
+                    <dt>{name}</dt>
+                    <dd>{value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </details>
+          </Section>
+        )}
       <Section title="Оставить заявку на эту модель">
         <LeadForm
           source="product"
@@ -191,23 +199,6 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
         />
       </Section>
 
-      {Object.keys(specs.extra).length > 0 && (
-        <Section title="Все характеристики" className={styles.specsSection}>
-          <details className={styles.specsDetails}>
-            <summary className={styles.specsSummary}>
-              Показать полную таблицу ({Object.keys(specs.extra).length} параметров)
-            </summary>
-            <dl className={styles.specsTable}>
-              {Object.entries(specs.extra).map(([name, value]) => (
-                <div key={name} className={styles.specsRow}>
-                  <dt>{name}</dt>
-                  <dd>{value}</dd>
-                </div>
-              ))}
-            </dl>
-          </details>
-        </Section>
-      )}
 
       {similar.length > 0 && (
         <Section title="Похожие модели">

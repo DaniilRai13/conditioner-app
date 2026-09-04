@@ -141,4 +141,30 @@ export async function writeVariants(
   return total;
 }
 
+/**
+ * Один файл на изображение, в полном разрешении. Это мастер: его правят
+ * руками (например, убирают водяной знак), а варианты для сайта
+ * генерируются из него отдельным скриптом.
+ *
+ * WebP, а не PNG: у поставщика исходники и так сжаты с потерями,
+ * перегонять их в PNG значит раздуть файл втрое без выигрыша в качестве.
+ */
+export async function writeMaster(
+  image: RawImage,
+  { outDir, base, maxWidth = 1000 }: { outDir: string; base: string; maxWidth?: number }
+): Promise<number> {
+  await mkdir(outDir, { recursive: true });
+
+  const scaled =
+    image.width <= maxWidth
+      ? image
+      : downscale(image, maxWidth, Math.round((image.height / image.width) * maxWidth));
+
+  // Качество выше обычного: файл ещё будут открывать в редакторе
+  // и пересохранять, потери накапливаются.
+  const encoded = await encodeWebp(scaled as unknown as ImageData, { quality: 90 });
+  await writeFile(join(outDir, `${base}.webp`), Buffer.from(encoded));
+  return encoded.byteLength;
+}
+
 export const kb = (bytes: number) => `${(bytes / 1024).toFixed(0)} КБ`;

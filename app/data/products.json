@@ -8,7 +8,7 @@
     "type": "split",
     "price": 1900,
     "inStock": true,
-    "image": "/catalog/electrolux-monaco-eacs-i-07hm-n8",
+    "image": "/catalog/electrolux-monaco-eacs-i-07hm-n8.webp",
     "specs": {
       "areaM2": 20,
       "coolingKw": 2.2,
@@ -71,7 +71,7 @@
     "type": "split",
     "price": 1190,
     "inStock": true,
-    "image": "/catalog/royal-clima-aria-dc-inverter-2026-rci-are28hn",
+    "image": "/catalog/royal-clima-aria-dc-inverter-2026-rci-are28hn.webp",
     "specs": {
       "areaM2": 25,
       "coolingKw": 2.68,
@@ -142,7 +142,7 @@
     "type": "split",
     "price": 1390,
     "inStock": true,
-    "image": "/catalog/royal-clima-aria-dc-inverter-2026-rci-are35hn",
+    "image": "/catalog/royal-clima-aria-dc-inverter-2026-rci-are28hn.webp",
     "specs": {
       "areaM2": 35,
       "coolingKw": 3.55,
@@ -213,7 +213,7 @@
     "type": "split",
     "price": 2810,
     "inStock": true,
-    "image": "/catalog/haier-coral-dc-as50hpl2hra-1u50hpl1fra",
+    "image": "/catalog/haier-coral-dc-as50hpl2hra-1u50hpl1fra.webp",
     "specs": {
       "areaM2": 42,
       "coolingKw": 4.8,
@@ -282,7 +282,7 @@
     "type": "split",
     "price": 2986,
     "inStock": true,
-    "image": "/catalog/royal-clima-vela-nuova-inverter-rci-vne55hn",
+    "image": "/catalog/royal-clima-vela-nuova-inverter-rci-vne55hn.webp",
     "specs": {
       "areaM2": 53,
       "coolingKw": 5.28,
@@ -350,7 +350,7 @@
     "type": "split",
     "price": 1020,
     "inStock": true,
-    "image": "/catalog/haier-hsu-07hqj103-r3-w",
+    "image": "/catalog/haier-hsu-07hqj103-r3-w.webp",
     "specs": {
       "areaM2": 20,
       "coolingKw": 2.05,
@@ -422,7 +422,7 @@
     "type": "split",
     "price": 975,
     "inStock": true,
-    "image": "/catalog/royal-clima-vela-nuova-rc-vne22hn",
+    "image": "/catalog/royal-clima-vela-nuova-rc-vne22hn.webp",
     "specs": {
       "areaM2": 22,
       "coolingKw": 2.15,
@@ -490,7 +490,7 @@
     "type": "split",
     "price": 1080,
     "inStock": true,
-    "image": "/catalog/royal-clima-vela-nuova-rc-vne28hn",
+    "image": "/catalog/royal-clima-vela-nuova-rc-vne22hn.webp",
     "specs": {
       "areaM2": 27,
       "coolingKw": 2.68,
@@ -558,7 +558,7 @@
     "type": "split",
     "price": 1990,
     "inStock": true,
-    "image": "/catalog/tcl-savein-on-off-tac-18chsd-zg31",
+    "image": "/catalog/tcl-savein-on-off-tac-18chsd-zg31.webp",
     "specs": {
       "areaM2": 50,
       "coolingKw": 5.275,
@@ -622,7 +622,7 @@
     "type": "split",
     "price": 2490,
     "inStock": true,
-    "image": "/catalog/tcl-savein-on-off-tac-24chsd-zg31",
+    "image": "/catalog/tcl-savein-on-off-tac-18chsd-zg31.webp",
     "specs": {
       "areaM2": 70,
       "coolingKw": 7.03,
@@ -686,7 +686,7 @@
     "type": "split",
     "price": 2016,
     "inStock": true,
-    "image": "/catalog/gree-pular-inverter-eco-gwh07agaxa-k6dna4e",
+    "image": "/catalog/gree-pular-inverter-eco-gwh07agaxa-k6dna4e.webp",
     "specs": {
       "areaM2": 20,
       "coolingKw": 2.35,
@@ -754,7 +754,7 @@
     "type": "split",
     "price": 1234,
     "inStock": true,
-    "image": "/catalog/royal-clima-vela-nuova-inverter-rci-vne22hn",
+    "image": "/catalog/royal-clima-vela-nuova-inverter-rci-vne55hn.webp",
     "specs": {
       "areaM2": 23,
       "coolingKw": 2.3,
@@ -822,7 +822,7 @@
     "type": "split",
     "price": 1482,
     "inStock": true,
-    "image": "/catalog/royal-clima-vela-nuova-inverter-rci-vne28hn",
+    "image": "/catalog/royal-clima-vela-nuova-inverter-rci-vne55hn.webp",
     "specs": {
       "areaM2": 27,
       "coolingKw": 2.65,
@@ -890,7 +890,7 @@
     "type": "split",
     "price": 2915,
     "inStock": true,
-    "image": "/catalog/electrolux-onix-super-eacs-i-12hix-black-n8-v2-wf",
+    "image": "/catalog/electrolux-onix-super-eacs-i-12hix-black-n8-v2-wf.webp",
     "specs": {
       "areaM2": 40,
       "coolingKw": 4.1,
@@ -955,7 +955,7 @@
     "type": "split",
     "price": 3350,
     "inStock": true,
-    "image": "/catalog/electrolux-eacs-i-18hef-n8-wifi",
+    "image": "/catalog/electrolux-eacs-i-18hef-n8-wifi.webp",
     "specs": {
       "areaM2": 55,
       "coolingKw": 5.1,
@@ -1022,7 +1022,7 @@
     "type": "split",
     "price": 1055,
     "inStock": true,
-    "image": "/catalog/tcl-savein-on-off-tac-07chsd-zg31",
+    "image": "/catalog/tcl-savein-on-off-tac-18chsd-zg31.webp",
     "specs": {
       "areaM2": 20,
       "coolingKw": 2.05,
@@ -1086,7 +1086,7 @@
     "type": "split",
     "price": 1120,
     "inStock": true,
-    "image": "/catalog/haier-hsu-09hqj103-r3-w",
+    "image": "/catalog/haier-hsu-07hqj103-r3-w.webp",
     "specs": {
       "areaM2": 25,
       "coolingKw": 2.5,
@@ -1158,7 +1158,7 @@
     "type": "split",
     "price": 1245,
     "inStock": true,
-    "image": "/catalog/tcl-savein-on-off-tac-12chsd-zg31",
+    "image": "/catalog/tcl-savein-on-off-tac-18chsd-zg31.webp",
     "specs": {
       "areaM2": 35,
       "coolingKw": 3.52,
@@ -1222,7 +1222,7 @@
     "type": "split",
     "price": 2320,
     "inStock": true,
-    "image": "/catalog/haier-hsu-18hqj103-r3-w",
+    "image": "/catalog/haier-hsu-07hqj103-r3-w.webp",
     "specs": {
       "areaM2": 45,
       "coolingKw": 4.8,
@@ -1294,7 +1294,7 @@
     "type": "split",
     "price": 3025,
     "inStock": true,
-    "image": "/catalog/royal-clima-vela-nuova-rc-vne70hn",
+    "image": "/catalog/royal-clima-vela-nuova-rc-vne22hn.webp",
     "specs": {
       "areaM2": 70,
       "coolingKw": 7,
@@ -1362,7 +1362,7 @@
     "type": "multi-split",
     "price": 4640,
     "inStock": true,
-    "image": "/catalog/tcl-free-match-inverter-breezin-fma-18i2hd-dvo-09-09",
+    "image": "/catalog/tcl-free-match-inverter-breezin-fma-18i2hd-dvo-09-09.webp",
     "specs": {
       "areaM2": 50,
       "coolingKw": 5.1,
@@ -1427,7 +1427,7 @@
     "type": "multi-split",
     "price": 5900,
     "inStock": true,
-    "image": "/catalog/dantex-flex-plus-r32-rk-m09pdmi-rk-2m18hm3e-w-09-09",
+    "image": "/catalog/dantex-flex-plus-r32-rk-m09pdmi-rk-2m18hm3e-w-09-09.webp",
     "specs": {
       "areaM2": 52,
       "coolingKw": 5.27,
@@ -1493,7 +1493,7 @@
     "type": "multi-split",
     "price": 5600,
     "inStock": true,
-    "image": "/catalog/dantex-flex-profi-r32-rk-mw09hg-rk-2m14hge-w-09-09",
+    "image": "/catalog/dantex-flex-profi-r32-rk-mw09hg-rk-2m14hge-w-09-09.webp",
     "specs": {
       "areaM2": 41,
       "coolingKw": 4.1,
@@ -1559,7 +1559,7 @@
     "type": "multi-split",
     "price": 6305,
     "inStock": true,
-    "image": "/catalog/tcl-free-match-inverter-breezin-fma-27i3hd-dvo-09-09-09",
+    "image": "/catalog/tcl-free-match-inverter-breezin-fma-27i3hd-dvo-09-09-09.webp",
     "specs": {
       "areaM2": 75,
       "coolingKw": 7.9,
@@ -1624,7 +1624,7 @@
     "type": "multi-split",
     "price": 7320,
     "inStock": true,
-    "image": "/catalog/electrolux-fusion-2-0-super-match-erp-eaco-i-18-fmi-2-n8-erp",
+    "image": "/catalog/electrolux-fusion-2-0-super-match-erp-eaco-i-18-fmi-2-n8-erp.webp",
     "specs": {
       "areaM2": 50,
       "coolingKw": 5.3,
@@ -1686,7 +1686,7 @@
     "type": "multi-split",
     "price": 8100,
     "inStock": true,
-    "image": "/catalog/dantex-flex-plus-r32-rk-m09pdmi-rk-3m27hm3e-w-09-09-09",
+    "image": "/catalog/dantex-flex-plus-r32-rk-m09pdmi-rk-3m27hm3e-w-09-09-09.webp",
     "specs": {
       "areaM2": 79,
       "coolingKw": 7.91,
@@ -1752,7 +1752,7 @@
     "type": "multi-split",
     "price": 8880,
     "inStock": true,
-    "image": "/catalog/gree-pular-multi-free-match-gwhd-18-nk6oo-lclh-09-09",
+    "image": "/catalog/gree-pular-multi-free-match-gwhd-18-nk6oo-lclh-09-09.webp",
     "specs": {
       "areaM2": 50,
       "coolingKw": 5.3,
@@ -1819,7 +1819,7 @@
     "type": "multi-split",
     "price": 8450,
     "inStock": true,
-    "image": "/catalog/dantex-flex-profi-r32-rk-mw09hg-rk-3m21hge-w-09-09-09",
+    "image": "/catalog/dantex-flex-profi-r32-rk-mw09hg-rk-3m21hge-w-09-09-09.webp",
     "specs": {
       "areaM2": 61,
       "coolingKw": 6.1,
@@ -1885,7 +1885,7 @@
     "type": "mobile",
     "price": 960,
     "inStock": true,
-    "image": "/catalog/ballu-orbis-bpac-07-or-n6",
+    "image": "/catalog/ballu-orbis-bpac-07-or-n6.webp",
     "specs": {
       "areaM2": 18,
       "coolingKw": 2,
@@ -1936,7 +1936,7 @@
     "type": "mobile",
     "price": 1220,
     "inStock": true,
-    "image": "/catalog/electrolux-arizona-eacm-09-az-n6",
+    "image": "/catalog/electrolux-arizona-eacm-09-az-n6.webp",
     "specs": {
       "areaM2": 25,
       "coolingKw": 2.6,
@@ -1990,7 +1990,7 @@
     "type": "mobile",
     "price": 1600,
     "inStock": true,
-    "image": "/catalog/electrolux-eacm-11-cl-n3",
+    "image": "/catalog/electrolux-eacm-11-cl-n3.webp",
     "specs": {
       "areaM2": 27,
       "coolingKw": 3.2,
@@ -2043,7 +2043,7 @@
     "type": "mobile",
     "price": 2150,
     "inStock": true,
-    "image": "/catalog/electrolux-eacm-15-cl-n3",
+    "image": "/catalog/electrolux-eacm-11-cl-n3.webp",
     "specs": {
       "areaM2": 38,
       "coolingKw": 4.4,
@@ -2096,7 +2096,7 @@
     "type": "mobile",
     "price": 2640,
     "inStock": false,
-    "image": "/catalog/ballu-bpac-20-ce-20y",
+    "image": "/catalog/ballu-bpac-20-ce-20y.webp",
     "specs": {
       "areaM2": 55,
       "coolingKw": 6,
@@ -2148,7 +2148,7 @@
     "type": "mobile",
     "price": 1490,
     "inStock": true,
-    "image": "/catalog/electrolux-eacm-8-cl-n3",
+    "image": "/catalog/electrolux-eacm-11-cl-n3.webp",
     "specs": {
       "areaM2": 20,
       "coolingKw": 2.4,
@@ -2200,7 +2200,7 @@
     "type": "mobile",
     "price": 1550,
     "inStock": true,
-    "image": "/catalog/dantex-toscana-rk-09pmm-r",
+    "image": "/catalog/dantex-toscana-rk-09pmm-r.webp",
     "specs": {
       "areaM2": 25,
       "coolingKw": 2.64,
@@ -2252,7 +2252,7 @@
     "type": "mobile",
     "price": 1530,
     "inStock": false,
-    "image": "/catalog/ballu-platinum-x4-bphs-12-hx-n3",
+    "image": "/catalog/ballu-platinum-x4-bphs-12-hx-n3.webp",
     "specs": {
       "areaM2": 30,
       "coolingKw": 3.5,
@@ -2306,7 +2306,7 @@
     "type": "semi-industrial",
     "price": 3360,
     "inStock": false,
-    "image": "/catalog/ballu-universal-dc-3-blci-a-c-12hn8-v3",
+    "image": "/catalog/ballu-universal-dc-3-blci-a-c-12hn8-v3.webp",
     "specs": {
       "areaM2": 35,
       "coolingKw": 3.52,
@@ -2368,7 +2368,7 @@
     "type": "semi-industrial",
     "price": 3480,
     "inStock": true,
-    "image": "/catalog/ballu-universal-dc-3-blci-a-d-18hn8-v3",
+    "image": "/catalog/ballu-universal-dc-3-blci-a-d-18hn8-v3.webp",
     "specs": {
       "areaM2": 50,
       "coolingKw": 5.3,
@@ -2431,7 +2431,7 @@
     "type": "semi-industrial",
     "price": 4260,
     "inStock": true,
-    "image": "/catalog/ballu-universal-dc-3-blci-a-d-24hn8-v3",
+    "image": "/catalog/ballu-universal-dc-3-blci-a-d-18hn8-v3.webp",
     "specs": {
       "areaM2": 70,
       "coolingKw": 7.03,
@@ -2494,7 +2494,7 @@
     "type": "semi-industrial",
     "price": 2369,
     "inStock": false,
-    "image": "/catalog/royal-clima-competenza-2024-co-4c-12hnx-co-e-12hnx-co-4c-pan",
+    "image": "/catalog/royal-clima-competenza-2024-co-4c-12hnx-co-e-12hnx-co-4c-pan.webp",
     "specs": {
       "areaM2": 35,
       "coolingKw": 3.52,
@@ -2560,7 +2560,7 @@
     "type": "semi-industrial",
     "price": 3092,
     "inStock": true,
-    "image": "/catalog/tcl-tcc-18zhra-u-l",
+    "image": "/catalog/tcl-tcc-18zhra-u-l.webp",
     "specs": {
       "areaM2": 50,
       "coolingKw": 5.2,
@@ -2624,7 +2624,7 @@
     "type": "semi-industrial",
     "price": 3524,
     "inStock": true,
-    "image": "/catalog/tcl-tcc-24d2hra-u-l",
+    "image": "/catalog/tcl-tcc-24d2hra-u-l.webp",
     "specs": {
       "areaM2": 70,
       "coolingKw": 7,
@@ -2688,7 +2688,7 @@
     "type": "semi-industrial",
     "price": 3595,
     "inStock": false,
-    "image": "/catalog/royal-clima-competenza-inverter-2024-co-4c-12hnbi-co-e-12hnb",
+    "image": "/catalog/royal-clima-competenza-inverter-2024-co-4c-12hnbi-co-e-12hnb.webp",
     "specs": {
       "areaM2": 35,
       "coolingKw": 3.52,
@@ -2754,7 +2754,7 @@
     "type": "semi-industrial",
     "price": 3510,
     "inStock": false,
-    "image": "/catalog/ballu-universal-dc-3-blci-a-cf-18hn8-v3",
+    "image": "/catalog/ballu-universal-dc-3-blci-a-cf-18hn8-v3.webp",
     "specs": {
       "areaM2": 50,
       "coolingKw": 5.28,
@@ -2816,7 +2816,7 @@
     "type": "semi-industrial",
     "price": 5650,
     "inStock": true,
-    "image": "/catalog/dantex-city-on-off-rk-36uht3n-rk-36ht3ne-w",
+    "image": "/catalog/dantex-city-on-off-rk-36uht3n-rk-36ht3ne-w.webp",
     "specs": {
       "areaM2": 105,
       "coolingKw": 10.5,
@@ -2881,7 +2881,7 @@
     "type": "semi-industrial",
     "price": 6180,
     "inStock": true,
-    "image": "/catalog/ballu-universal-dc-3-blci-a-d-36hn8-v3",
+    "image": "/catalog/ballu-universal-dc-3-blci-a-d-18hn8-v3.webp",
     "specs": {
       "areaM2": 100,
       "coolingKw": 10.6,
@@ -2944,7 +2944,7 @@
     "type": "semi-industrial",
     "price": 7050,
     "inStock": true,
-    "image": "/catalog/dantex-city-on-off-rk-48uht3n-rk-48ht3ne-w",
+    "image": "/catalog/dantex-city-on-off-rk-48uht3n-rk-48ht3ne-w.webp",
     "specs": {
       "areaM2": 140,
       "coolingKw": 14,
@@ -3009,7 +3009,7 @@
     "type": "split",
     "price": 7112,
     "inStock": true,
-    "image": "/catalog/gree-u-match-inverter-r32-gud100zd1-b-s-gud100w1-nhb-s",
+    "image": "/catalog/gree-u-match-inverter-r32-gud100zd1-b-s-gud100w1-nhb-s.webp",
     "specs": {
       "areaM2": 100,
       "coolingKw": 10,
@@ -3074,7 +3074,7 @@
     "type": "split",
     "price": 7249,
     "inStock": true,
-    "image": "/catalog/gree-u-match-inverter-r32-gud100phs1-b-s-gud1001w1-nhb-s",
+    "image": "/catalog/gree-u-match-inverter-r32-gud100phs1-b-s-gud1001w1-nhb-s.webp",
     "specs": {
       "areaM2": 100,
       "coolingKw": 10,
@@ -3134,7 +3134,7 @@
     "type": "semi-industrial",
     "price": 7600,
     "inStock": true,
-    "image": "/catalog/dantex-city-on-off-rk-60uht3n-rk-60ht3ne-w",
+    "image": "/catalog/dantex-city-on-off-rk-48uht3n-rk-48ht3ne-w.webp",
     "specs": {
       "areaM2": 160,
       "coolingKw": 16.12,
