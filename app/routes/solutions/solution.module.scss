@@ -29,13 +29,13 @@
 
 .picks {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.25rem;
 
   // На планшете две колонки, а не одна: в одну карточка растягивается
   // на всю ширину, и картинка 4:3 превращается в полотно на пол-экрана.
   @include mq(md) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   // С 480px одна колонка: там же карточка становится горизонтальной,
@@ -91,7 +91,7 @@
 
 .columns {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 2.5rem;
 
   @include mq(md) {

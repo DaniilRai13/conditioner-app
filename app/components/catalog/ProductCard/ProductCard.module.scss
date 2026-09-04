@@ -82,6 +82,9 @@
 }
 
 .model {
+  // Артикулы вроде «BPAC-07 OR/N6» не имеют мест переноса и распирали бы
+  // колонку сетки. Вместе с minmax(0, 1fr) это и держит колонки равными.
+  overflow-wrap: anywhere;
   margin-bottom: 0.75rem;
   color: var(--ink-900);
   font-size: 1rem;
