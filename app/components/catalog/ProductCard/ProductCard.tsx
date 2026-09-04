@@ -7,26 +7,69 @@ import styles from "./ProductCard.module.scss";
 
 type Props = {
   product: CatalogProduct;
+
   /**
-   * `row` — горизонтальный вариант для узких колонок: картинка слева,
-   * текст справа. В сетке каталога карточка вертикальная.
+   * `grid` — картинка сверху, текст снизу.
+   * `row` — картинка слева, текст справа.
+   * `auto` — как `grid`, но на телефоне переключается в `row`: там карточка
+   * растягивается на всю ширину и картинка 4:3 съедает пол-экрана.
    */
-  layout?: "card" | "row";
+  layout?: "grid" | "row" | "auto";
+
+  /**
+   * Пропорции картинки в вертикальной раскладке. `short` заметно уменьшает
+   * высоту карточки там, где колонки широкие.
+   */
+  media?: "wide" | "square" | "short";
+
+  /** Плотнее отступы и мельче кегль — для тесных мест вроде выдачи квиза. */
+  compact?: boolean;
+
+  /**
+   * Что скрыть. По умолчанию показывается всё; убирать стоит только то,
+   * что в конкретном месте дублируется соседними элементами.
+   */
+  hide?: { brand?: boolean; specs?: boolean; tag?: boolean };
+
+  /** Первые карточки в списке грузим сразу — они выше сгиба. */
+  eager?: boolean;
 };
 
-export function ProductCard({ product, layout = "card" }: Props) {
+const MEDIA_CLASS = {
+  wide: "mediaWide",
+  square: "mediaSquare",
+  short: "mediaShort",
+} as const;
+
+export function ProductCard({
+  product,
+  layout = "auto",
+  media = "wide",
+  compact = false,
+  hide = {},
+  eager = false,
+}: Props) {
   const { image, name, brand, model, price, inStock, specs } = product;
 
+  const className = [
+    styles.card,
+    styles[MEDIA_CLASS[media]],
+    layout === "row" && styles.row,
+    layout === "auto" && styles.autoRow,
+    compact && styles.compact,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  // В горизонтальной раскладке картинка всегда маленькая, в вертикальной —
+  // во всю ширину колонки. Точнее без контейнерных запросов не сказать.
   const sizes =
     layout === "row"
       ? "7rem"
       : "(max-width: 640px) 90vw, (max-width: 1024px) 44vw, 22vw";
 
   return (
-    <Link
-      to={`/product/${product.slug}`}
-      className={layout === "row" ? `${styles.card} ${styles.row}` : styles.card}
-    >
+    <Link to={`/product/${product.slug}`} className={className}>
       <div className={styles.media}>
         {image ? (
           <picture>
@@ -43,7 +86,7 @@ export function ProductCard({ product, layout = "card" }: Props) {
               alt={name}
               width={400}
               height={400}
-              loading="lazy"
+              loading={eager ? "eager" : "lazy"}
               decoding="async"
             />
           </picture>
@@ -54,33 +97,35 @@ export function ProductCard({ product, layout = "card" }: Props) {
         {!inStock && <span className={styles.badge}>Под заказ</span>}
       </div>
 
-      {/* В вертикальном варианте обёртка «прозрачна» (display: contents),
-          поэтому разметка одна на оба layout-а. */}
+      {/* В вертикальной раскладке обёртка «прозрачна» (display: contents),
+          поэтому разметка одна на все варианты. */}
       <span className={styles.body}>
-        <span className={styles.brand}>{brand}</span>
+        {!hide.brand && <span className={styles.brand}>{brand}</span>}
         <b className={styles.model}>{model || name}</b>
 
-        <ul className={styles.specs}>
-          {specs.areaM2 && (
-            <li>
-              <Snowflake size={14} aria-hidden />
-              {formatArea(specs.areaM2)}
-              {specs.coolingKw ? ` · ${formatKw(specs.coolingKw)}` : ""}
-            </li>
-          )}
-          {specs.noiseDb && (
-            <li>
-              <Volume2 size={14} aria-hidden />
-              от {specs.noiseDb} дБ
-            </li>
-          )}
-          {specs.hasWifi && (
-            <li>
-              <Wifi size={14} aria-hidden />
-              Wi-Fi
-            </li>
-          )}
-        </ul>
+        {!hide.specs && (
+          <ul className={styles.specs}>
+            {specs.areaM2 && (
+              <li>
+                <Snowflake size={14} aria-hidden />
+                {formatArea(specs.areaM2)}
+                {specs.coolingKw ? ` · ${formatKw(specs.coolingKw)}` : ""}
+              </li>
+            )}
+            {specs.noiseDb && (
+              <li>
+                <Volume2 size={14} aria-hidden />
+                от {specs.noiseDb} дБ
+              </li>
+            )}
+            {specs.hasWifi && (
+              <li>
+                <Wifi size={14} aria-hidden />
+                Wi-Fi
+              </li>
+            )}
+          </ul>
+        )}
 
         <span className={styles.footer}>
           <span className={styles.price}>
@@ -89,7 +134,9 @@ export function ProductCard({ product, layout = "card" }: Props) {
               {PRICE_MODE === "turnkey" ? "под ключ" : "без монтажа"}
             </span>
           </span>
-          {specs.isInverter && <span className={styles.tag}>Инвертор</span>}
+          {!hide.tag && specs.isInverter && (
+            <span className={styles.tag}>Инвертор</span>
+          )}
         </span>
       </span>
     </Link>

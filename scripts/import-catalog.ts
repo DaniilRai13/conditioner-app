@@ -48,6 +48,22 @@ const BRANDS = [
 const AREA_CLASSES = [20, 25, 35, 50, 70];
 
 /**
+ * Добор по большим площадям.
+ *
+ * Основные квоты дали каталог, заканчивающийся на 79 м², а квиз с поправкой
+ * на окна и офис доходит до 94 м² — на таких ответах выдача была пуста.
+ * У поставщика линейка прыгает с 24 BTU (около 70 м²) сразу на 36 (около 100),
+ * поэтому промежутка 80–96 нет ни у кого; для подбора этого хватает —
+ * расчётным 84 м² подходит блок на 97.
+ */
+const AREA_FILL = {
+  categories: [33, 28512],
+  minArea: 80,
+  quota: 6,
+  label: "большие площади",
+};
+
+/**
  * Потолок на бренд по всему каталогу.
  *
  * Без него отбор по цене внутри класса площади сваливается в одну марку:
@@ -252,6 +268,28 @@ async function loadExisting(): Promise<Map<number, Product>> {
   return new Map(raw.map((p) => [p.sourceId, p]));
 }
 
+/** Кандидаты категории: бренд из белого списка и есть цена. */
+async function collect(categoryId: number, limit: number): Promise<ApiProduct[]> {
+  const out: ApiProduct[] = [];
+
+  for (let page = 1; page <= 6; page++) {
+    const batch = await fetchPage(categoryId, page);
+    if (batch.length === 0) break;
+
+    for (const p of batch) {
+      const brand = attributeValue(p.attributes, "Бренд")?.toLowerCase() ?? "";
+      if (!BRANDS.some((b) => brand.includes(b))) continue;
+      if (priceOf(p) === null) continue;
+      out.push(p);
+    }
+
+    if (out.length >= limit) break;
+    await sleep(300); // не долбим чужой сервер
+  }
+
+  return out;
+}
+
 async function run() {
   const dryRun = process.argv.includes("--dry-run");
   const skipImages = dryRun || process.argv.includes("--skip-images");
@@ -263,22 +301,7 @@ async function run() {
   const result: Product[] = [];
 
   for (const { id, quota, label } of QUOTAS) {
-    const candidates: ApiProduct[] = [];
-
-    for (let page = 1; page <= 6; page++) {
-      const batch = await fetchPage(id, page);
-      if (batch.length === 0) break;
-
-      for (const p of batch) {
-        const brand = attributeValue(p.attributes, "Бренд")?.toLowerCase() ?? "";
-        if (!BRANDS.some((b) => brand.includes(b))) continue;
-        if (priceOf(p) === null) continue;
-        candidates.push(p);
-      }
-
-      if (candidates.length >= quota * 6) break;
-      await sleep(300); // не долбим чужой сервер
-    }
+    const candidates = await collect(id, quota * 6);
 
     const picked = select(candidates, quota, brandCount);
     console.log(
@@ -286,46 +309,96 @@ async function run() {
     );
 
     for (const p of picked) {
-      const brand = attributeValue(p.attributes, "Бренд") ?? "";
-      const model =
-        attributeValue(p.attributes, "Модель") ??
-        attributeValue(p.attributes, "Модель общая") ??
-        "";
-      const prev = existing.get(p.id);
-      // Слаг фиксируется при первом импорте: смена URL стоит позиций.
-      const slug = prev?.slug ?? buildSlug(brand, model, p.name, p.id, usedSlugs);
-      usedSlugs.add(slug);
-
-      // Уже скачанное не перекачиваем: повторный прогон ради обновления цен
-      // не должен упираться в час перекодирования картинок.
-      const image =
-        skipImages || prev?.image
-          ? (prev?.image ?? null)
-          : await importImage(p.images?.[0]?.src, slug);
-
-      result.push({
-        sourceId: p.id,
-        slug,
-        name: p.name.trim(),
-        brand: brand.trim(),
-        model: model.trim(),
-        type: typeFromCategory(id),
-        price: priceOf(p)!,
-        inStock: p.is_in_stock,
-        image,
-        specs: normalizeSpecs(p.attributes),
-
-        // Поля, которые ведём руками: импорт их не перезаписывает.
-        description: prev?.description ?? stripSupplierPitch(p.short_description),
-        tier: prev?.tier ?? "optimum",
-        featured: prev?.featured ?? false,
-        sortOrder: prev?.sortOrder ?? 0,
-        isPublished: prev?.isPublished ?? true,
-
-        sourceUrl: p.permalink,
-        updatedAt: new Date().toISOString().slice(0, 10),
-      });
+      result.push(await toProduct(p, id));
     }
+  }
+
+  /**
+   * Добор по большим площадям. Идёт после основных квот и пропускает уже
+   * отобранное: иначе те же полупромышленные попали бы в каталог дважды.
+   */
+  const already = new Set(result.map((p) => p.sourceId));
+
+  // Категорию несём рядом с товаром: тип оборудования определяется ею,
+  // а по названию или ссылке его не угадать.
+  const large: { product: ApiProduct; categoryId: number }[] = [];
+
+  for (const categoryId of AREA_FILL.categories) {
+    const candidates = await collect(categoryId, 400);
+    for (const product of candidates) {
+      if (already.has(product.id)) continue;
+      already.add(product.id); // одна модель может лежать в двух категориях
+      const area = normalizeSpecs(product.attributes).areaM2;
+      if (!area || area < AREA_FILL.minArea) continue;
+      large.push({ product, categoryId });
+    }
+  }
+
+  // Сначала в наличии, потом дешевле — как и в основном отборе.
+  large.sort((a, b) => {
+    if (a.product.is_in_stock !== b.product.is_in_stock) {
+      return a.product.is_in_stock ? -1 : 1;
+    }
+    return (priceOf(a.product) ?? Infinity) - (priceOf(b.product) ?? Infinity);
+  });
+
+  const fill: typeof large = [];
+  for (const entry of large) {
+    if (fill.length >= AREA_FILL.quota) break;
+    const brand = (attributeValue(entry.product.attributes, "Бренд") ?? "").trim();
+    if ((brandCount.get(brand) ?? 0) >= MAX_PER_BRAND) continue;
+    brandCount.set(brand, (brandCount.get(brand) ?? 0) + 1);
+    fill.push(entry);
+  }
+
+  console.log(
+    `${AREA_FILL.label}: кандидатов ${large.length}, отобрано ${fill.length} из ${AREA_FILL.quota}`
+  );
+
+  for (const entry of fill) {
+    result.push(await toProduct(entry.product, entry.categoryId));
+  }
+
+  async function toProduct(p: ApiProduct, categoryId: number): Promise<Product> {
+    const brand = attributeValue(p.attributes, "Бренд") ?? "";
+    const model =
+      attributeValue(p.attributes, "Модель") ??
+      attributeValue(p.attributes, "Модель общая") ??
+      "";
+    const prev = existing.get(p.id);
+    // Слаг фиксируется при первом импорте: смена URL стоит позиций.
+    const slug = prev?.slug ?? buildSlug(brand, model, p.name, p.id, usedSlugs);
+    usedSlugs.add(slug);
+
+    // Уже скачанное не перекачиваем: повторный прогон ради обновления цен
+    // не должен упираться в час перекодирования картинок.
+    const image =
+      skipImages || prev?.image
+        ? (prev?.image ?? null)
+        : await importImage(p.images?.[0]?.src, slug);
+
+    return {
+      sourceId: p.id,
+      slug,
+      name: p.name.trim(),
+      brand: brand.trim(),
+      model: model.trim(),
+      type: typeFromCategory(categoryId),
+      price: priceOf(p)!,
+      inStock: p.is_in_stock,
+      image,
+      specs: normalizeSpecs(p.attributes),
+
+      // Поля, которые ведём руками: импорт их не перезаписывает.
+      description: prev?.description ?? stripSupplierPitch(p.short_description),
+      tier: prev?.tier ?? "optimum",
+      featured: prev?.featured ?? false,
+      sortOrder: prev?.sortOrder ?? 0,
+      isPublished: prev?.isPublished ?? true,
+
+      sourceUrl: p.permalink,
+      updatedAt: new Date().toISOString().slice(0, 10),
+    };
   }
 
   // tier назначаем только тем, у кого его ещё не вели руками.

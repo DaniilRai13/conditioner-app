@@ -21,7 +21,7 @@
 .media {
   position: relative;
   margin-bottom: 0.875rem;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: var(--media-aspect, 4 / 3);
   background: #fff;
   border-radius: var(--radius-control);
   overflow: hidden;
@@ -133,7 +133,11 @@
 
 // --- горизонтальный вариант: картинка слева, текст справа ---
 
-.row {
+@mixin horizontal {
+  // Пропорции — через переменную, а не селектором .row .media: иначе
+  // правило вариантов пропорций перебивало бы её по порядку в файле.
+  --media-aspect: 1 / 1;
+
   flex-direction: row;
   gap: 1rem;
   align-items: center;
@@ -143,7 +147,6 @@
     flex: none;
     width: 6.5rem;
     margin-bottom: 0;
-    aspect-ratio: 1 / 1;
   }
 
   .body {
@@ -157,8 +160,8 @@
     font-size: 0.9375rem;
   }
 
-  // Характеристики в строку: в узкой колонке вертикальный список
-  // растягивает карточку без пользы.
+  // Характеристики в строку: в узкой карточке вертикальный список
+  // растягивает её без пользы.
   .specs {
     flex-direction: row;
     flex-wrap: wrap;
@@ -171,7 +174,7 @@
   }
 
   // Цена в одну строку с подписью сбоку — иначе «1 390 р.»
-  // ломается на три строки, как было в квизе.
+  // ломается на три строки.
   .price {
     flex-direction: row;
     gap: 0.375rem;
@@ -179,14 +182,53 @@
     font-size: 1.0625rem;
     white-space: nowrap;
   }
+}
 
+// Явный горизонтальный вариант — для мест, где так задумано (квиз).
+.row {
+  @include horizontal;
+}
+
+// Автоматический вариант: вертикальная карточка, но на телефоне
+// горизонтальная. Порог по вьюпорту, а не по ширине карточки: в каталоге
+// на десктопе она 273px и вертикальная раскладка в самый раз, а на телефоне
+// 358px и та же раскладка съедает пол-экрана картинкой. По собственной
+// ширине эти два случая не различить.
+.autoRow {
   @include mq(xxs) {
-    .media {
-      width: 5rem;
-    }
+    @include horizontal;
+  }
+}
 
-    .price {
-      font-size: 1rem;
-    }
+// --- пропорции картинки ---
+
+.mediaWide {
+  --media-aspect: 4 / 3;
+}
+
+.mediaSquare {
+  --media-aspect: 1 / 1;
+}
+
+.mediaShort {
+  --media-aspect: 16 / 9;
+}
+
+// --- плотный вариант ---
+
+.compact {
+  padding: 0.75rem;
+
+  .model {
+    font-size: 0.875rem;
+  }
+
+  .specs {
+    gap: 0.25rem;
+    margin-bottom: 0.625rem;
+  }
+
+  .price {
+    font-size: 1rem;
   }
 }

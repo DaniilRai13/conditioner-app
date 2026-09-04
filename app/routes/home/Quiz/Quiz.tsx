@@ -210,7 +210,7 @@ export function Quiz({ products }: Props) {
                     {result.picks.map((pick) => (
                       <div key={pick.product.slug} className={styles.pick}>
                         <span className={styles.tier}>{pick.label}</span>
-                        <ProductCard product={pick.product} layout="row" />
+                        <ProductCard product={pick.product} layout="row" compact />
                       </div>
                     ))}
                   </div>

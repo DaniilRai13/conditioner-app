@@ -79,7 +79,7 @@ export default function SolutionPage({ loaderData }: Route.ComponentProps) {
             {picks.map((pick) => (
               <div key={pick.product.slug} className={styles.pick}>
                 <span className={styles.tier}>{pick.label}</span>
-                <ProductCard product={pick.product} />
+                <ProductCard product={pick.product} media="short" />
               </div>
             ))}
           </div>

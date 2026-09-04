@@ -32,7 +32,13 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 1.25rem;
 
+  // На планшете две колонки, а не одна: в одну карточка растягивается
+  // на всю ширину, и картинка 4:3 превращается в полотно на пол-экрана.
   @include mq(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include mq(xxs) {
     grid-template-columns: 1fr;
   }
 }
@@ -41,6 +47,13 @@
   display: flex;
   flex-direction: column;
   gap: 0.625rem;
+  min-width: 0;
+
+  // Карточка тянется на всю высоту ряда — иначе соседние карточки
+  // с разным числом характеристик заканчиваются на разной высоте.
+  > a {
+    flex: 1;
+  }
 }
 
 .tier {
