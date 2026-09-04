@@ -36,6 +36,9 @@ type Props = {
 
   /** Первые карточки в списке грузим сразу — они выше сгиба. */
   eager?: boolean;
+
+  /** Снаружи — только скрыть карточку в свёрнутом хвосте каталога. */
+  className?: string;
 };
 
 const MEDIA_CLASS = {
@@ -51,21 +54,23 @@ export function ProductCard({
   compact = false,
   hide = {},
   eager = false,
+  className: extra,
 }: Props) {
   const { image, name, brand, model, price, inStock, specs } = product;
 
-  const className = [
+  const cls = [
     styles.card,
     styles[MEDIA_CLASS[media]],
     layout === "row" && styles.row,
     layout === "auto" && styles.autoRow,
     compact && styles.compact,
+    extra,
   ]
     .filter(Boolean)
     .join(" ");
 
   return (
-    <Link to={`/product/${product.slug}`} className={className}>
+    <Link to={`/product/${product.slug}`} className={cls}>
       <div className={styles.media}>
         {image ? (
           <img

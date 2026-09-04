@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
 import type { CatalogProduct } from "~/lib/queries";
 import { ProductCard } from "../ProductCard/ProductCard";
@@ -11,6 +11,10 @@ type Props = {
 
 /** Классы площади те же, по которым отбирался каталог. */
 const AREA_OPTIONS = [20, 25, 35, 50, 70];
+
+/** Сколько карточек показываем сразу. Остальные лежат в разметке скрытыми:
+ * поисковик их видит, человек разворачивает кнопкой. */
+const PAGE = 12;
 
 const SORT_OPTIONS = [
   { value: "", label: "По умолчанию" },
@@ -40,7 +44,7 @@ export function CatalogView({ products }: Props) {
     return [1, 2, 3].map((i) => Math.ceil((max * i) / 4 / 500) * 500);
   }, [products]);
 
-  const visible = useMemo(() => {
+  const filtered = useMemo(() => {
     let list = products;
 
     if (area) {
@@ -50,11 +54,31 @@ export function CatalogView({ products }: Props) {
     if (maxPrice) {
       list = list.filter((p) => p.price <= Number(maxPrice));
     }
-    if (sort === "price-asc") list = [...list].sort((a, b) => a.price - b.price);
-    if (sort === "price-desc") list = [...list].sort((a, b) => b.price - a.price);
+    if (sort === "price-asc")
+      list = [...list].sort((a, b) => a.price - b.price);
+    if (sort === "price-desc")
+      list = [...list].sort((a, b) => b.price - a.price);
 
     return list;
   }, [products, area, maxPrice, sort]);
+
+  const [shown, setShown] = useState(PAGE);
+
+  // Смена фильтра возвращает список к первым двенадцати. Иначе, развернув
+  // весь каталог и переключив площадь, человек видит кнопку, которая
+  // уже ничего не открывает.
+  //
+  // Состояние правится прямо в рендере, а не эффектом: React тут же
+  // перезапускает рендер с новым значением, и лишнего кадра со старым
+  // счётчиком не возникает.
+  const filterKey = area + "|" + maxPrice + "|" + sort;
+  const [prevKey, setPrevKey] = useState(filterKey);
+  if (prevKey !== filterKey) {
+    setPrevKey(filterKey);
+    setShown(PAGE);
+  }
+
+  const rest = filtered.length - shown;
 
   function update(key: string, value: string | null) {
     const next = new URLSearchParams(params);
@@ -84,7 +108,9 @@ export function CatalogView({ products }: Props) {
                 key={value}
                 type="button"
                 className={
-                  area === String(value) ? `${styles.chip} ${styles.on}` : styles.chip
+                  area === String(value)
+                    ? `${styles.chip} ${styles.on}`
+                    : styles.chip
                 }
                 onClick={() => update("area", String(value))}
               >
@@ -99,7 +125,9 @@ export function CatalogView({ products }: Props) {
           <div className={styles.chips}>
             <button
               type="button"
-              className={!maxPrice ? `${styles.chip} ${styles.on}` : styles.chip}
+              className={
+                !maxPrice ? `${styles.chip} ${styles.on}` : styles.chip
+              }
               onClick={() => update("price", null)}
             >
               Любая
@@ -141,17 +169,34 @@ export function CatalogView({ products }: Props) {
       </div>
 
       <p className={styles.count} aria-live="polite">
-        {visible.length === products.length
+        {filtered.length === products.length
           ? `${products.length} моделей`
-          : `Показано ${visible.length} из ${products.length}`}
+          : `Найдено ${filtered.length} из ${products.length}`}
       </p>
 
-      {visible.length > 0 ? (
-        <div className={styles.grid}>
-          {visible.map((p) => (
-            <ProductCard key={p.slug} product={p} />
-          ))}
-        </div>
+      {filtered.length > 0 ? (
+        <>
+          <div className={styles.grid}>
+            {filtered.map((p, i) => (
+              <ProductCard
+                key={p.slug}
+                product={p}
+                className={i >= shown ? styles.beyond : undefined}
+              />
+            ))}
+          </div>
+
+          {rest > 0 && (
+            <button
+              type="button"
+              className={styles.more}
+              onClick={() => setShown(shown + PAGE)}
+            >
+              Показать ещё {Math.min(PAGE, rest)}
+              <span className={styles.moreRest}>осталось {rest}</span>
+            </button>
+          )}
+        </>
       ) : (
         // Пустая выдача без объяснения и выхода — тупик. Даём и то, и другое.
         <div className={styles.empty}>
