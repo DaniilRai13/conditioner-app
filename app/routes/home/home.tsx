@@ -1,7 +1,9 @@
 import type { MetaFunction } from "react-router";
+import type { Route } from "./+types/home";
+import { getCatalogProducts } from "~/lib/queries";
 import { Hero } from "./Hero/Hero";
 import { HERO_AVIF, HERO_SIZES } from "./Hero/heroImage";
-import { QuizTeaser } from "./QuizTeaser/QuizTeaser";
+import { Quiz } from "./Quiz/Quiz";
 import { SolutionsPreview } from "./SolutionsPreview/SolutionsPreview";
 import { ServicesPreview } from "./ServicesPreview/ServicesPreview";
 import { WhyMe } from "~/components/sections/WhyMe/WhyMe";
@@ -12,6 +14,11 @@ import { Section } from "~/components/ui/Section/Section";
 import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
 import { site } from "~/config/site";
 import styles from "./home.module.scss";
+
+export function loader() {
+  // Квизу нужен весь каталог: он фильтрует его на клиенте по ответам.
+  return { products: getCatalogProducts() };
+}
 
 /**
  * Предзагрузка LCP-картинки. Без неё браузер найдёт <img> только после
@@ -35,7 +42,13 @@ export const links = () => [
   },
 ];
 
+/**
+ * Canonical жёстко на «/»: ответы квиза живут в query-параметрах главной,
+ * и без этого каждая комбинация ответов уехала бы в индекс отдельной
+ * страницей с одинаковым содержимым.
+ */
 export const meta: MetaFunction = () => [
+  { tagName: "link", rel: "canonical", href: site.url },
   { title: `${site.name} — установка кондиционеров в Минске и области` },
   {
     name: "description",
@@ -47,11 +60,11 @@ export const meta: MetaFunction = () => [
 // Семь секций (PLAN.md §4). Порядок не случайный: квиз стоит вторым,
 // пока внимание максимально, а FAQ идёт перед формой — снимает последние
 // возражения ровно перед тем, как просить контакты.
-export default function Home() {
+export default function Home({ loaderData }: Route.ComponentProps) {
   return (
     <main>
       <Hero />
-      <QuizTeaser />
+      <Quiz products={loaderData.products} />
       <SolutionsPreview />
       <ServicesPreview />
       <WhyMe />
