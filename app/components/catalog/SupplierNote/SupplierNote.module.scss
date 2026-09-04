@@ -1,0 +1,34 @@
+@use "mixins" as *;
+
+// Липнет к низу окна, пока в поле зрения секция каталога, и сам садится
+// на место в её конце. Через sticky, а не fixed: не нужен ни отступ снизу
+// у страницы, ни разбирательство, кто кого перекрывает у футера.
+.note {
+  position: sticky;
+  z-index: 5;
+  bottom: 1rem;
+  margin-top: 1.5rem;
+  padding: 1.125rem 1.25rem;
+  background: var(--brand-50);
+  border: 1px solid rgb(59 91 254 / 14%);
+  border-radius: var(--radius-control);
+  box-shadow: var(--shadow-card);
+  color: var(--ink-600);
+
+  @include text-preset(caption);
+
+  // Под ним проезжают карточки, поэтому фон обязан быть плотным —
+  // никакой прозрачности здесь быть не должно.
+
+  a {
+    color: var(--brand-600);
+    font-weight: 600;
+  }
+
+  // На телефоне полоса съедает заметную часть экрана: ужимаем отступы
+  // и прижимаем ближе к краю.
+  @include mq(sm) {
+    bottom: 0.5rem;
+    padding: 0.875rem 1rem;
+  }
+}

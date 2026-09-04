@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import type { Route } from "./+types/catalog";
 import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
 import { Section } from "~/components/ui/Section/Section";
+import { SupplierNote } from "~/components/catalog/SupplierNote/SupplierNote";
 import { CatalogView } from "~/components/catalog/CatalogView/CatalogView";
 import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
 import { getCatalogProducts, getCategoriesWithCount } from "~/lib/queries";
@@ -53,11 +54,7 @@ export default function Catalog({ loaderData }: Route.ComponentProps) {
 
         <CatalogView products={products} />
 
-        {/* Широту ассортимента отдаём текстом, а не восемью сотнями страниц. */}
-        <p className={styles.wider}>
-          Работаю со всем каталогом поставщика — больше 4000 моделей. Нужной нет
-          на сайте? <a href={site.phoneHref}>Позвоните</a>, привезу под заказ.
-        </p>
+        <SupplierNote />
       </Section>
 
       <Section

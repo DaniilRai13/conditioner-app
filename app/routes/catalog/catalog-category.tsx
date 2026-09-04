@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import type { Route } from "./+types/catalog-category";
 import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
 import { Section } from "~/components/ui/Section/Section";
+import { SupplierNote } from "~/components/catalog/SupplierNote/SupplierNote";
 import { CatalogView } from "~/components/catalog/CatalogView/CatalogView";
 import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
 import { getCatalogProducts, getCategoriesWithCount } from "~/lib/queries";
@@ -52,6 +53,8 @@ export default function CatalogCategory({ loaderData }: Route.ComponentProps) {
         </div>
 
         <CatalogView products={products} />
+
+        <SupplierNote />
       </Section>
 
       <Section title="Другие категории" className={styles.others}>

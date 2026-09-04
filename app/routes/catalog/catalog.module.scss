@@ -49,12 +49,3 @@
   }
 }
 
-.wider {
-  margin-top: 1.5rem;
-  padding: 1.125rem 1.25rem;
-  background: var(--brand-50);
-  border-radius: var(--radius-control);
-  color: var(--ink-600);
-
-  @include text-preset(caption);
-}
