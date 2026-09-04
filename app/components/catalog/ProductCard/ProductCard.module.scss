@@ -1,6 +1,7 @@
 @use "mixins" as *;
 
 .card {
+  height: 100%;
   display: flex;
   flex-direction: column;
   padding: 1rem 1rem 1.25rem;
@@ -21,7 +22,7 @@
 .media {
   position: relative;
   margin-bottom: 0.875rem;
-  aspect-ratio: var(--media-aspect, 4 / 3);
+  aspect-ratio: var(--media-aspect, 1 / 1);
   background: #fff;
   border-radius: var(--radius-control);
   overflow: hidden;
@@ -42,7 +43,7 @@
   object-fit: contain;
   // Кадрирование у поставщика разное: у одних моделей вокруг блока много
   // воздуха, у других почти нет. Отступ выравнивает видимый размер.
-  padding: 0.75rem;
+  padding: 0.5rem;
 }
 
 .noImage {
@@ -204,7 +205,7 @@
 // 358px и та же раскладка съедает пол-экрана картинкой. По собственной
 // ширине эти два случая не различить.
 .autoRow {
-  @include mq(xxs) {
+  @include mq(xs) {
     @include horizontal;
   }
 }

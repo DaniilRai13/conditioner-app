@@ -94,7 +94,9 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @include mq(xxs) {
+  // С 480px одна колонка: там же карточка становится горизонтальной,
+  // и две колонки горизонтальных карточек не помещаются.
+  @include mq(xs) {
     grid-template-columns: 1fr;
   }
 }
