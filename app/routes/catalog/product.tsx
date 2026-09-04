@@ -114,13 +114,13 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
                 <source
                   type="image/avif"
                   srcSet={`${product.image}-400.avif 400w, ${product.image}-800.avif 800w`}
-                  sizes="(max-width: 1024px) 90vw, 40vw"
+                  sizes="(max-width: 640px) 20rem, (max-width: 1024px) 38vw, 40vw"
                 />
                 <img
                   className={styles.image}
                   src={`${product.image}-800.webp`}
                   srcSet={`${product.image}-400.webp 400w, ${product.image}-800.webp 800w`}
-                  sizes="(max-width: 1024px) 90vw, 40vw"
+                  sizes="(max-width: 640px) 20rem, (max-width: 1024px) 38vw, 40vw"
                   alt={product.name}
                   width={800}
                   height={800}

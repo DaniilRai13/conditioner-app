@@ -10,9 +10,16 @@
   gap: 2.5rem;
   align-items: start;
 
+  // На планшете не схлопываем в одну колонку, а сужаем картинку: иначе
+  // она растягивается на всю ширину и занимает почти весь экран,
+  // а цена с характеристиками уезжает под сгиб.
   @include mq(lg) {
+    grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+    gap: 1.5rem;
+  }
+
+  @include mq(sm) {
     grid-template-columns: 1fr;
-    gap: 1.75rem;
   }
 }
 
@@ -21,6 +28,18 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-banner);
+
+  @include mq(lg) {
+    padding: 1rem;
+  }
+
+  // В одну колонку картинка во всю ширину экрана выглядит витриной,
+  // а не карточкой товара. Ограничиваем и центрируем.
+  @include mq(sm) {
+    width: 100%;
+    max-width: 20rem;
+    margin-inline: auto;
+  }
 }
 
 // <picture> без display:block не даёт картинке высоту — см. ProductCard.
@@ -95,6 +114,12 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
   margin: 0 0 1.5rem;
+
+  // Колонка с текстом на планшете сужена — три характеристики в ряд
+  // там уже не читаются.
+  @include mq(lg) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 
   @include mq(sm) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
