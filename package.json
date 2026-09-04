@@ -8,7 +8,7 @@
     "preview": "vite preview",
     "typecheck": "react-router typegen && tsc",
     "lint": "oxlint",
-    "images": "node scripts/optimize-images.mjs",
+    "images": "node scripts/optimize-images.ts",
     "lint:css": "stylelint \"app/**/*.scss\"",
     "format": "prettier --write \"app/**/*.{ts,tsx,scss}\"",
     "import:catalog": "node scripts/import-catalog.ts"

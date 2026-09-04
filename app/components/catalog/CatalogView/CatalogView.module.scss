@@ -1,0 +1,134 @@
+@use "mixins" as *;
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem 2rem;
+  align-items: flex-end;
+  padding: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.label {
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  padding: 0.4375rem 0.875rem;
+  background: var(--bg);
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  color: var(--ink-600);
+  font-size: 0.875rem;
+  white-space: nowrap;
+  transition:
+    background-color var(--transition),
+    color var(--transition);
+
+  @include focus-ring;
+
+  &:hover {
+    color: var(--brand-600);
+  }
+}
+
+.on {
+  background: var(--brand-600);
+  color: #fff;
+
+  &:hover {
+    color: #fff;
+  }
+}
+
+.select {
+  padding: 0.4375rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  color: var(--ink-900);
+  font-size: 0.875rem;
+
+  @include focus-ring;
+}
+
+.count {
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+
+  @include mq(lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include mq(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include mq(xxs) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 2.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+
+  b {
+    color: var(--ink-900);
+
+    @include text-preset(h3);
+  }
+
+  p {
+    max-width: 46ch;
+
+    @include text-preset(body);
+  }
+}
+
+.reset {
+  padding: 0.625rem 1.25rem;
+  background: var(--brand-600);
+  border: none;
+  border-radius: var(--radius-control);
+  color: #fff;
+  font-weight: 600;
+
+  @include focus-ring;
+}

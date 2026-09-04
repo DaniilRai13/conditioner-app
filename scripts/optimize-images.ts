@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { initCodecs, decodeImage, writeVariants, kb } from "./lib/images.mjs";
+import { initCodecs, decodeImage, writeVariants, kb } from "./lib/images.ts";
 
 /**
  * Картинки страниц → AVIF + WebP в нескольких размерах, для srcset.

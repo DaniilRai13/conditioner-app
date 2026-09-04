@@ -7,7 +7,7 @@ import {
   stripSupplierPitch,
   typeFromCategory,
 } from "./lib/normalize.ts";
-import { initCodecs, decodeImage, writeVariants } from "./lib/images.mjs";
+import { initCodecs, decodeImage, writeVariants } from "./lib/images.ts";
 import { MARKUP } from "../app/config/pricing.ts";
 import type { Product, ProductTier } from "../app/types/product.ts";
 

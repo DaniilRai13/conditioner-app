@@ -1,0 +1,45 @@
+@use "mixins" as *;
+
+.top {
+  padding-top: 0;
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  max-width: 68ch;
+  margin-bottom: 2rem;
+
+  p {
+    @include text-preset(body);
+  }
+}
+
+.others {
+  padding-block: 0;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+}
+
+.link {
+  display: inline-block;
+  padding: 0.625rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  color: var(--ink-600);
+  text-decoration: none;
+
+  @include text-preset(caption);
+  @include focus-ring;
+
+  &:hover {
+    border-color: var(--brand-600);
+    color: var(--brand-600);
+  }
+}

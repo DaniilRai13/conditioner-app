@@ -1,6 +1,8 @@
 import type { Config } from "@react-router/dev/config";
 import { services } from "./app/data/services";
 import { articles } from "./app/data/articles";
+import { categories } from "./app/data/categories";
+import { getProductSlugs } from "./app/lib/queries";
 
 export default {
   // Рантайм-сервера нет: сайт целиком уезжает на CDN статикой.
@@ -19,8 +21,9 @@ export default {
       ...getStaticPaths(),
       ...services.map((s) => `/services/${s.slug}`),
       ...articles.map((a) => `/articles/${a.slug}`),
-      // TODO: /solutions/:slug, /catalog/:category, /product/:slug —
-      // появятся из Supabase на этапе 3.
+      ...categories.map((c) => `/catalog/${c.slug}`),
+      ...getProductSlugs().map((slug) => `/product/${slug}`),
+      // TODO: /solutions/:slug — когда решения переедут в данные.
     ];
   },
 } satisfies Config;

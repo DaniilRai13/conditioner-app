@@ -1,0 +1,218 @@
+@use "mixins" as *;
+
+.top {
+  padding-top: 0;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 2.5rem;
+  align-items: start;
+
+  @include mq(lg) {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+}
+
+.gallery {
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-banner);
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+}
+
+.noImage {
+  aspect-ratio: 1 / 1;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--border) 0 0.5rem,
+    transparent 0.5rem 1rem
+  );
+  opacity: 0.5;
+}
+
+.info {
+  min-width: 0;
+}
+
+.brand {
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}
+
+.stock {
+  margin: 0.25rem 0 1.25rem;
+  color: var(--brand-600);
+  font-weight: 600;
+
+  @include text-preset(caption);
+}
+
+.priceBox {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.price {
+  color: var(--ink-900);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.priceNote {
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}
+
+.description {
+  max-width: 60ch;
+  margin-bottom: 1.5rem;
+
+  @include text-preset(body);
+}
+
+.highlights {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 0 0 1.5rem;
+
+  @include mq(sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  li {
+    display: flex;
+    gap: 0.625rem;
+    align-items: flex-start;
+  }
+
+  svg {
+    flex: none;
+    margin-top: 0.125rem;
+    color: var(--brand-600);
+  }
+
+  b {
+    display: block;
+    color: var(--ink-900);
+    font-size: 0.9375rem;
+  }
+}
+
+.highlightLabel {
+  display: block;
+  color: var(--ink-400);
+  font-size: 0.75rem;
+}
+
+.installCard {
+  gap: 0.75rem;
+}
+
+.installTitle {
+  color: var(--ink-900);
+  font-size: 0.9375rem;
+}
+
+.installList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  color: var(--ink-600);
+
+  @include text-preset(caption);
+
+  li {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  svg {
+    flex: none;
+    color: var(--brand-600);
+  }
+}
+
+.priceLink {
+  font-weight: 600;
+
+  @include text-preset(caption);
+  @include focus-ring;
+}
+
+// --- полная таблица характеристик ---
+
+.specsSection {
+  padding-top: 0;
+}
+
+.specsDetails {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+}
+
+.specsSummary {
+  padding: 1rem 1.25rem;
+  color: var(--brand-600);
+  font-weight: 600;
+  cursor: pointer;
+
+  @include text-preset(caption);
+  @include focus-ring;
+}
+
+.specsTable {
+  margin: 0;
+  padding: 0 1.25rem 0.5rem;
+}
+
+.specsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 0.625rem 0;
+  border-top: 1px solid var(--border);
+
+  @include text-preset(caption);
+
+  dt {
+    color: var(--ink-400);
+  }
+
+  dd {
+    margin: 0;
+    color: var(--ink-900);
+  }
+}
+
+.similar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+
+  @include mq(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include mq(xxs) {
+    grid-template-columns: 1fr;
+  }
+}
