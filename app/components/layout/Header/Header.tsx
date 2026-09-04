@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { NavLink, useLocation } from "react-router";
 import { Menu, X, Phone } from "lucide-react";
 import { Container } from "~/components/ui/Container/Container";
 import { Button } from "~/components/ui/Button/Button";
 import { Logo } from "../Logo/Logo";
-import { nav, site } from "~/config/site";
+import { headerNav, site } from "~/config/site";
 import styles from "./Header.module.scss";
 
 export function Header() {
@@ -34,11 +35,16 @@ export function Header() {
    *
    * Плюс ловушка: Tab не должен уводить на страницу, скрытую под шторкой.
    */
+  const wasOpen = useRef(false);
+
   useEffect(() => {
     if (!open) {
-      burgerRef.current?.focus();
+      // На первом рендере шторка и так закрыта, возвращать фокус неоткуда.
+      // Без этой проверки при загрузке страницы фокус молча уезжает на бургер.
+      if (wasOpen.current) burgerRef.current?.focus();
       return;
     }
+    wasOpen.current = true;
 
     const dialog = dialogRef.current;
     if (!dialog) return;
@@ -46,8 +52,8 @@ export function Header() {
     const focusable = () =>
       Array.from(
         dialog.querySelectorAll<HTMLElement>(
-          "a[href], button:not([disabled]), [tabindex]:not([tabindex='-1'])"
-        )
+          "a[href], button:not([disabled]), [tabindex]:not([tabindex='-1'])",
+        ),
       );
 
     focusable()[0]?.focus();
@@ -87,10 +93,11 @@ export function Header() {
             Раньше они стояли по разным краям и визуально не связывались. */}
         <div className={styles.right}>
           <nav className={styles.nav} aria-label="Основное меню">
-            {nav.map((item) => (
+            {headerNav.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
+                end={item.to === "/"}
                 className={({ isActive }) =>
                   isActive ? `${styles.link} ${styles.active}` : styles.link
                 }
@@ -117,58 +124,65 @@ export function Header() {
         </div>
       </Container>
 
-      {open && (
-        <div
-          ref={dialogRef}
-          className={styles.mobile}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Меню"
-        >
-          <Container className={styles.mobileInner}>
-            {/* Логотип остаётся на месте: без него при открытии меню
+      {/* Шторка уезжает в body, а не остаётся внутри <header>.
+          У шапки backdrop-filter, а он создаёт containing block для
+          position: fixed — внутри неё inset: 0 меряется от шапки,
+          и меню схлопывается в полоску высотой 4.5rem. */}
+      {open &&
+        createPortal(
+          <div
+            ref={dialogRef}
+            className={styles.mobile}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Меню"
+          >
+            <Container className={styles.mobileInner}>
+              {/* Логотип остаётся на месте: без него при открытии меню
                 бренд пропадает, и шторка выглядит чужой страницей. */}
-            <div className={styles.mobileTop}>
-              <Logo />
-              <button
-                type="button"
-                className={styles.close}
-                aria-label="Закрыть меню"
-                onClick={() => setOpen(false)}
-              >
-                <X size={24} aria-hidden />
-              </button>
-            </div>
-
-            <nav className={styles.mobileNav} aria-label="Основное меню">
-              {nav.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  className={({ isActive }) =>
-                    isActive
-                      ? `${styles.mobileLink} ${styles.mobileActive}`
-                      : styles.mobileLink
-                  }
+              <div className={styles.mobileTop}>
+                <Logo />
+                <button
+                  type="button"
+                  className={styles.close}
+                  aria-label="Закрыть меню"
+                  onClick={() => setOpen(false)}
                 >
-                  {item.label}
-                </NavLink>
-              ))}
-            </nav>
+                  <X size={24} aria-hidden />
+                </button>
+              </div>
 
-            <div className={styles.mobileActions}>
-              <Button to="/contacts" size="lg">
-                Связаться
-              </Button>
-              <a className={styles.call} href={site.phoneHref}>
-                <Phone size={18} aria-hidden />
-                {site.phone}
-              </a>
-              <span className={styles.hours}>{site.workHours}</span>
-            </div>
-          </Container>
-        </div>
-      )}
+              <nav className={styles.mobileNav} aria-label="Основное меню">
+                {headerNav.map((item) => (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    end={item.to === "/"}
+                    className={({ isActive }) =>
+                      isActive
+                        ? `${styles.mobileLink} ${styles.mobileActive}`
+                        : styles.mobileLink
+                    }
+                  >
+                    {item.label}
+                  </NavLink>
+                ))}
+              </nav>
+
+              <div className={styles.mobileActions}>
+                <Button to="/contacts" size="lg">
+                  Связаться
+                </Button>
+                <a className={styles.call} href={site.phoneHref}>
+                  <Phone size={18} aria-hidden />
+                  {site.phone}
+                </a>
+                <span className={styles.hours}>{site.workHours}</span>
+              </div>
+            </Container>
+          </div>,
+          document.body,
+        )}
     </header>
   );
 }
