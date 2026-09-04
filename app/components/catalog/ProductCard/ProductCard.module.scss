@@ -125,3 +125,68 @@
   font-weight: 600;
   white-space: nowrap;
 }
+
+// В вертикальном варианте обёртка не влияет на раскладку.
+.body {
+  display: contents;
+}
+
+// --- горизонтальный вариант: картинка слева, текст справа ---
+
+.row {
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.875rem;
+
+  .media {
+    flex: none;
+    width: 6.5rem;
+    margin-bottom: 0;
+    aspect-ratio: 1 / 1;
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .model {
+    margin-bottom: 0.5rem;
+    font-size: 0.9375rem;
+  }
+
+  // Характеристики в строку: в узкой колонке вертикальный список
+  // растягивает карточку без пользы.
+  .specs {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.875rem;
+    margin-bottom: 0.625rem;
+  }
+
+  .footer {
+    align-items: center;
+  }
+
+  // Цена в одну строку с подписью сбоку — иначе «1 390 р.»
+  // ломается на три строки, как было в квизе.
+  .price {
+    flex-direction: row;
+    gap: 0.375rem;
+    align-items: baseline;
+    font-size: 1.0625rem;
+    white-space: nowrap;
+  }
+
+  @include mq(xxs) {
+    .media {
+      width: 5rem;
+    }
+
+    .price {
+      font-size: 1rem;
+    }
+  }
+}
