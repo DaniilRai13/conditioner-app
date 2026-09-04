@@ -109,6 +109,72 @@ export function getProductSlugs(): string[] {
   return all.map((p) => p.slug);
 }
 
+export type SolutionPick = {
+  tier: "budget" | "optimum" | "premium";
+  label: string;
+  product: CatalogProduct;
+};
+
+const TIER_LABELS = {
+  budget: "Бюджетный",
+  optimum: "Оптимальный",
+  premium: "Премиум",
+} as const;
+
+/**
+ * Три модели под решение: бюджет, оптимум, премиум.
+ *
+ * Подбираем из каталога по площади, а не прописываем слаги руками: иначе
+ * при следующем импорте ссылки протухнут молча, и страница решения покажет
+ * пустоту вместо моделей.
+ *
+ * Верхняя граница площади нужна, чтобы под комнату 20 м² не предложить
+ * модель на 70: формально она подходит, но это переплата и постоянные
+ * циклы запуска на минимальной нагрузке.
+ */
+export function getSolutionProducts(
+  areaTo: number,
+  types: ProductType[]
+): SolutionPick[] {
+  const fits = all
+    .filter((p) => {
+      if (!types.includes(p.type)) return false;
+      const area = p.specs.areaM2;
+      if (!area) return false;
+      // Верхняя граница 1.25, а не 1.6: с широким допуском под комнату
+      // 35 м² предлагались блоки на 50 — формально подходят, а на деле
+      // это переплата и работа на минимальной нагрузке.
+      return area >= areaTo && area <= areaTo * 1.25;
+    })
+    .sort((a, b) => a.price - b.price);
+
+  if (fits.length === 0) return [];
+
+  const indexes =
+    fits.length === 1
+      ? [0]
+      : fits.length === 2
+        ? [0, fits.length - 1]
+        : [0, Math.floor(fits.length / 2), fits.length - 1];
+
+  const tiers = ["budget", "optimum", "premium"] as const;
+
+  return indexes.map((index, i) => ({
+    tier: tiers[i],
+    label: TIER_LABELS[tiers[i]],
+    product: toCatalog(fits[index]),
+  }));
+}
+
+/** Цена «от» для карточки решения — самое дешёвое подходящее оборудование. */
+export function getSolutionPriceFrom(
+  areaTo: number,
+  types: ProductType[]
+): number | null {
+  const picks = getSolutionProducts(areaTo, types);
+  return picks.length ? picks[0].product.price : null;
+}
+
 /** Границы фильтров считаем по данным, а не задаём руками. */
 export function getCatalogBounds(products: CatalogProduct[]) {
   const prices = products.map((p) => p.price);

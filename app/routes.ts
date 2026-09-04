@@ -10,8 +10,8 @@ export default [
   route("catalog/:category", "routes/catalog/catalog-category.tsx"),
   route("product/:slug", "routes/catalog/product.tsx"),
 
-  route("solutions", "routes/solutions.tsx"),
-  route("solutions/:slug", "routes/solution.tsx"),
+  route("solutions", "routes/solutions/solutions.tsx"),
+  route("solutions/:slug", "routes/solutions/solution.tsx"),
 
   route("services", "routes/services/services.tsx"),
   route("services/:slug", "routes/services/service.tsx"),

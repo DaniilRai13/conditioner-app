@@ -2,6 +2,7 @@ import type { Config } from "@react-router/dev/config";
 import { services } from "./app/data/services";
 import { articles } from "./app/data/articles";
 import { categories } from "./app/data/categories";
+import { solutions } from "./app/data/solutions";
 import { getProductSlugs } from "./app/lib/queries";
 
 export default {
@@ -23,7 +24,7 @@ export default {
       ...articles.map((a) => `/articles/${a.slug}`),
       ...categories.map((c) => `/catalog/${c.slug}`),
       ...getProductSlugs().map((slug) => `/product/${slug}`),
-      // TODO: /solutions/:slug — когда решения переедут в данные.
+      ...solutions.map((s) => `/solutions/${s.slug}`),
     ];
   },
 } satisfies Config;
