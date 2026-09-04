@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Link, useSearchParams } from "react-router";
 import { ArrowRight, ArrowLeft, RotateCcw } from "lucide-react";
 import { Container } from "~/components/ui/Container/Container";
@@ -40,14 +40,23 @@ export function Quiz({ products }: Props) {
     windows: params.get("windows") ?? undefined,
   };
 
-  const answered = QUIZ_QUESTIONS.filter((q) => answers[q.key]).length;
-  const [step, setStep] = useState(answered);
+  /**
+   * Шаг выводится из ответов, а не хранится отдельным состоянием.
+   *
+   * Раньше `step` был в useState и синхронизировался эффектом. React батчит
+   * обновления, поэтому на промежуточном рендере параметры URL были ещё
+   * старыми, а step уже сброшенным — эффект «чинил» его обратно, и после
+   * «Пройти заново» квиз оказывался на последнем вопросе.
+   *
+   * Дублирующее состояние убрано: удаление ответа само отматывает шаг назад.
+   *
+   * Считаем именно индекс первого неотвеченного вопроса, а не количество
+   * ответов. По ссылке могут прийти ответы с пропуском — например только
+   * `heat`; при подсчёте количеством квиз завис бы на уже отвеченном шаге.
+   */
+  const firstUnanswered = QUIZ_QUESTIONS.findIndex((q) => !answers[q.key]);
   const done = isComplete(answers);
-
-  // Заход по ссылке с готовыми ответами должен сразу открывать результат.
-  useEffect(() => {
-    if (answered > step) setStep(answered);
-  }, [answered, step]);
+  const step = done ? QUIZ_QUESTIONS.length : firstUnanswered;
 
   // Фокус на первый вариант нового шага: иначе с клавиатуры после ответа
   // приходится табать через всю шапку заново.
@@ -56,27 +65,31 @@ export function Quiz({ products }: Props) {
     optionsRef.current?.querySelector<HTMLButtonElement>("button")?.focus();
   }, [step, done]);
 
-  function choose(key: keyof QuizAnswers, value: string) {
+  function update(mutate: (next: URLSearchParams) => void) {
     const next = new URLSearchParams(params);
-    next.set(key, value);
+    mutate(next);
+    // replace, чтобы каждый ответ не засорял историю браузера.
     setParams(next, { replace: true, preventScrollReset: true });
-    setStep((s) => Math.min(s + 1, QUIZ_QUESTIONS.length));
+  }
+
+  function choose(key: keyof QuizAnswers, value: string) {
+    update((next) => next.set(key, value));
   }
 
   function back() {
-    const previous = QUIZ_QUESTIONS[step - 1];
-    if (!previous) return;
-    const next = new URLSearchParams(params);
-    next.delete(previous.key);
-    setParams(next, { replace: true, preventScrollReset: true });
-    setStep((s) => Math.max(0, s - 1));
+    // Ищем последний отвеченный вопрос перед текущим: при неполной ссылке
+    // это не обязательно предыдущий по порядку.
+    for (let i = Math.min(step, QUIZ_QUESTIONS.length) - 1; i >= 0; i--) {
+      const question = QUIZ_QUESTIONS[i];
+      if (answers[question.key]) {
+        update((next) => next.delete(question.key));
+        return;
+      }
+    }
   }
 
   function restart() {
-    const next = new URLSearchParams(params);
-    QUIZ_QUESTIONS.forEach((q) => next.delete(q.key));
-    setParams(next, { replace: true, preventScrollReset: true });
-    setStep(0);
+    update((next) => QUIZ_QUESTIONS.forEach((q) => next.delete(q.key)));
   }
 
   /** Стрелки внутри группы вариантов — как в нативном radiogroup. */
