@@ -93,14 +93,37 @@ const IMAGE_WIDTHS = [400, 800];
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
+/** Название без родовых слов и марки: «Кондиционер Electrolux EACM-11 CL/N3» → «EACM-11 CL/N3». */
+function modelFromName(brand: string, name: string): string {
+  return name
+    .replace(/^[а-яё]*\s*кондиционер\s+/i, "")
+    .replace(new RegExp(`^${brand}\\s+`, "i"), "")
+    .trim();
+}
+
+/**
+ * Обозначение модели для карточки.
+ *
+ * Атрибут «Модель» у поставщика бывает обрезан: у трёх мобильных Electrolux
+ * он равен просто «EACM», и в каталоге три разных товара выглядели
+ * одинаково. Если название содержит более полное обозначение — берём его.
+ */
+export function buildModel(brand: string, model: string, name: string): string {
+  const fromName = modelFromName(brand, name);
+  if (!model) return fromName;
+  if (fromName.toLowerCase().startsWith(model.toLowerCase()) && fromName.length > model.length) {
+    return fromName;
+  }
+  return model;
+}
+
 /**
  * Слаг товара.
  *
- * Обычно хватает бренда с моделью, но у поставщика атрибут «Модель» бывает
- * обрезан: у трёх мобильных Electrolux он равен просто «EACM», и слаги
- * схлопывались в один — товары затирали картинки друг друга и делили
- * бы один URL. Поэтому при столкновении берём название, отбросив
- * родовые слова, а в крайнем случае добавляем id поставщика.
+ * Обычно хватает бренда с моделью, но атрибут «Модель» бывает обрезан:
+ * слаги схлопывались в один — товары затирали картинки друг друга
+ * и делили бы один URL. Поэтому при столкновении берём название,
+ * а в крайнем случае добавляем id поставщика.
  */
 function buildSlug(
   brand: string,
@@ -109,8 +132,7 @@ function buildSlug(
   sourceId: number,
   used: Set<string>
 ): string {
-  const fromName = () =>
-    slugify(name.replace(/^[а-яё]*\s*кондиционер\s+/i, ""));
+  const fromName = () => slugify(modelFromName(brand, name));
 
   const base = slugify(`${brand} ${model}`);
   const named = fromName();
@@ -365,6 +387,7 @@ async function run() {
       attributeValue(p.attributes, "Модель") ??
       attributeValue(p.attributes, "Модель общая") ??
       "";
+    const fullModel = buildModel(brand, model, p.name);
     const prev = existing.get(p.id);
     // Слаг фиксируется при первом импорте: смена URL стоит позиций.
     const slug = prev?.slug ?? buildSlug(brand, model, p.name, p.id, usedSlugs);
@@ -382,7 +405,7 @@ async function run() {
       slug,
       name: p.name.trim(),
       brand: brand.trim(),
-      model: model.trim(),
+      model: fullModel.trim(),
       type: typeFromCategory(categoryId),
       price: priceOf(p)!,
       inStock: p.is_in_stock,

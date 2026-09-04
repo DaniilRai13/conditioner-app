@@ -27,6 +27,15 @@
   overflow: hidden;
 }
 
+// <picture> — строчный элемент без собственной высоты, поэтому height: 100%
+// у картинки не к чему привязаться: object-fit не срабатывает и высокие
+// снимки (блок + наружный + пульт) вылезают за плашку и режутся overflow.
+.media picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .image {
   width: 100%;
   height: 100%;
