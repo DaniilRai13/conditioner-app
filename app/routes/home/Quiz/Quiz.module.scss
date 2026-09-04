@@ -60,14 +60,13 @@
   @include text-preset(caption);
 }
 
+// Сетка с равными колонками вместо flex: во flex каждая кнопка тянется
+// по своему тексту, и в узкой колонке они встают друг под другом
+// разной ширины. auto-fit держит их равными и в один ряд, и в два.
 .actions {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
   gap: 0.75rem;
-
-  @include mq(xs) {
-    flex-direction: column;
-  }
 }
 
 .restart {
