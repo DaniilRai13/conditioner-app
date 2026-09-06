@@ -71,6 +71,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       <Proof />
 
       <Section
+        tone="warm"
         title="Частые вопросы"
         lead="Собрал то, о чём спрашивают чаще всего. Если вашего вопроса тут нет — напишите, отвечу лично."
       >

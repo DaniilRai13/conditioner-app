@@ -9,6 +9,7 @@ import styles from "./SolutionsPreview.module.scss";
 export function SolutionsPreview() {
   return (
     <Section
+      tone="warm"
       title="Готовые решения по площади"
       lead="Подобрал оптимальные комплекты под разные площади. В каждом — расчёт мощности и три модели на выбор."
     >
@@ -19,7 +20,11 @@ export function SolutionsPreview() {
           const priceFrom = getSolutionPriceFrom(s.areaTo, s.types);
 
           return (
-            <Card key={s.slug} to={`/solutions/${s.slug}`} className={styles.card}>
+            <Card
+              key={s.slug}
+              to={`/solutions/${s.slug}`}
+              className={styles.card}
+            >
               <span className={styles.room}>{s.room}</span>
               <span className={styles.area}>{areaLabel(s)}</span>
               {priceFrom && (

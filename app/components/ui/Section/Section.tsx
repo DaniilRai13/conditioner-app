@@ -6,8 +6,15 @@ type Props = {
   children?: ReactNode;
   title?: string;
   lead?: string;
-  /** Синяя секция — как баннер «Работаю один» из макета. */
-  tone?: "default" | "brand";
+
+  /**
+   * Фон секции во всю ширину.
+   *
+   * `warm` — тёплая полоса. Расставляется через одну, чтобы страница не была
+   * одним сплошным полотном: соседние блоки перестают сливаться, а белые
+   * карточки получают фон, от которого отделяются.
+   */
+  tone?: "default" | "warm";
   id?: string;
   className?: string;
 };
@@ -20,7 +27,7 @@ export function Section({
   id,
   className,
 }: Props) {
-  const cn = [styles.section, tone === "brand" && styles.brand, className]
+  const cn = [styles.section, tone === "warm" && styles.warm, className]
     .filter(Boolean)
     .join(" ");
 
