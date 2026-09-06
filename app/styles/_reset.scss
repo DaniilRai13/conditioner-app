@@ -13,6 +13,9 @@ html {
 }
 
 body {
+  // Точка отсчёта для слоя фигур (PageDecor): без неё absolute
+  // мерялся бы от окна, и все четыре легли бы на первый экран.
+  position: relative;
   min-height: 100vh;
   background: var(--bg);
   color: var(--ink-600);
