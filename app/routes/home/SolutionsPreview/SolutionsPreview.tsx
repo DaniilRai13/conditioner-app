@@ -9,7 +9,7 @@ import styles from "./SolutionsPreview.module.scss";
 export function SolutionsPreview() {
   return (
     <Section
-      tone="warm"
+      decor="left"
       title="Готовые решения по площади"
       lead="Подобрал оптимальные комплекты под разные площади. В каждом — расчёт мощности и три модели на выбор."
     >

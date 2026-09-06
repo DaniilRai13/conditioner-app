@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Container } from "../Container/Container";
+import { Decor, type DecorVariant } from "../Decor/Decor";
 import styles from "./Section.module.scss";
 
 type Props = {
@@ -8,13 +9,11 @@ type Props = {
   lead?: string;
 
   /**
-   * Фон секции во всю ширину.
-   *
-   * `warm` — тёплая полоса. Расставляется через одну, чтобы страница не была
-   * одним сплошным полотном: соседние блоки перестают сливаться, а белые
-   * карточки получают фон, от которого отделяются.
+   * Органическая подложка под секцией. Раскладку задавать разную:
+   * одинаковая на каждой секции вернёт монотонность, ради ухода
+   * от которой она и добавлена.
    */
-  tone?: "default" | "warm";
+  decor?: DecorVariant;
   id?: string;
   className?: string;
 };
@@ -23,16 +22,17 @@ export function Section({
   children,
   title,
   lead,
-  tone = "default",
+  decor,
   id,
   className,
 }: Props) {
-  const cn = [styles.section, tone === "warm" && styles.warm, className]
+  const cn = [styles.section, decor && styles.decorated, className]
     .filter(Boolean)
     .join(" ");
 
   return (
     <section id={id} className={cn}>
+      {decor && <Decor variant={decor} />}
       <Container>
         {(title || lead) && (
           <header className={styles.head}>

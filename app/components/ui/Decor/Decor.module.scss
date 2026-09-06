@@ -1,0 +1,124 @@
+@use "mixins" as *;
+
+// Слой обрезает фигуры сам, чтобы не вешать overflow на секцию: там внутри
+// живут sticky-элементы (строка про ассортимент в каталоге), а overflow
+// у любого предка молча ломает sticky.
+//
+// z-index: -1 вместо возни с z-index у содержимого: отрицательный слой
+// внутри собственного контекста наложения рисуется поверх фона секции,
+// но под её текстом.
+.layer {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.back,
+.front {
+  position: absolute;
+  // Фигуры заведомо больше секции и выходят за края: обрезанная форма
+  // читается как продолжение фона, целая — как объект на нём.
+  width: 46rem;
+  height: 46rem;
+
+  @include mq(md) {
+    width: 28rem;
+    height: 28rem;
+  }
+}
+
+.back path {
+  fill: var(--decor);
+  opacity: 0.06;
+}
+
+.front path {
+  fill: var(--decor);
+  opacity: 0.1;
+}
+
+// --- раскладки ---
+
+.topRight {
+  .back {
+    top: -14rem;
+    right: -12rem;
+  }
+
+  .front {
+    top: 20%;
+    left: -20rem;
+  }
+}
+
+.left {
+  .back {
+    bottom: -18rem;
+    left: -16rem;
+  }
+
+  .front {
+    top: -16rem;
+    right: -14rem;
+  }
+}
+
+.bottomRight {
+  .back {
+    right: -18rem;
+    bottom: -16rem;
+  }
+
+  .front {
+    top: -12rem;
+    left: -18rem;
+  }
+}
+
+// --- параллакс ---
+//
+// Прокруточный таймлайн, а не JS на событие scroll: анимация живёт
+// в композиторе и не дёргает основной поток. Где не поддерживается —
+// фигуры просто стоят на месте, и это нормальный исход.
+@supports (animation-timeline: view()) {
+  .back,
+  .front {
+    animation: drift linear both;
+    animation-timeline: view();
+    animation-range: entry 0% exit 100%;
+  }
+
+  // Разный размах даёт ощущение глубины: будь он одинаковым,
+  // слои двигались бы как одна картинка.
+  .back {
+    --shift: 3rem;
+  }
+
+  // Ближний слой ходит дальше и в противоход — так читается глубина.
+  .front {
+    --shift: -5rem;
+  }
+}
+
+@keyframes drift {
+  from {
+    translate: 0 var(--shift);
+  }
+
+  to {
+    translate: 0 calc(var(--shift) * -1);
+  }
+}
+
+// Общий сброс в _reset.scss гасит анимации через animation-duration,
+// но у прокруточного таймлайна длительности нет — он ей не подчиняется.
+// Поэтому глушим отдельно.
+@media (prefers-reduced-motion: reduce) {
+  .back,
+  .front {
+    animation: none;
+    translate: none;
+  }
+}

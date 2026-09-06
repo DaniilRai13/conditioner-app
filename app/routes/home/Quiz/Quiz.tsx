@@ -98,14 +98,15 @@ export function Quiz({ products }: Props) {
     if (!keys.includes(e.key)) return;
 
     const items = Array.from(
-      optionsRef.current?.querySelectorAll<HTMLButtonElement>("button") ?? []
+      optionsRef.current?.querySelectorAll<HTMLButtonElement>("button") ?? [],
     );
     const index = items.indexOf(document.activeElement as HTMLButtonElement);
     if (index === -1) return;
 
     e.preventDefault();
     const forward = e.key === "ArrowDown" || e.key === "ArrowRight";
-    const nextIndex = (index + (forward ? 1 : -1) + items.length) % items.length;
+    const nextIndex =
+      (index + (forward ? 1 : -1) + items.length) % items.length;
     items[nextIndex]?.focus();
   }
 
@@ -150,7 +151,11 @@ export function Quiz({ products }: Props) {
             )}
 
             {done && (
-              <button type="button" className={styles.restart} onClick={restart}>
+              <button
+                type="button"
+                className={styles.restart}
+                onClick={restart}
+              >
                 <RotateCcw size={14} aria-hidden />
                 Пройти заново
               </button>
@@ -163,7 +168,9 @@ export function Quiz({ products }: Props) {
                 <div className={styles.bar} aria-hidden>
                   <span
                     className={styles.barFill}
-                    style={{ width: `${(step / QUIZ_QUESTIONS.length) * 100}%` }}
+                    style={{
+                      width: `${(step / QUIZ_QUESTIONS.length) * 100}%`,
+                    }}
                   />
                 </div>
 
@@ -189,7 +196,11 @@ export function Quiz({ products }: Props) {
                       {option.hint && (
                         <span className={styles.optionHint}>{option.hint}</span>
                       )}
-                      <ArrowRight size={16} className={styles.optionArrow} aria-hidden />
+                      <ArrowRight
+                        size={16}
+                        className={styles.optionArrow}
+                        aria-hidden
+                      />
                     </button>
                   ))}
                 </div>
@@ -210,7 +221,11 @@ export function Quiz({ products }: Props) {
                     {result.picks.map((pick) => (
                       <div key={pick.product.slug} className={styles.pick}>
                         <span className={styles.tier}>{pick.label}</span>
-                        <ProductCard product={pick.product} layout="row" compact />
+                        <ProductCard
+                          product={pick.product}
+                          layout="row"
+                          compact
+                        />
                       </div>
                     ))}
                   </div>
