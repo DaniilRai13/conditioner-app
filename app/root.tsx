@@ -17,6 +17,7 @@ import { site } from "./config/site";
 // index.css подключает все сабсеты с unicode-range: браузер скачает
 // только кириллицу и латиницу, остальные шесть файлов не тронет.
 import "@fontsource-variable/manrope";
+import "@fontsource-variable/oswald";
 import "./styles/index.scss";
 
 export function Layout({ children }: { children: React.ReactNode }) {

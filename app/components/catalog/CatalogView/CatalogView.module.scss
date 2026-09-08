@@ -27,7 +27,7 @@
 .label {
   color: var(--ink-400);
 
-  @include text-preset(caption);
+  @include text-preset(label);
 }
 
 .chips {
