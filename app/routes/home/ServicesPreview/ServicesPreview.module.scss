@@ -1,77 +1,135 @@
 @use "mixins" as *;
 
-.list {
-  margin: 0;
-  padding: 0;
-  border-top: 1px solid var(--border);
-  list-style: none;
+// Услуг четыре, и в сетке на три колонки они дают 3 + 1 — вторая строка
+// почти пустая. Карточка с телефоном занимает оставшиеся две ячейки:
+// прямоугольник закрывается, а призыв получает заметное место в конце.
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+
+  @include mq(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include mq(xs) {
+    grid-template-columns: 1fr;
+  }
 }
 
-.row {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 1.25rem;
-  align-items: center;
-  padding: 1.5rem 0.75rem;
-  border-bottom: 1px solid var(--border);
+.card,
+.call {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
   color: inherit;
   text-decoration: none;
   transition:
-    background-color var(--transition),
-    color var(--transition);
+    border-color var(--transition),
+    box-shadow var(--transition);
 
   @include focus-ring;
 
   &:hover {
-    background: var(--brand-50);
-
-    .title {
-      color: var(--brand-600);
-    }
-
-    // Стрелка отъезжает вправо — единственная анимация в строке,
-    // этого достаточно, чтобы связь с наведением читалась.
-    .arrow {
-      transform: translateX(0.25rem);
-    }
+    border-color: var(--brand-600);
+    box-shadow: var(--shadow-card);
   }
-
-  // На телефоне иконка и стрелка съедают ширину, которой и так мало:
-  // оставляем только иконку, а текст пускаем во всю строку.
-  @include mq(sm) {
-    grid-template-columns: auto 1fr;
-    gap: 0.875rem;
-    padding: 1.125rem 0.25rem;
-
-    .arrow {
-      display: none;
-    }
-  }
-}
-
-.body {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  min-width: 0;
 }
 
 .title {
+  margin-top: 1rem;
   color: var(--ink-900);
-  transition: color var(--transition);
 
   @include text-preset(h3);
 }
 
 .text {
-  max-width: 68ch;
+  flex: 1;
+  margin-top: 0.5rem;
   color: var(--ink-600);
 
   @include text-preset(caption);
 }
 
-.arrow {
-  flex: none;
+.more {
+  display: inline-flex;
+  gap: 0.375rem;
+  align-items: center;
+  margin-top: 1.25rem;
   color: var(--brand-600);
-  transition: transform var(--transition);
+  font-weight: 600;
+
+  @include text-preset(caption);
+
+  svg {
+    flex: none;
+    transition: transform var(--transition);
+  }
+}
+
+.card:hover .more svg,
+.call:hover .more svg {
+  transform: translateX(3px);
+}
+
+// --- залитые карточки ---
+//
+// Акцент расставлен ПО СЕТКЕ, а не по смыслу: заливается первая карточка
+// каждой строки. Услуги можно менять местами, не думая о цвете.
+//
+// Правило 3n + 1 даёт первую и четвёртую — и в три колонки, и в две:
+// там они ложатся по диагонали, то есть узор держится сам, без отдельных
+// правил под каждый брейкпойнт.
+.card:nth-child(3n + 1) {
+  background: var(--surface-accent);
+  border-color: transparent;
+
+  &:hover {
+    border-color: transparent;
+    box-shadow: 0 10px 28px rgb(73 82 126 / 30%);
+  }
+
+  .title {
+    color: #fff;
+  }
+
+  .text {
+    color: rgb(255 255 255 / 82%);
+  }
+
+  .more {
+    color: #fff;
+  }
+
+  // Подложка иконки живёт в своём CSS-модуле и по имени класса снаружи
+  // недоступна, поэтому целимся в первый элемент карточки.
+  > span:first-child {
+    background: rgb(255 255 255 / 16%);
+    color: #fff;
+  }
+}
+
+// --- карточка с телефоном ---
+//
+// Пунктир, а не сплошная рамка: она не услуга, и списком услуг
+// читаться не должна.
+.call {
+  grid-column: span 2;
+  border-style: dashed;
+
+  .text {
+    max-width: 46ch;
+  }
+
+  .more {
+    font-variant-numeric: tabular-nums;
+  }
+
+  @include mq(xs) {
+    grid-column: span 1;
+  }
 }
