@@ -6,6 +6,7 @@ type Props = {
   children?: ReactNode;
   title?: string;
   lead?: string;
+
   id?: string;
   className?: string;
 };

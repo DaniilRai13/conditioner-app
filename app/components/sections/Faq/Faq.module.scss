@@ -1,19 +1,41 @@
 @use "mixins" as *;
 
+// Одна панель с разделителями вместо шести отдельных карточек.
+//
+// Раньше каждый вопрос был карточкой: белая на почти белом фоне, отделённая
+// только рамкой. Шесть таких подряд не читались ни как список, ни как блок —
+// глаз видел повтор одного и того же прямоугольника.
+//
+// Панель решает это без цвета: шесть контуров заменяются одним, а вопросы
+// разделяются линиями. Тот же приём, что в списке услуг на главной.
 .list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-banner);
 }
 
 .item {
-  padding: 0.25rem 1.25rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-card);
+  padding-inline: 1.5rem;
+  border-top: 1px solid var(--border);
+  transition: background-color var(--transition);
+
+  &:first-child {
+    border-top: none;
+  }
+
+  // Открытый вопрос подсвечивается: до этого о состоянии говорила только
+  // повёрнутая стрелка, а её на длинном вопросе легко не заметить.
+  &[open] {
+    background: var(--brand-50);
+  }
 
   &[open] .chevron {
     transform: rotate(180deg);
+  }
+
+  @include mq(sm) {
+    padding-inline: 1.125rem;
   }
 }
 
@@ -22,7 +44,7 @@
   gap: 1rem;
   align-items: center;
   justify-content: space-between;
-  padding-block: 1rem;
+  padding-block: 1.125rem;
   color: var(--ink-900);
   font-size: 1rem;
   font-weight: 600;
@@ -35,6 +57,14 @@
   &::-webkit-details-marker {
     display: none;
   }
+
+  &:hover .chevron {
+    transform: translateY(2px);
+  }
+}
+
+.item[open] .question:hover .chevron {
+  transform: rotate(180deg) translateY(2px);
 }
 
 .chevron {
@@ -44,7 +74,10 @@
 }
 
 .answer {
-  padding-bottom: 1rem;
+  // Ответ выровнен по вопросу, но не занимает всю ширину: длинная строка
+  // на всю панель читается тяжело.
+  max-width: 68ch;
+  padding-bottom: 1.25rem;
   color: var(--ink-600);
 
   @include text-preset(body);
