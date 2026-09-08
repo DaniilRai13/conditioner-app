@@ -24,6 +24,22 @@ const SHAPES = [
 export function PageDecor() {
   return (
     <div className={styles.layer} aria-hidden>
+      {/*
+        Градиент объявлен один раз и переиспользуется всеми фигурами:
+        id в SVG общие на весь документ. Цвет задаётся не атрибутом,
+        а из CSS — в атрибут stop-color переменная не подставится.
+      */}
+      <svg className={styles.defs}>
+        <defs>
+          <radialGradient id="decor-fade">
+            <stop offset="0%" stopOpacity="1" />
+            <stop offset="45%" stopOpacity="0.92" />
+            <stop offset="72%" stopOpacity="0.55" />
+            <stop offset="100%" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+      </svg>
+
       {SHAPES.map((d, i) => (
         <svg
           key={d.slice(0, 12)}
