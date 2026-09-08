@@ -19,12 +19,9 @@ export const meta: MetaFunction = () => [
 export default function About() {
   return (
     <main>
-      <PageHeader
-        title="Обо мне"
-        crumbs={[{ label: "Обо мне" }]}
-      />
+      <PageHeader title="Обо мне" crumbs={[{ label: "Обо мне" }]} />
 
-      <Section className={styles.top}>
+      <Section>
         <div className={styles.intro}>
           <div className={styles.text}>
             {aboutIntro.map((p) => (

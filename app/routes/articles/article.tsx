@@ -40,7 +40,10 @@ export default function ArticlePage({ loaderData }: Route.ComponentProps) {
     <main>
       <PageHeader
         title={article.h1}
-        crumbs={[{ label: "Полезное", to: "/articles" }, { label: article.title }]}
+        crumbs={[
+          { label: "Полезное", to: "/articles" },
+          { label: article.title },
+        ]}
       >
         <p className={styles.meta}>
           <time dateTime={article.date}>{formatDate(article.date)}</time> ·{" "}
@@ -48,7 +51,7 @@ export default function ArticlePage({ loaderData }: Route.ComponentProps) {
         </p>
       </PageHeader>
 
-      <Section className={styles.top}>
+      <Section>
         <article className={styles.body}>
           <p className={styles.lead}>{article.lead}</p>
 

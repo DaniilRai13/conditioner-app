@@ -28,10 +28,14 @@ export default function Services() {
         crumbs={[{ label: "Услуги" }]}
       />
 
-      <Section className={styles.top}>
+      <Section>
         <div className={styles.grid}>
           {services.map((s) => (
-            <Card key={s.slug} to={`/services/${s.slug}`} className={styles.card}>
+            <Card
+              key={s.slug}
+              to={`/services/${s.slug}`}
+              className={styles.card}
+            >
               <IconBox name={s.icon} />
               <b className={styles.title}>{s.title}</b>
               <span className={styles.text}>{s.short}</span>
@@ -45,7 +49,10 @@ export default function Services() {
 
       <WhyMe />
 
-      <Section title="Оставьте заявку" lead="Перезвоню, уточню детали и назову точную стоимость.">
+      <Section
+        title="Оставьте заявку"
+        lead="Перезвоню, уточню детали и назову точную стоимость."
+      >
         <LeadForm source="footer" />
       </Section>
     </main>

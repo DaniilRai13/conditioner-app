@@ -1,5 +1,13 @@
 import { Link } from "react-router";
-import { Check, Snowflake, Flame, Volume2, Wifi, Wind, Thermometer } from "lucide-react";
+import {
+  Check,
+  Snowflake,
+  Flame,
+  Volume2,
+  Wifi,
+  Wind,
+  Thermometer,
+} from "lucide-react";
 import type { Route } from "./+types/product";
 import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
 import { Section } from "~/components/ui/Section/Section";
@@ -75,7 +83,11 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
       value: `${specs.minHeatTemp} °C`,
     },
     specs.hasWifi && { icon: Wifi, label: "Wi-Fi", value: "есть" },
-  ].filter(Boolean) as { icon: typeof Snowflake; label: string; value: string }[];
+  ].filter(Boolean) as {
+    icon: typeof Snowflake;
+    label: string;
+    value: string;
+  }[];
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -106,7 +118,7 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
         ]}
       />
 
-      <Section className={styles.top}>
+      <Section>
         <div className={styles.columns}>
           <div className={styles.gallery}>
             {product.image ? (
@@ -174,32 +186,24 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
         </div>
       </Section>
 
-        {Object.keys(specs.extra).length > 0 && (
-          <Section title="Все характеристики" className={styles.specsSection}>
-            <details className={styles.specsDetails}>
-              <summary className={styles.specsSummary}>
-                Показать полную таблицу ({Object.keys(specs.extra).length} параметров)
-              </summary>
-              <dl className={styles.specsTable}>
-                {Object.entries(specs.extra).map(([name, value]) => (
-                  <div key={name} className={styles.specsRow}>
-                    <dt>{name}</dt>
-                    <dd>{value}</dd>
-                  </div>
-                ))}
-              </dl>
-            </details>
-          </Section>
-        )}
-      <Section title="Оставить заявку на эту модель">
-        <LeadForm
-          source="product"
-          productSlug={product.slug}
-          defaultMessage={`Интересует ${product.name}`}
-        />
-      </Section>
-
-
+      {Object.keys(specs.extra).length > 0 && (
+        <Section title="Все характеристики">
+          <details className={styles.specsDetails}>
+            <summary className={styles.specsSummary}>
+              Показать полную таблицу ({Object.keys(specs.extra).length}{" "}
+              параметров)
+            </summary>
+            <dl className={styles.specsTable}>
+              {Object.entries(specs.extra).map(([name, value]) => (
+                <div key={name} className={styles.specsRow}>
+                  <dt>{name}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
+            </dl>
+          </details>
+        </Section>
+      )}
       {similar.length > 0 && (
         <Section title="Похожие модели">
           <div className={styles.similar}>
@@ -209,6 +213,14 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
           </div>
         </Section>
       )}
+
+      <Section title="Оставить заявку на эту модель">
+        <LeadForm
+          source="product"
+          productSlug={product.slug}
+          defaultMessage={`Интересует ${product.name}`}
+        />
+      </Section>
 
       <script
         type="application/ld+json"

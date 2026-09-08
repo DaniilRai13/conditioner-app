@@ -1,9 +1,5 @@
 @use "mixins" as *;
 
-.top {
-  padding-top: 0;
-}
-
 .intro {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);

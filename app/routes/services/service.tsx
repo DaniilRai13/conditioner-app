@@ -32,10 +32,13 @@ export default function ServicePage({ loaderData }: Route.ComponentProps) {
       <PageHeader
         title={service.h1}
         lead={service.lead}
-        crumbs={[{ label: "Услуги", to: "/services" }, { label: service.title }]}
+        crumbs={[
+          { label: "Услуги", to: "/services" },
+          { label: service.title },
+        ]}
       />
 
-      <Section className={styles.top}>
+      <Section>
         <div className={styles.columns}>
           <div className={styles.main}>
             <h2 className={styles.blockTitle}>Что входит</h2>
@@ -52,7 +55,8 @@ export default function ServicePage({ loaderData }: Route.ComponentProps) {
               <>
                 <h2 className={styles.blockTitle}>Оплачивается отдельно</h2>
                 <p className={styles.note}>
-                  Называю это до начала работ, а не после — сюрпризов в счёте не будет.
+                  Называю это до начала работ, а не после — сюрпризов в счёте не
+                  будет.
                 </p>
                 <ul className={styles.checks}>
                   {service.extra.map((item) => (
@@ -101,25 +105,35 @@ export default function ServicePage({ loaderData }: Route.ComponentProps) {
         </div>
       </Section>
 
-      <Section title="Вопросы по услуге">
-        <Faq items={service.faq} />
-      </Section>
-
-      <Section title="Оставьте заявку" lead="Перезвоню и назову точную стоимость по вашей задаче.">
-        <LeadForm source="footer" defaultMessage={`Интересует: ${service.title.toLowerCase()}`} />
-      </Section>
-
-      <Section title="Другие услуги" className={styles.other}>
+      <Section title="Другие услуги">
         <div className={styles.otherGrid}>
           {services
             .filter((s) => s.slug !== service.slug)
             .map((s) => (
-              <Card key={s.slug} to={`/services/${s.slug}`} className={styles.otherCard}>
+              <Card
+                key={s.slug}
+                to={`/services/${s.slug}`}
+                className={styles.otherCard}
+              >
                 <b>{s.title}</b>
                 <span className={styles.otherText}>{s.short}</span>
               </Card>
             ))}
         </div>
+      </Section>
+
+      <Section title="Вопросы по услуге">
+        <Faq items={service.faq} />
+      </Section>
+
+      <Section
+        title="Оставьте заявку"
+        lead="Перезвоню и назову точную стоимость по вашей задаче."
+      >
+        <LeadForm
+          source="footer"
+          defaultMessage={`Интересует: ${service.title.toLowerCase()}`}
+        />
       </Section>
     </main>
   );

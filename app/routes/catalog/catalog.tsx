@@ -42,7 +42,7 @@ export default function Catalog({ loaderData }: Route.ComponentProps) {
         crumbs={[{ label: "Каталог" }]}
       />
 
-      <Section className={styles.top}>
+      <Section>
         <nav className={styles.categories} aria-label="Категории каталога">
           {categories.map((c) => (
             <Link

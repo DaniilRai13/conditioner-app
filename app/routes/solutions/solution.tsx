@@ -96,7 +96,7 @@ export default function SolutionPage({ loaderData }: Route.ComponentProps) {
         )}
       </Section>
 
-      <Section title="Что входит в цену" className={styles.priceSection}>
+      <Section title="Что входит в цену">
         <div className={styles.columns}>
           <div>
             <h3 className={styles.subTitle}>Стандартный монтаж</h3>
@@ -127,6 +127,20 @@ export default function SolutionPage({ loaderData }: Route.ComponentProps) {
         </div>
       </Section>
 
+      <Section title="Другие решения" className={styles.others}>
+        <nav className={styles.links} aria-label="Другие решения">
+          {others.map((s) => (
+            <Link
+              key={s.slug}
+              to={`/solutions/${s.slug}`}
+              className={styles.link}
+            >
+              {s.room} · {s.area}
+            </Link>
+          ))}
+        </nav>
+      </Section>
+
       <Section title="Частые вопросы">
         <Faq items={solution.faq} />
       </Section>
@@ -139,16 +153,6 @@ export default function SolutionPage({ loaderData }: Route.ComponentProps) {
           source="solution"
           defaultMessage={`Помещение: ${solution.room.toLowerCase()}, ${areaLabel(solution)}`}
         />
-      </Section>
-
-      <Section title="Другие решения" className={styles.others}>
-        <nav className={styles.links} aria-label="Другие решения">
-          {others.map((s) => (
-            <Link key={s.slug} to={`/solutions/${s.slug}`} className={styles.link}>
-              {s.room} · {s.area}
-            </Link>
-          ))}
-        </nav>
       </Section>
     </main>
   );

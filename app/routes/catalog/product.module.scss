@@ -1,9 +1,5 @@
 @use "mixins" as *;
 
-.top {
-  padding-top: 0;
-}
-
 .columns {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
@@ -147,7 +143,8 @@
 .highlightLabel {
   display: block;
   color: var(--ink-400);
-  font-size: 0.75rem;
+
+  @include text-preset(label);
 }
 
 .installCard {
@@ -188,10 +185,6 @@
 }
 
 // --- полная таблица характеристик ---
-
-.specsSection {
-  padding-top: 0;
-}
 
 .specsDetails {
   background: var(--surface);

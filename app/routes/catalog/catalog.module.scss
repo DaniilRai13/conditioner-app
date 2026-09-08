@@ -1,9 +1,5 @@
 @use "mixins" as *;
 
-.top {
-  padding-top: 0;
-}
-
 .categories {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -48,4 +44,3 @@
     @include text-preset(caption);
   }
 }
-

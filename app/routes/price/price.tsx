@@ -30,7 +30,7 @@ export default function Price() {
         crumbs={[{ label: "Цены на монтаж" }]}
       />
 
-      <Section className={styles.top}>
+      <Section>
         <div className={styles.tableWrap}>
           <table className={styles.table}>
             <thead>
@@ -104,10 +104,7 @@ export default function Price() {
         title="Рассчитать точно"
         lead="Опишите помещение — назову стоимость с учётом ваших условий."
       >
-        <LeadForm
-          source="footer"
-          defaultMessage="Площадь комнаты: , этаж: "
-        />
+        <LeadForm source="footer" defaultMessage="Площадь комнаты: , этаж: " />
       </Section>
     </main>
   );

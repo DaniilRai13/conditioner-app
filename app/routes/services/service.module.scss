@@ -1,9 +1,5 @@
 @use "mixins" as *;
 
-.top {
-  padding-top: 0;
-}
-
 .columns {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 21.25rem;
@@ -161,10 +157,6 @@
 }
 
 // --- другие услуги ---
-
-.other {
-  padding-top: 0;
-}
 
 .otherGrid {
   display: grid;

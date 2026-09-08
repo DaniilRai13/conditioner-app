@@ -46,7 +46,7 @@ export default function CatalogCategory({ loaderData }: Route.ComponentProps) {
         ]}
       />
 
-      <Section className={styles.top}>
+      <Section>
         {/* Свой текст, а не отфильтрованный дубль каталога: без него
             поисковику нечем отличить эту страницу от соседней. */}
         <div className={styles.intro}>

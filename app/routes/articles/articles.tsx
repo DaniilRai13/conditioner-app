@@ -25,10 +25,14 @@ export default function Articles() {
         crumbs={[{ label: "Полезное" }]}
       />
 
-      <Section className={styles.top}>
+      <Section>
         <div className={styles.grid}>
           {articles.map((a) => (
-            <Card key={a.slug} to={`/articles/${a.slug}`} className={styles.card}>
+            <Card
+              key={a.slug}
+              to={`/articles/${a.slug}`}
+              className={styles.card}
+            >
               <span className={styles.meta}>
                 <time dateTime={a.date}>{formatDate(a.date)}</time>
                 <span>·</span>
