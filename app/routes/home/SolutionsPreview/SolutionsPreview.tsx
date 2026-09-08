@@ -1,10 +1,18 @@
-import { ArrowRight } from "lucide-react";
 import { Section } from "~/components/ui/Section/Section";
-import { Card } from "~/components/ui/Card/Card";
+import { SolutionCard } from "~/components/solutions/SolutionCard/SolutionCard";
 import { solutions, areaLabel } from "~/data/solutions";
 import { getSolutionPriceFrom } from "~/lib/queries";
-import { formatPrice } from "~/lib/format";
 import styles from "./SolutionsPreview.module.scss";
+
+/**
+ * Какое решение выделяем цветом.
+ *
+ * Пока индексом: в данных нет признака «рекомендуем», и придумывать его
+ * до разговора с заказчиком не стоит — это его знание о том, что чаще
+ * всего заказывают, а не наша догадка. Когда ответит, признак переедет
+ * в `Solution` полем, а отсюда уйдёт.
+ */
+const FEATURED = 1;
 
 export function SolutionsPreview() {
   return (
@@ -13,32 +21,20 @@ export function SolutionsPreview() {
       lead="Подобрал оптимальные комплекты под разные площади. В каждом — расчёт мощности и три модели на выбор."
     >
       <div className={styles.grid}>
-        {solutions.map((s) => {
-          // Цена считается по каталогу, а не задаётся руками: иначе после
-          // импорта она молча разъезжается с тем, что показано в карточке.
-          const priceFrom = getSolutionPriceFrom(s.areaTo, s.types);
-
-          return (
-            <Card
-              key={s.slug}
-              to={`/solutions/${s.slug}`}
-              className={styles.card}
-            >
-              <span className={styles.room}>{s.room}</span>
-              <span className={styles.area}>{areaLabel(s)}</span>
-              {priceFrom && (
-                <span className={styles.price}>
-                  от {formatPrice(priceFrom)}
-                  <span className={styles.priceNote}>за оборудование</span>
-                </span>
-              )}
-              <span className={styles.short}>{s.short}</span>
-              <span className={styles.more}>
-                Подробнее <ArrowRight size={16} aria-hidden />
-              </span>
-            </Card>
-          );
-        })}
+        {solutions.map((s, i) => (
+          <SolutionCard
+            key={s.slug}
+            slug={s.slug}
+            room={s.room}
+            area={areaLabel(s)}
+            areaTo={s.areaTo}
+            // Цена считается по каталогу, а не задаётся руками: иначе после
+            // импорта она молча разъезжается с тем, что показано в карточке.
+            priceFrom={getSolutionPriceFrom(s.areaTo, s.types)}
+            short={s.short}
+            featured={i === FEATURED}
+          />
+        ))}
       </div>
     </Section>
   );
