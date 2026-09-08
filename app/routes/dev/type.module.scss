@@ -1,0 +1,132 @@
+@use "mixins" as *;
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.pair {
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+
+  &:first-child {
+    padding-top: 0;
+    border-top: none;
+  }
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+
+.num {
+  color: var(--brand-600);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.pairName {
+  color: var(--ink-900);
+
+  @include text-preset(h3);
+}
+
+.tag {
+  padding: 0.125rem 0.5rem;
+  background: var(--brand-50);
+  border-radius: var(--radius-pill);
+  color: var(--brand-600);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.why {
+  max-width: 70ch;
+  margin-bottom: 1.5rem;
+
+  @include text-preset(caption);
+}
+
+.sample {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+}
+
+.label {
+  color: var(--ink-400);
+
+  @include text-preset(label);
+}
+
+.h1 {
+  margin: 0;
+  color: var(--ink-900);
+
+  @include text-preset(h1);
+}
+
+.h2 {
+  margin: 0.5rem 0 0;
+  color: var(--ink-900);
+
+  @include text-preset(h2);
+}
+
+.body {
+  max-width: 62ch;
+  margin: 0;
+
+  @include text-preset(body);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+// --- сами пары ---
+//
+// Меняем только гарнитуру: кегли, вес и разрядка везде из пресетов проекта.
+// Иначе сравнивались бы не шрифты, а пять разных вёрсток.
+
+.onest .h1,
+.onest .h2,
+.onest .pairName {
+  font-family: Onest, var(--font-sans);
+}
+
+.golos,
+.golos .h1,
+.golos .h2,
+.golos .body,
+.golos .label {
+  font-family: "Golos Text", var(--font-sans);
+}
+
+.oswald .h1,
+.oswald .h2 {
+  font-family: Oswald, var(--font-sans);
+  // Узкий гротеск при отрицательной разрядке из пресета слипается.
+  letter-spacing: 0;
+}
+
+.unbounded .h1,
+.unbounded .h2 {
+  font-family: Unbounded, var(--font-sans);
+  letter-spacing: -0.01em;
+}

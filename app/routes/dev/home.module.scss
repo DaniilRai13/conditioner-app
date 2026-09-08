@@ -1,0 +1,607 @@
+@use "mixins" as *;
+
+// Своя палитра на корне страницы: черновик не должен зависеть от токенов
+// проекта и уж тем более их менять. Всё, что ниже, живёт только здесь.
+.page {
+  --ground: #e9e6df;
+  --frame: #fbfaf7;
+  --panel: #ffffff;
+  --soft: #f1eee8;
+  --accent: #49527e;
+  --accent-hover: #3c4468;
+  --accent-soft: #e2e5ef;
+  --ink: #22252f;
+  --ink-mid: #5c6070;
+  --ink-low: #96999f;
+  --line: #e2ded5;
+  --r-lg: 32px;
+  --r-md: 20px;
+  --r-sm: 14px;
+
+  padding: 1.25rem;
+  background: var(--ground);
+  color: var(--ink-mid);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+
+  @include mq(sm) {
+    padding: 0.5rem;
+  }
+}
+
+// Страница лежит в скруглённой рамке с полями — приём из макета.
+// Он же задаёт всему остальному масштаб скруглений: внутри рамки
+// с радиусом 32 карточка с радиусом 6 смотрелась бы чужой.
+.frame {
+  max-width: 82rem;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background: var(--frame);
+  border-radius: var(--r-lg);
+
+  @include mq(sm) {
+    padding: 1rem;
+    border-radius: var(--r-md);
+  }
+}
+
+// --- шапка ---
+
+.top {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.5rem 1.5rem;
+}
+
+.logo {
+  display: flex;
+  gap: 0.625rem;
+  align-items: center;
+  color: var(--ink);
+
+  b {
+    display: block;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+}
+
+.mark {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  background: var(--accent-soft);
+  border-radius: 50%;
+  color: var(--accent);
+  font-size: 1.125rem;
+}
+
+.logoSub {
+  color: var(--ink-low);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  gap: 1.75rem;
+
+  @include mq(md) {
+    display: none;
+  }
+}
+
+.navLink {
+  color: var(--ink-mid);
+  font-size: 0.9375rem;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--accent);
+  }
+}
+
+// Кнопка-таблетка — вторая опорная форма макета после крупных скруглений.
+.pill {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.625rem 1.25rem;
+  background: var(--accent);
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 180ms ease;
+
+  &:hover {
+    background: var(--accent-hover);
+  }
+}
+
+.pillLg {
+  padding: 0.9375rem 1.75rem;
+  font-size: 0.9375rem;
+}
+
+.ghostPill {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.875rem 1.5rem;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    border-color 180ms ease,
+    color 180ms ease;
+
+  &:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+}
+
+// --- герой ---
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 2rem;
+  align-items: center;
+  padding: 3rem;
+  background: var(--soft);
+  border-radius: var(--r-lg);
+
+  @include mq(md) {
+    grid-template-columns: 1fr;
+    padding: 1.75rem;
+  }
+}
+
+.h1 {
+  margin: 0 0 1.25rem;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  font-weight: 600;
+  line-height: 1.08;
+}
+
+.heroLead {
+  max-width: 40ch;
+  margin: 0 0 2rem;
+  font-size: 1rem;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+// Фото живёт внутри скруглённой панели, а не висит отдельно — в макете
+// это ключевая деталь: изображение там часть блока, а не иллюстрация к нему.
+.heroMedia {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-md);
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-height: 22rem;
+    object-fit: cover;
+  }
+}
+
+.badge {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  display: grid;
+  place-items: center;
+  width: 5.25rem;
+  height: 5.25rem;
+  background: var(--frame);
+  border-radius: 50%;
+  color: var(--ink-mid);
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  text-align: center;
+
+  b {
+    display: block;
+    color: var(--accent);
+    font-size: 0.9375rem;
+  }
+}
+
+// --- полоса преимуществ ---
+
+.strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem;
+  padding: 2rem 3rem;
+
+  @include mq(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 1.5rem;
+  }
+
+  @include mq(xxs) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stripItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  align-items: flex-start;
+
+  b {
+    color: var(--ink);
+    font-size: 0.9375rem;
+  }
+
+  span {
+    color: var(--ink-low);
+    font-size: 0.875rem;
+  }
+}
+
+// --- решения ---
+
+.panel {
+  padding: 2.5rem;
+  background: var(--soft);
+  border-radius: var(--r-lg);
+
+  @include mq(md) {
+    padding: 1.5rem;
+  }
+}
+
+.panelHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+}
+
+.h2 {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.panelLead {
+  max-width: 48ch;
+  margin: 0.5rem 0 0;
+  font-size: 0.9375rem;
+}
+
+.solGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+
+  @include mq(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include mq(xxs) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.solCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 1.5rem;
+  background: var(--panel);
+  border-radius: var(--r-md);
+  transition: transform 200ms ease;
+
+  &:hover {
+    transform: translateY(-3px);
+  }
+}
+
+.solArea {
+  align-self: flex-start;
+  padding: 0.1875rem 0.625rem;
+  background: var(--accent-soft);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.solRoom {
+  margin-top: 0.5rem;
+  color: var(--ink);
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.solShort {
+  flex: 1;
+  font-size: 0.875rem;
+}
+
+.solPrice {
+  margin-top: 0.75rem;
+  color: var(--ink);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+// --- услуги ---
+
+.services {
+  padding: 3rem 2rem;
+
+  @include mq(md) {
+    padding: 2rem 0.5rem;
+  }
+}
+
+// Надзаголовок с чёрточками по бокам — из макета. Он там отбивает
+// смену темы, когда полноценный заголовок был бы тяжеловат.
+.eyebrow {
+  display: flex;
+  gap: 0.875rem;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 2rem;
+  color: var(--ink-low);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  span {
+    width: 2.5rem;
+    height: 1px;
+    background: var(--line);
+  }
+}
+
+.srvGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+
+  @include mq(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include mq(xxs) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.srvCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+  padding: 1.5rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+
+  b {
+    margin-top: 0.5rem;
+    color: var(--ink);
+    font-size: 1rem;
+  }
+
+  span:not(.srvMore) {
+    flex: 1;
+    font-size: 0.875rem;
+  }
+}
+
+.srvMore {
+  display: inline-flex;
+  gap: 0.375rem;
+  align-items: center;
+  margin-top: 0.75rem;
+  color: var(--accent);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+// --- как работаю ---
+
+.stepsBlock {
+  padding: 2.5rem 3rem;
+  background: var(--accent);
+  border-radius: var(--r-lg);
+  color: rgb(255 255 255 / 78%);
+
+  .h2 {
+    margin-bottom: 1.75rem;
+    color: #fff;
+  }
+
+  @include mq(md) {
+    padding: 1.75rem;
+  }
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  b {
+    color: #fff;
+    font-size: 0.9375rem;
+  }
+
+  span:not(.stepNum) {
+    font-size: 0.875rem;
+  }
+
+  @include mq(lg) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @include mq(sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stepNum {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 0.5rem;
+  background: rgb(255 255 255 / 14%);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+// --- призыв ---
+
+.cta {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 2.5rem;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding: 2.5rem 3rem;
+  background: var(--soft);
+  border-radius: var(--r-lg);
+
+  @include mq(md) {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+    padding: 1.75rem;
+  }
+}
+
+.ctaTitle {
+  margin: 0 0 0.75rem;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.ctaLead {
+  max-width: 46ch;
+  margin: 0 0 1.25rem;
+  font-size: 0.9375rem;
+}
+
+.ctaList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.9375rem;
+  }
+
+  svg {
+    color: var(--accent);
+  }
+}
+
+.ctaBox {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+  padding: 1.75rem;
+  background: var(--panel);
+  border-radius: var(--r-md);
+}
+
+.ctaLabel {
+  color: var(--ink-low);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ctaPhone {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  color: var(--ink);
+  font-size: 1.375rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+
+  svg {
+    color: var(--accent);
+  }
+}
+
+.ctaHours {
+  margin-bottom: 0.75rem;
+  color: var(--ink-low);
+  font-size: 0.875rem;
+}
+
+// --- подвал ---
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  padding: 1.75rem 0.5rem 0.5rem;
+  color: var(--ink-low);
+  font-size: 0.8125rem;
+}
+
+.back {
+  color: var(--accent);
+  font-weight: 600;
+}

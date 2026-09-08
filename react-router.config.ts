@@ -19,7 +19,8 @@ export default {
   // и потеряют пререндер, а вместе с ним и SEO.
   async prerender({ getStaticPaths }) {
     return [
-      ...getStaticPaths(),
+      // Черновики из routes/dev в сборку не идут.
+      ...getStaticPaths().filter((path) => !path.startsWith("/dev/")),
       ...services.map((s) => `/services/${s.slug}`),
       ...articles.map((a) => `/articles/${a.slug}`),
       ...categories.map((c) => `/catalog/${c.slug}`),

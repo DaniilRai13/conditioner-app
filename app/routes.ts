@@ -24,5 +24,12 @@ export default [
   route("contacts", "routes/contacts/contacts.tsx"),
   route("privacy", "routes/privacy/privacy.tsx"),
 
+  // Временная витрина шрифтов. Удаляется вместе с папкой routes/dev.
+  route("dev/type", "routes/dev/type.tsx"),
+  route("dev/services", "routes/dev/services.tsx"),
+  route("dev/cards", "routes/dev/cards.tsx"),
+  route("dev/home", "routes/dev/home.tsx"),
+  route("dev/form", "routes/dev/form.tsx"),
+
   route("*", "routes/not-found/not-found.tsx"),
 ] satisfies RouteConfig;
