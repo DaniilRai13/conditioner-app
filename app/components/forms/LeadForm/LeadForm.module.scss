@@ -1,15 +1,28 @@
 @use "mixins" as *;
 
+// Форма — тёмная панель на индиго, поля без коробок, только подчёркивание.
+//
+// Белые поля на почти белом фоне не читались как область ввода: поле светлее
+// страницы — это по логике карточка, предмет НА поверхности, а поле должно
+// быть углублением В ней. Тёмная панель снимает вопрос иначе: теперь светлое
+// здесь только то, что ввёл человек.
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
+  padding: 2rem;
+  background: var(--surface-accent);
+  border-radius: var(--radius-banner);
+
+  @include mq(sm) {
+    padding: 1.25rem;
+  }
 }
 
 .row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 1.25rem;
 
   @include mq(sm) {
     grid-template-columns: 1fr;
@@ -19,38 +32,66 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: 0.25rem;
+  min-width: 0;
 }
 
 .label {
-  color: var(--ink-900);
-  font-weight: 600;
+  color: rgb(255 255 255 / 72%);
 
-  @include text-preset(caption);
+  @include text-preset(label);
+
+  // Мельче общего пресета: прописные на тёмном фоне выглядят плотнее,
+  // чем на светлом, и 13px здесь начинали спорить с самим полем ввода.
+  // Переопределяем только тут — на светлых страницах пресет верный.
+  font-size: 0.75rem;
 }
 
 .optional {
-  color: var(--ink-400);
+  color: rgb(255 255 255 / 45%);
   font-weight: 400;
+  text-transform: none;
 }
 
+// Ни рамки, ни заливки — линия под полем.
+//
+// Вертикальный padding здесь несёт нагрузку: у поля без коробки границы
+// не видно, и по площади промаха он единственное, что даёт пальцу
+// во что попасть. Меньше 0.75rem ставить нельзя.
 .input,
 .textarea {
-  padding: 0.75rem 0.875rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-control);
-  color: var(--ink-900);
-  transition: border-color var(--transition);
-
-  @include focus-ring;
+  padding: 0.75rem 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgb(255 255 255 / 28%);
+  border-radius: 0;
+  color: #fff;
+  font-family: inherit;
+  font-size: 1rem;
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
 
   &::placeholder {
-    color: var(--ink-400);
+    color: rgb(255 255 255 / 40%);
+  }
+
+  // Обводки нет: прямоугольник вокруг поля без коробки читается рамкой
+  // и разрушает всю идею подчёркивания.
+  //
+  // Но убрать индикацию совсем нельзя — человек, идущий по форме табом,
+  // потеряет место. Её несёт сама линия: она белеет и удваивается.
+  // Толщину добавляет тень, а не border-width: рост рамки на пиксель
+  // сдвинул бы поле и вся форма дёргалась бы при переходе между полями.
+  &:focus,
+  &:focus-visible {
+    border-bottom-color: #fff;
+    box-shadow: 0 1px 0 #fff;
+    outline: none;
   }
 
   &[aria-invalid="true"] {
-    border-color: #dc2626;
+    border-bottom-color: #fca5a5;
   }
 }
 
@@ -70,14 +111,30 @@
   display: flex;
   gap: 0.625rem;
   align-items: flex-start;
-  color: var(--ink-600);
+  color: rgb(255 255 255 / 72%);
 
   @include text-preset(caption);
 
+  // Подчёркивание, а не только цвет и вес: жирный белый текст среди
+  // обычного белого ссылкой не читается — особенно в согласии, которое
+  // и так пробегают глазами. Отступ, чтобы линия не липла к буквам.
+  a {
+    color: #fff;
+    text-decoration: underline;
+    text-decoration-color: rgb(255 255 255 / 45%);
+    text-underline-offset: 0.2em;
+    transition: text-decoration-color var(--transition);
+
+    &:hover,
+    &:focus-visible {
+      text-decoration-color: #fff;
+    }
+  }
+
   input {
-    margin-top: 0.1875rem;
     flex: none;
-    accent-color: var(--brand-600);
+    margin-top: 0.1875rem;
+    accent-color: #fff;
   }
 }
 
@@ -90,27 +147,58 @@
 }
 
 .note {
-  color: var(--ink-400);
+  color: rgb(255 255 255 / 60%);
 
   @include text-preset(caption);
+
+  a {
+    color: #fff;
+    font-weight: 600;
+  }
 }
 
+// Светлее фона панели, а не краснее: чистый красный на индиго звенит
+// и перетягивает внимание с самого поля, где ошибка.
 .error {
-  color: #dc2626;
+  color: #fca5a5;
 
   @include text-preset(caption);
 }
 
 .done {
   padding: 2rem;
-  background: var(--brand-50);
-  border-radius: var(--radius-card);
+  background: var(--surface-accent);
+  border-radius: var(--radius-banner);
+  color: rgb(255 255 255 / 82%);
+
+  @include mq(sm) {
+    padding: 1.25rem;
+  }
 }
 
 .doneTitle {
   display: block;
   margin-bottom: 0.5rem;
-  color: var(--ink-900);
+  color: #fff;
 
   @include text-preset(h3);
+}
+
+// Инверсия: белая кнопка на индиго. Фирменный синий здесь два близких
+// тёмных цвета подряд — кнопка перестаёт читаться действием.
+// Селектор удвоен намеренно: у собственного правила Button
+// специфичность (0,1,0), ровно как у одиночного класса, и кто победит —
+// зависело бы от порядка CSS-модулей в бандле.
+.form .submit {
+  background: #fff;
+  color: var(--surface-accent);
+
+  &:hover:not(:disabled) {
+    background: rgb(255 255 255 / 88%);
+    color: var(--surface-accent);
+  }
+
+  &:focus-visible {
+    outline-color: rgb(255 255 255 / 80%);
+  }
 }

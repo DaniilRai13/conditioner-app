@@ -42,7 +42,7 @@ export default function Contacts() {
         crumbs={[{ label: "Контакты" }]}
       />
 
-      <Section className={styles.top}>
+      <Section>
         <div className={styles.grid}>
           <div className={styles.cards}>
             <Card className={styles.card}>
@@ -76,7 +76,8 @@ export default function Contacts() {
                 ))}
               </ul>
               <span className={styles.hint}>
-                Выезд за МКАД обсуждается отдельно — расстояние влияет на стоимость
+                Выезд за МКАД обсуждается отдельно — расстояние влияет на
+                стоимость
               </span>
             </Card>
 
@@ -93,7 +94,7 @@ export default function Contacts() {
             </Card>
           </div>
 
-          <div className={styles.formBox}>
+          <div>
             <h2 className={styles.formTitle}>Оставьте заявку</h2>
             <p className={styles.formLead}>
               Перезвоню в ближайшее время и отвечу на вопросы.
@@ -103,7 +104,7 @@ export default function Contacts() {
         </div>
       </Section>
 
-      <Section className={styles.mapSection}>
+      <Section>
         {/* TODO: карта Яндекса. Подключаем, когда будет адрес или точка
             выезда — пустая карта на весь экран пользы не приносит. */}
         <div className={styles.map} aria-hidden />

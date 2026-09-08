@@ -1,9 +1,5 @@
 @use "mixins" as *;
 
-.top {
-  padding-top: 0;
-}
-
 .grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -78,17 +74,6 @@ a.value:hover {
   }
 }
 
-.formBox {
-  padding: 2rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-banner);
-
-  @include mq(md) {
-    padding: 1.25rem;
-  }
-}
-
 .formTitle {
   margin-bottom: 0.5rem;
 
@@ -100,10 +85,6 @@ a.value:hover {
   color: var(--ink-600);
 
   @include text-preset(caption);
-}
-
-.mapSection {
-  padding-top: 0;
 }
 
 .map {

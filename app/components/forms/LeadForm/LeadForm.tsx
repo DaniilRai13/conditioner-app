@@ -74,7 +74,9 @@ export function LeadForm({ source, productSlug, defaultMessage }: Props) {
             aria-invalid={!!errors.name}
             {...register("name")}
           />
-          {errors.name && <span className={styles.error}>{errors.name.message}</span>}
+          {errors.name && (
+            <span className={styles.error}>{errors.name.message}</span>
+          )}
         </label>
 
         <label className={styles.field}>
@@ -133,7 +135,15 @@ export function LeadForm({ source, productSlug, defaultMessage }: Props) {
       )}
 
       <div className={styles.actions}>
-        <Button type="submit" size="lg" disabled={status === "sending"}>
+        {/* Своя раскраска: фирменный синий на индиго проваливается —
+            два близких тёмных цвета, и кнопка перестаёт читаться
+            действием. */}
+        <Button
+          type="submit"
+          size="lg"
+          className={styles.submit}
+          disabled={status === "sending"}
+        >
           {status === "sending" ? "Отправляю…" : "Отправить заявку"}
         </Button>
         <span className={styles.note}>

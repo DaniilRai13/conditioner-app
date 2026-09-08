@@ -1,4 +1,5 @@
 import type { MetaFunction } from "react-router";
+import { Check, Clock } from "lucide-react";
 import type { Route } from "./+types/home";
 import { getCatalogProducts } from "~/lib/queries";
 import { Hero } from "./Hero/Hero";
@@ -77,7 +78,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <Faq items={faq} />
       </Section>
 
-      <Section id="lead" className={styles.contact}>
+      <Section id="lead">
         <div className={styles.contactBox}>
           <div className={styles.contactHead}>
             <h2 className={styles.contactTitle}>Оставьте заявку</h2>
@@ -85,7 +86,32 @@ export default function Home({ loaderData }: Route.ComponentProps) {
               Перезвоню, уточню детали и назову точную стоимость. Замер и
               консультация — бесплатно.
             </p>
+
+            {/* Не заполнение пустоты, а ответ на возражения, которые
+                возникают ровно здесь: «сколько ждать», «не втянут ли меня
+                в разговор с менеджером», «не назовут ли потом другую цену».
+                Это последний блок перед подвалом — момент, когда человек
+                либо оставляет контакты, либо уходит. */}
+            <ul className={styles.contactList}>
+              {[
+                "Перезвоню в течение часа в рабочее время",
+                "Смету назову до начала работ, а не по факту",
+                "Отвечаю лично — колл-центра и менеджеров нет",
+                "Не подойдёт по площади — скажу сразу, а не продам лишнее",
+              ].map((t) => (
+                <li key={t}>
+                  <Check size={16} aria-hidden />
+                  {t}
+                </li>
+              ))}
+            </ul>
+
+            <p className={styles.contactHours}>
+              <Clock size={16} aria-hidden />
+              {site.workHours}
+            </p>
           </div>
+
           <LeadForm source="home" />
         </div>
       </Section>
