@@ -30,6 +30,10 @@ export default [
   route("dev/cards", "routes/dev/cards.tsx"),
   route("dev/home", "routes/dev/home.tsx"),
   route("dev/form", "routes/dev/form.tsx"),
+  route("dev/steps", "routes/dev/steps.tsx"),
+  route("dev/filters", "routes/dev/filters.tsx"),
+  route("dev/bg", "routes/dev/bg.tsx"),
+  route("dev/bg2", "routes/dev/bg2.tsx"),
 
   route("*", "routes/not-found/not-found.tsx"),
 ] satisfies RouteConfig;
