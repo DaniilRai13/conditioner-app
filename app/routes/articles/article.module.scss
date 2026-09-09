@@ -47,6 +47,10 @@
   padding: 1.75rem;
   background: var(--brand-50);
   border-radius: var(--radius-banner);
+  box-shadow:
+    0 1px 1px rgb(15 23 42 / 5%),
+    0 4px 8px rgb(15 23 42 / 5%),
+    0 16px 32px rgb(15 23 42 / 6%);
 
   @include mq(md) {
     padding: 1.25rem;
@@ -66,10 +70,6 @@
   color: var(--ink-600);
 
   @include text-preset(body);
-}
-
-.others {
-  padding-block: 0;
 }
 
 .otherList {

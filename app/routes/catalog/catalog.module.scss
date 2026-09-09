@@ -21,15 +21,25 @@
   gap: 0.125rem;
   padding: 0.875rem 1.125rem;
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid transparent;
   border-radius: var(--radius-control);
+  // Тень полегче, чем у карточек: плитки мелкие и стоят вчетвером
+  // в ряд — полная тень от каждой сложилась бы в рябь.
+  box-shadow:
+    0 1px 1px rgb(15 23 42 / 4%),
+    0 3px 6px rgb(15 23 42 / 4%),
+    0 10px 20px rgb(15 23 42 / 5%);
   color: inherit;
   text-decoration: none;
+  transition: box-shadow var(--transition);
 
   @include focus-ring;
 
   &:hover {
-    border-color: var(--brand-600);
+    box-shadow:
+      0 1px 1px rgb(15 23 42 / 6%),
+      0 6px 14px rgb(15 23 42 / 7%),
+      0 16px 32px rgb(15 23 42 / 9%);
   }
 
   b {

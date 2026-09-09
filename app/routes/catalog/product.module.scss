@@ -22,7 +22,10 @@
 .gallery {
   padding: 1.5rem;
   background: var(--surface);
-  border: 1px solid var(--border);
+  box-shadow:
+    0 1px 1px rgb(15 23 42 / 5%),
+    0 4px 8px rgb(15 23 42 / 5%),
+    0 16px 32px rgb(15 23 42 / 6%);
   border-radius: var(--radius-banner);
 
   @include mq(lg) {
@@ -188,7 +191,10 @@
 
 .specsDetails {
   background: var(--surface);
-  border: 1px solid var(--border);
+  box-shadow:
+    0 1px 1px rgb(15 23 42 / 5%),
+    0 4px 8px rgb(15 23 42 / 5%),
+    0 16px 32px rgb(15 23 42 / 6%);
   border-radius: var(--radius-card);
 }
 

@@ -45,12 +45,13 @@
   // на большом экране. Оба живут здесь, а не в миксине.
   // Половина промежутка между секциями: отступ идёт и сверху, и снизу,
   // поэтому между соседними блоками получается вдвое больше.
-  --section-gap: 1.5rem;
-  --section-gap-sm: 1rem;
+  --section-gap: 2rem;
+  --section-gap-sm: 1.5rem;
 
   // --- типографика ---
-  --font-sans: "Manrope Variable", "Manrope", system-ui, -apple-system,
-    "Segoe UI", roboto, sans-serif;
+  --font-sans:
+    "Manrope Variable", "Manrope", system-ui, -apple-system, "Segoe UI", roboto,
+    sans-serif;
 
   // Заголовочная гарнитура. Узкий гротеск: в крупном кегле у него есть
   // характер, которого нет у Manrope, а тот остаётся в тексте, где его
