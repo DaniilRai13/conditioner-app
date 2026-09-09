@@ -104,15 +104,6 @@ export default function Contacts() {
         </div>
       </Section>
 
-      <Section>
-        {/* TODO: карта Яндекса. Подключаем, когда будет адрес или точка
-            выезда — пустая карта на весь экран пользы не приносит. */}
-        <div className={styles.map} aria-hidden />
-        <p className={styles.legal}>
-          {site.legal.entity}, УНП {site.legal.unp}, {site.legal.address}
-        </p>
-      </Section>
-
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusiness) }}

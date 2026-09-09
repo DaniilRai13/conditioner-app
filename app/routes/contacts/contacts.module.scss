@@ -86,23 +86,3 @@ a.value:hover {
 
   @include text-preset(caption);
 }
-
-.map {
-  aspect-ratio: 21 / 9;
-  background:
-    radial-gradient(80% 60% at 50% 50%, var(--brand-50), transparent 70%),
-    var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-banner);
-
-  @include mq(md) {
-    aspect-ratio: 4 / 3;
-  }
-}
-
-.legal {
-  margin-top: 1.25rem;
-  color: var(--ink-400);
-
-  @include text-preset(caption);
-}

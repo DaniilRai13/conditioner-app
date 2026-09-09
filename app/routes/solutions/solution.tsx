@@ -6,7 +6,7 @@ import { Section } from "~/components/ui/Section/Section";
 import { Card } from "~/components/ui/Card/Card";
 import { Faq } from "~/components/sections/Faq/Faq";
 import { ProductCard } from "~/components/catalog/ProductCard/ProductCard";
-import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
+import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { solutions, getSolution, areaLabel } from "~/data/solutions";
 import { getSolutionProducts } from "~/lib/queries";
 import { STANDARD_INSTALL_INCLUDES, EXTRA_CHARGES } from "~/config/pricing";
@@ -145,15 +145,18 @@ export default function SolutionPage({ loaderData }: Route.ComponentProps) {
         <Faq items={solution.faq} />
       </Section>
 
-      <Section
+      <LeadBlock
         title="Рассчитать точную стоимость"
         lead="Замер и консультация бесплатны. Перезвоню и уточню детали."
-      >
-        <LeadForm
-          source="solution"
-          defaultMessage={`Помещение: ${solution.room.toLowerCase()}, ${areaLabel(solution)}`}
-        />
-      </Section>
+        source="solution"
+        defaultMessage={`Помещение: ${solution.room.toLowerCase()}, ${areaLabel(solution)}`}
+        points={[
+          "Уточню площадь, этаж и остекление",
+          "Посчитаю мощность с запасом на юг и последний этаж",
+          "Назову цену комплекта и монтажа отдельно",
+          "Замер и консультация бесплатны",
+        ]}
+      />
     </main>
   );
 }

@@ -5,7 +5,7 @@ import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
 import { Section } from "~/components/ui/Section/Section";
 import { Card } from "~/components/ui/Card/Card";
 import { Faq } from "~/components/sections/Faq/Faq";
-import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
+import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { services, getService } from "~/data/services";
 import { site } from "~/config/site";
 import styles from "./service.module.scss";
@@ -126,15 +126,18 @@ export default function ServicePage({ loaderData }: Route.ComponentProps) {
         <Faq items={service.faq} />
       </Section>
 
-      <Section
+      <LeadBlock
         title="Оставьте заявку"
         lead="Перезвоню и назову точную стоимость по вашей задаче."
-      >
-        <LeadForm
-          source="footer"
-          defaultMessage={`Интересует: ${service.title.toLowerCase()}`}
-        />
-      </Section>
+        source="footer"
+        defaultMessage={`Интересует: ${service.title.toLowerCase()}`}
+        points={[
+          "Отвечу по вашей задаче конкретно, а не общими словами",
+          "Назову срок и стоимость заранее",
+          "Скажу, если задача не моя — и посоветую, к кому",
+          "Даю гарантию на работы",
+        ]}
+      />
     </main>
   );
 }

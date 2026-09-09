@@ -4,7 +4,7 @@ import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
 import { Section } from "~/components/ui/Section/Section";
 import { SupplierNote } from "~/components/catalog/SupplierNote/SupplierNote";
 import { CatalogView } from "~/components/catalog/CatalogView/CatalogView";
-import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
+import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { getCatalogProducts, getCategoriesWithCount } from "~/lib/queries";
 import { site } from "~/config/site";
 import styles from "./catalog.module.scss";
@@ -61,12 +61,17 @@ export default function Catalog({ loaderData }: Route.ComponentProps) {
         <SupplierNote />
       </Section>
 
-      <Section
+      <LeadBlock
         title="Не уверены в выборе?"
         lead="Назовите площадь и этаж — подберу модель с нужным запасом и скажу стоимость под ключ."
-      >
-        <LeadForm source="footer" />
-      </Section>
+        source="footer"
+        points={[
+          "Подберу модель под площадь, этаж и остекление",
+          "Скажу, где переплата за мощность, а где экономия выйдет боком",
+          "Нужной модели нет на сайте — привезу под заказ",
+          "Назову цену с монтажом, а не только за коробку",
+        ]}
+      />
     </main>
   );
 }

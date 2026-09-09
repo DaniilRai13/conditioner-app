@@ -1,5 +1,4 @@
 import type { MetaFunction } from "react-router";
-import { Check, Clock } from "lucide-react";
 import type { Route } from "./+types/home";
 import { getCatalogProducts } from "~/lib/queries";
 import { Hero } from "./Hero/Hero";
@@ -12,9 +11,8 @@ import { Proof } from "./Proof";
 import { Faq } from "~/components/sections/Faq/Faq";
 import { faq } from "~/data/faq";
 import { Section } from "~/components/ui/Section/Section";
-import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
+import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { site } from "~/config/site";
-import styles from "./home.module.scss";
 
 export function loader() {
   // Квизу нужен весь каталог: он фильтрует его на клиенте по ответам.
@@ -78,43 +76,18 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <Faq items={faq} />
       </Section>
 
-      <Section id="lead">
-        <div className={styles.contactBox}>
-          <div className={styles.contactHead}>
-            <h2 className={styles.contactTitle}>Оставьте заявку</h2>
-            <p className={styles.contactLead}>
-              Перезвоню, уточню детали и назову точную стоимость. Замер и
-              консультация — бесплатно.
-            </p>
-
-            {/* Не заполнение пустоты, а ответ на возражения, которые
-                возникают ровно здесь: «сколько ждать», «не втянут ли меня
-                в разговор с менеджером», «не назовут ли потом другую цену».
-                Это последний блок перед подвалом — момент, когда человек
-                либо оставляет контакты, либо уходит. */}
-            <ul className={styles.contactList}>
-              {[
-                "Перезвоню в течение часа в рабочее время",
-                "Смету назову до начала работ, а не по факту",
-                "Отвечаю лично — колл-центра и менеджеров нет",
-                "Не подойдёт по площади — скажу сразу, а не продам лишнее",
-              ].map((t) => (
-                <li key={t}>
-                  <Check size={16} aria-hidden />
-                  {t}
-                </li>
-              ))}
-            </ul>
-
-            <p className={styles.contactHours}>
-              <Clock size={16} aria-hidden />
-              {site.workHours}
-            </p>
-          </div>
-
-          <LeadForm source="home" />
-        </div>
-      </Section>
+      <LeadBlock
+        id="lead"
+        title="Оставьте заявку"
+        lead="Перезвоню, уточню детали и назову точную стоимость. Замер и консультация — бесплатно."
+        source="home"
+        points={[
+          "Перезвоню в течение часа в рабочее время",
+          "Смету назову до начала работ, а не по факту",
+          "Отвечаю лично — колл-центра и менеджеров нет",
+          "Не подойдёт по площади — скажу сразу, а не продам лишнее",
+        ]}
+      />
     </main>
   );
 }

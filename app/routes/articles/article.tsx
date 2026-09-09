@@ -3,7 +3,7 @@ import type { Route } from "./+types/article";
 import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
 import { Section } from "~/components/ui/Section/Section";
 import { Button } from "~/components/ui/Button/Button";
-import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
+import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { articles, getArticle, formatDate } from "~/data/articles";
 import { site } from "~/config/site";
 import styles from "./article.module.scss";
@@ -83,7 +83,7 @@ export default function ArticlePage({ loaderData }: Route.ComponentProps) {
       </Section>
 
       {others.length > 0 && (
-        <Section title="Ещё по теме" className={styles.others}>
+        <Section title="Ещё по теме">
           <ul className={styles.otherList}>
             {others.map((a) => (
               <li key={a.slug}>
@@ -96,9 +96,17 @@ export default function ArticlePage({ loaderData }: Route.ComponentProps) {
         </Section>
       )}
 
-      <Section title="Остались вопросы?">
-        <LeadForm source="footer" />
-      </Section>
+      <LeadBlock
+        title="Остались вопросы?"
+        lead="Отвечу по вашей ситуации — статья описывает общий случай."
+        source="footer"
+        points={[
+          "Отвечу на вопрос по этой статье",
+          "Подскажу, подходит ли написанное вашему случаю",
+          "Можно просто спросить, без заказа",
+          "Отвечаю лично",
+        ]}
+      />
 
       <script
         type="application/ld+json"

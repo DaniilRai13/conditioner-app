@@ -2,7 +2,7 @@ import type { MetaFunction } from "react-router";
 import { Check, Plus } from "lucide-react";
 import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
 import { Section } from "~/components/ui/Section/Section";
-import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
+import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import {
   installRows,
   PRICES_CONFIRMED,
@@ -100,12 +100,18 @@ export default function Price() {
         </div>
       </Section>
 
-      <Section
+      <LeadBlock
         title="Рассчитать точно"
         lead="Опишите помещение — назову стоимость с учётом ваших условий."
-      >
-        <LeadForm source="footer" defaultMessage="Площадь комнаты: , этаж: " />
-      </Section>
+        source="footer"
+        defaultMessage={"Площадь комнаты: , этаж: "}
+        points={[
+          "Стоимость зависит от этажа, длины трассы и штробления",
+          "Посчитаю по вашим условиям, а не «в среднем»",
+          "Смету назову до начала работ",
+          "Выезд на замер бесплатный",
+        ]}
+      />
     </main>
   );
 }

@@ -13,7 +13,7 @@ import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
 import { Section } from "~/components/ui/Section/Section";
 import { Card } from "~/components/ui/Card/Card";
 import { ProductCard } from "~/components/catalog/ProductCard/ProductCard";
-import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
+import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { getProductBySlug, getSimilarProducts } from "~/lib/queries";
 import { getCategory } from "~/data/categories";
 import { formatPrice, formatArea, formatKw } from "~/lib/format";
@@ -214,13 +214,19 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
         </Section>
       )}
 
-      <Section title="Оставить заявку на эту модель">
-        <LeadForm
-          source="product"
-          productSlug={product.slug}
-          defaultMessage={`Интересует ${product.name}`}
-        />
-      </Section>
+      <LeadBlock
+        title="Оставить заявку на эту модель"
+        lead="Проверю наличие, посчитаю монтаж и назову итоговую цену."
+        source="product"
+        productSlug={product.slug}
+        defaultMessage={`Интересует ${product.name}`}
+        points={[
+          "Проверю наличие у поставщика и срок поставки",
+          "Посчитаю монтаж для вашего помещения",
+          "Подскажу, если под вашу площадь есть вариант выгоднее",
+          "Гарантия производителя плюс моя на работы",
+        ]}
+      />
 
       <script
         type="application/ld+json"

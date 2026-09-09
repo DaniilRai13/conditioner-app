@@ -2,7 +2,7 @@ import type { MetaFunction } from "react-router";
 import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
 import { Section } from "~/components/ui/Section/Section";
 import { Card } from "~/components/ui/Card/Card";
-import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
+import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { aboutIntro, principles } from "~/data/about";
 import { site } from "~/config/site";
 import styles from "./about.module.scss";
@@ -48,12 +48,17 @@ export default function About() {
         </div>
       </Section>
 
-      <Section
+      <LeadBlock
         title="Остались вопросы?"
         lead="Напишите или позвоните — отвечу лично, без колл-центра."
-      >
-        <LeadForm source="footer" />
-      </Section>
+        source="footer"
+        points={[
+          "Отвечаю сам, менеджеров между нами нет",
+          "Можно просто спросить — заказывать не обязательно",
+          "Пришлите фото помещения, оценю задачу по нему",
+          "Обычно отвечаю в течение часа",
+        ]}
+      />
     </main>
   );
 }

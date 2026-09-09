@@ -4,7 +4,7 @@ import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
 import { Section } from "~/components/ui/Section/Section";
 import { SupplierNote } from "~/components/catalog/SupplierNote/SupplierNote";
 import { CatalogView } from "~/components/catalog/CatalogView/CatalogView";
-import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
+import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { getCatalogProducts, getCategoriesWithCount } from "~/lib/queries";
 import { getCategory } from "~/data/categories";
 import { site } from "~/config/site";
@@ -60,7 +60,7 @@ export default function CatalogCategory({ loaderData }: Route.ComponentProps) {
         <SupplierNote />
       </Section>
 
-      <Section title="Другие категории" className={styles.others}>
+      <Section title="Другие категории">
         <nav className={styles.links} aria-label="Другие категории">
           {others.map((c) => (
             <Link
@@ -74,12 +74,18 @@ export default function CatalogCategory({ loaderData }: Route.ComponentProps) {
         </nav>
       </Section>
 
-      <Section title="Подобрать под ваше помещение">
-        <LeadForm
-          source="footer"
-          defaultMessage={`Интересует: ${category.title.toLowerCase()}`}
-        />
-      </Section>
+      <LeadBlock
+        title="Подобрать под ваше помещение"
+        lead="Опишите комнату — предложу конкретные модели и посчитаю установку."
+        source="footer"
+        defaultMessage={`Интересует: ${category.title.toLowerCase()}`}
+        points={[
+          "Посчитаю нужную мощность по вашим условиям",
+          "Предложу два-три варианта: бюджетный, оптимальный, премиум",
+          "Скажу честно, если техника из этой категории вам не нужна",
+          "Цену назову сразу с установкой",
+        ]}
+      />
     </main>
   );
 }

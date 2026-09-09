@@ -1,13 +1,11 @@
-import { ArrowRight } from "lucide-react";
 import type { Route } from "./+types/solutions";
 import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
 import { Section } from "~/components/ui/Section/Section";
 import { SolutionCard } from "~/components/solutions/SolutionCard/SolutionCard";
 import { Button } from "~/components/ui/Button/Button";
-import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
+import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { solutions, areaLabel } from "~/data/solutions";
 import { getSolutionPriceFrom } from "~/lib/queries";
-import { formatPrice } from "~/lib/format";
 import { site } from "~/config/site";
 import styles from "./solutions.module.scss";
 
@@ -72,9 +70,17 @@ export default function Solutions({ loaderData }: Route.ComponentProps) {
         </div>
       </Section>
 
-      <Section title="Рассчитать под ваше помещение">
-        <LeadForm source="footer" />
-      </Section>
+      <LeadBlock
+        title="Рассчитать под ваше помещение"
+        lead="Готовые комплекты — отправная точка. Под вашу комнату посчитаю точнее."
+        source="footer"
+        points={[
+          "Назовите площадь и этаж — посчитаю мощность",
+          "Подберу комплект под задачу, а не по остаткам склада",
+          "Скажу итоговую цену под ключ",
+          "Замер бесплатный",
+        ]}
+      />
     </main>
   );
 }

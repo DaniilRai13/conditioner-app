@@ -5,7 +5,7 @@ import { Section } from "~/components/ui/Section/Section";
 import { Card } from "~/components/ui/Card/Card";
 import { IconBox } from "~/components/ui/IconBox/IconBox";
 import { WhyMe } from "~/components/sections/WhyMe/WhyMe";
-import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
+import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { services } from "~/data/services";
 import { site } from "~/config/site";
 import styles from "./services.module.scss";
@@ -49,12 +49,17 @@ export default function Services() {
 
       <WhyMe />
 
-      <Section
+      <LeadBlock
         title="Оставьте заявку"
         lead="Перезвоню, уточню детали и назову точную стоимость."
-      >
-        <LeadForm source="footer" />
-      </Section>
+        source="footer"
+        points={[
+          "Отвечу, берусь ли за вашу задачу",
+          "Назову срок и стоимость до начала работ",
+          "Работаю сам, без бригад и субподряда",
+          "Даю гарантию на работы",
+        ]}
+      />
     </main>
   );
 }
