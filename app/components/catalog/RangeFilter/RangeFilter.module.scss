@@ -1,0 +1,137 @@
+@use "mixins" as *;
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  min-width: 0;
+}
+
+.head {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.label {
+  color: var(--ink-400);
+
+  @include text-preset(label);
+}
+
+// Рамка и белый фон обязательны. Серой подложкой без рамки на этом сайте
+// оформлены подписи — фильтров, характеристик, шагов. Поле, одетое так же,
+// читается результатом, а не местом для ввода: человек видит цифру
+// и не догадывается, что её можно менять.
+.entry {
+  display: flex;
+  gap: 0.375rem;
+  align-items: baseline;
+  padding: 0.375rem 0.625rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  transition: border-color var(--transition);
+
+  // Подсветка на всей коробке, а не на самом input: рамка нарисована
+  // здесь, и обводка фокуса внутри висела бы отдельно от неё.
+  &:focus-within {
+    border-color: var(--brand-600);
+  }
+}
+
+.number {
+  width: 3.5rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: var(--ink-900);
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+
+  // Своей обводки нет: фокус показывает рамка коробки выше.
+  &:focus-visible {
+    outline: none;
+  }
+
+  // Стрелки браузера съедают половину узкого поля и всё равно неудобны:
+  // шаг задан, и его отрабатывает ползунок.
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    margin: 0;
+    appearance: none;
+  }
+
+  appearance: textfield;
+}
+
+.unit {
+  color: var(--ink-400);
+  font-size: 0.8125rem;
+}
+
+// Дорожка и бегунок задаются вручную: у браузеров они выглядят по-разному,
+// и без этого фильтр в Chrome и Firefox будет разной высоты.
+.slider {
+  width: 100%;
+  // Высота как у полей цены и селекта: дорожка центрируется внутри,
+  // поэтому она оказывается ровно на их уровне.
+  height: 2.375rem;
+  background: transparent;
+  cursor: pointer;
+  appearance: none;
+
+  @include focus-ring;
+
+  &::-webkit-slider-runnable-track {
+    height: 4px;
+    background: var(--border);
+    border-radius: 999px;
+  }
+
+  &::-moz-range-track {
+    height: 4px;
+    background: var(--border);
+    border-radius: 999px;
+  }
+
+  &::-webkit-slider-thumb {
+    width: 1.125rem;
+    height: 1.125rem;
+    // Половина разницы между высотой бегунка и дорожкой, со знаком минус:
+    // иначе бегунок сидит на дорожке, а не по её центру.
+    margin-top: -0.4375rem;
+    background: var(--brand-600);
+    border: 2px solid var(--surface);
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgb(15 23 42 / 25%);
+    appearance: none;
+  }
+
+  &::-moz-range-thumb {
+    width: 1.125rem;
+    height: 1.125rem;
+    background: var(--brand-600);
+    border: 2px solid var(--surface);
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgb(15 23 42 / 25%);
+  }
+}
+
+.marks {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}
+
+.off {
+  color: var(--ink-400);
+  font-style: italic;
+}
