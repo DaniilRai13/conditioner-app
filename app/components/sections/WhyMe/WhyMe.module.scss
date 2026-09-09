@@ -12,6 +12,7 @@
   padding: 2.5rem;
   background: var(--brand-600);
   border-radius: var(--radius-banner);
+  box-shadow: 0 14px 34px rgb(59 91 254 / 26%);
   color: #fff;
 
   @include mq(lg) {
@@ -77,60 +78,169 @@
 
 // --- как я работаю ---
 
-.stepsTitle {
-  margin: 4rem 0 2rem;
-
-  @include text-preset(h2);
+// По центру: ось зигзага идёт по середине блока, и заголовок у левого
+// края висел бы отдельно от того, что подписывает.
+.stepsHead {
+  margin: 4rem 0 2.5rem;
+  text-align: center;
 
   @include mq(md) {
-    margin: 2.5rem 0 1.5rem;
+    margin: 2.5rem 0 1.75rem;
+    text-align: left;
   }
 }
 
-.steps {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 1.25rem;
+.stepsTitle {
   margin: 0;
-  counter-reset: step;
 
-  @include mq(lg) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
+  @include text-preset(h2);
+}
 
-  @include mq(sm) {
-    grid-template-columns: 1fr;
+.stepsLead {
+  max-width: 52ch;
+  margin: 0.75rem auto 0;
+  color: var(--ink-600);
+
+  @include text-preset(body);
+
+  @include mq(md) {
+    margin-left: 0;
   }
+}
+
+// Зигзаг вдоль оси: шаги чередуются слева и справа, номера идут по центру.
+//
+// Линия непрерывная и проходит через всю высоту шага, а кружок лежит поверх
+// неё непрозрачной заливкой. Так отрезки всегда упираются точно в кружок,
+// какой бы длины ни был текст.
+//
+// Отрезками между шагами это не решается: у шагов разная высота, а вычислить
+// «половину следующего» в CSS нечем — проценты считаются от собственной
+// высоты элемента, и линия либо не доходит, либо перелетает.
+//
+// Промежуток задаётся padding, а не gap: gap разрывал бы линию.
+.steps {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .step {
-  display: flex;
   position: relative;
-  flex-direction: column;
-  gap: 0.375rem;
+  display: grid;
+  // Текст, номер, вторая колонка под текст чётных шагов.
+  grid-template-columns: 1fr auto 1fr;
+  gap: 1.5rem;
+  // Текст ровно напротив кружка, а не выше и не ниже.
+  align-items: center;
+  padding-block: 1.125rem;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    background: var(--border);
+    transform: translateX(-1px);
+  }
+
+  // У крайних шагов линия начинается и кончается в центре кружка,
+  // а не торчит за пределы цепочки.
+  &:first-child::after {
+    top: 50%;
+  }
+
+  &:last-child::after {
+    bottom: 50%;
+  }
+
+  @include mq(sm) {
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+
+    &::after {
+      left: 1.25rem;
+    }
+  }
 }
 
+// Ряд закреплён явно у обоих. Без этого автоматическая расстановка
+// отправляла текст во вторую строку: номер занимает колонку 2, курсор
+// уходит за неё, и вернуться в колонку 1 того же ряда он уже не может.
 .stepNumber {
+  position: relative;
+  z-index: 1;
   display: inline-flex;
+  grid-row: 1;
+  grid-column: 2;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  margin-bottom: 0.375rem;
-  background: var(--brand-50);
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: 0;
+  background: var(--brand-600);
   border-radius: var(--radius-pill);
-  color: var(--brand-600);
+  color: #fff;
+  font-size: 1rem;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
+
+  @include mq(sm) {
+    grid-column: 1;
+  }
 }
 
+.stepBody {
+  display: flex;
+  grid-row: 1;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.step:nth-child(odd) .stepBody {
+  grid-column: 1;
+  text-align: right;
+}
+
+.step:nth-child(even) .stepBody {
+  grid-column: 3;
+  text-align: left;
+}
+
+@include mq(sm) {
+  .step:nth-child(odd) .stepBody,
+  .step:nth-child(even) .stepBody {
+    grid-column: 2;
+    text-align: left;
+  }
+}
+
+// Текст крупнее и темнее прежнего: подписи шагов были --ink-400 кеглем 14,
+// то есть на уровне сносок. Маршрут работы — не сноска.
 .stepName {
   color: var(--ink-900);
-  font-size: 0.9375rem;
-  font-weight: 600;
+
+  @include text-preset(h3);
 }
 
 .stepText {
-  color: var(--ink-400);
+  max-width: 34ch;
+  color: var(--ink-600);
 
-  @include text-preset(caption);
+  @include text-preset(body);
+}
+
+.step:nth-child(odd) .stepText {
+  margin-left: auto;
+}
+
+@include mq(sm) {
+  .step:nth-child(odd) .stepText {
+    margin-left: 0;
+  }
 }

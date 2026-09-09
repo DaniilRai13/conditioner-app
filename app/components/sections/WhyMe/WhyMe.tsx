@@ -35,13 +35,22 @@ export function WhyMe() {
           </ul>
         </div>
 
-        <h2 className={styles.stepsTitle}>Как я работаю</h2>
+        <div className={styles.stepsHead}>
+          <h2 className={styles.stepsTitle}>Как я работаю</h2>
+          <p className={styles.stepsLead}>
+            От звонка до работающего кондиционера — пять шагов. Ничего не
+            начинаю, пока не согласуем модель, цену и дату: сюрпризов в смете не
+            будет.
+          </p>
+        </div>
         <ol className={styles.steps}>
           {steps.map((step, i) => (
             <li key={step.title} className={styles.step}>
               <span className={styles.stepNumber}>{i + 1}</span>
-              <b className={styles.stepName}>{step.title}</b>
-              <span className={styles.stepText}>{step.text}</span>
+              <span className={styles.stepBody}>
+                <b className={styles.stepName}>{step.title}</b>
+                <span className={styles.stepText}>{step.text}</span>
+              </span>
             </li>
           ))}
         </ol>
