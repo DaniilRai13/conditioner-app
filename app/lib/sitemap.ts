@@ -29,10 +29,10 @@ export function dynamicPaths(): string[] {
  * в карту сайта. Перечислены явно: список короткий и меняется редко,
  * а читать routes.ts из рантайма нечем.
  *
- * Чего здесь нет намеренно: /privacy (служебная, индексировать незачем)
- * и всё под /dev (черновики, закрыты noindex).
+ * Чего здесь нет намеренно: /privacy — служебная страница,
+ * индексировать её незачем.
  */
-export const STATIC_PATHS = [
+const STATIC_PATHS = [
   "/",
   "/catalog",
   "/solutions",
@@ -43,7 +43,7 @@ export const STATIC_PATHS = [
   "/contacts",
 ];
 
-export function publicPaths(): string[] {
+function publicPaths(): string[] {
   return [...STATIC_PATHS, ...dynamicPaths()];
 }
 
@@ -84,7 +84,6 @@ Disallow: /
 
   return `User-agent: *
 Allow: /
-Disallow: /dev/
 
 Sitemap: ${root}/sitemap.xml
 `;

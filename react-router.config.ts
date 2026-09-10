@@ -15,8 +15,7 @@ export default {
   // и потеряют пререндер, а вместе с ним и SEO.
   async prerender({ getStaticPaths }) {
     return [
-      // Черновики из routes/dev в сборку не идут.
-      ...getStaticPaths().filter((path) => !path.startsWith("/dev/")),
+      ...getStaticPaths(),
       // Динамические пути — из того же модуля, что и карта сайта:
       // так собранное и заявленное поисковику не могут разойтись.
       ...dynamicPaths(),
