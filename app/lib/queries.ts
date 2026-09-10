@@ -175,17 +175,3 @@ export function getSolutionPriceFrom(
   return picks.length ? picks[0].product.price : null;
 }
 
-/** Границы фильтров считаем по данным, а не задаём руками. */
-export function getCatalogBounds(products: CatalogProduct[]) {
-  const prices = products.map((p) => p.price);
-  const areas = products
-    .map((p) => p.specs.areaM2)
-    .filter((a): a is number => typeof a === "number");
-
-  return {
-    minPrice: Math.min(...prices),
-    maxPrice: Math.max(...prices),
-    minArea: areas.length ? Math.min(...areas) : 0,
-    maxArea: areas.length ? Math.max(...areas) : 0,
-  };
-}
