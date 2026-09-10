@@ -1,12 +1,10 @@
-import { useEffect, useRef } from "react";
-import { ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
 import { Container } from "~/components/ui/Container/Container";
 import { Button } from "~/components/ui/Button/Button";
 import { IconBox } from "~/components/ui/IconBox/IconBox";
 import { AcUnit } from "~/components/decor/AcUnit/AcUnit";
 import { advantages } from "~/data/advantages";
-import { QUIZ_QUESTIONS } from "~/lib/quiz";
 import { useQuiz } from "../useQuiz";
+import { QuizPanel } from "./QuizPanel";
 import styles from "./Hero.module.scss";
 
 /**
@@ -27,40 +25,6 @@ import styles from "./Hero.module.scss";
  */
 export function Hero() {
   const { answers, step, done, choose, back, restart } = useQuiz();
-  const question = QUIZ_QUESTIONS[Math.min(step, QUIZ_QUESTIONS.length - 1)];
-
-  const optionsRef = useRef<HTMLDivElement>(null);
-  // Первый рендер фокус не забирает: иначе страница, открытая с нуля,
-  // сама уводила бы экран к панели, мимо заголовка.
-  const started = useRef(false);
-
-  useEffect(() => {
-    if (done) return;
-    if (!started.current) {
-      started.current = true;
-      return;
-    }
-    // Фокус на первый вариант нового шага: без этого с клавиатуры после
-    // ответа приходится табать через всю панель заново.
-    optionsRef.current?.querySelector<HTMLButtonElement>("button")?.focus();
-  }, [step, done]);
-
-  /** Стрелки внутри группы вариантов — как в нативном radiogroup. */
-  function onKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
-    const keys = ["ArrowDown", "ArrowRight", "ArrowUp", "ArrowLeft"];
-    if (!keys.includes(e.key)) return;
-
-    const items = Array.from(
-      optionsRef.current?.querySelectorAll<HTMLButtonElement>("button") ?? []
-    );
-    const index = items.indexOf(document.activeElement as HTMLButtonElement);
-    if (index === -1) return;
-
-    e.preventDefault();
-    const forward = e.key === "ArrowDown" || e.key === "ArrowRight";
-    const nextIndex = (index + (forward ? 1 : -1) + items.length) % items.length;
-    items[nextIndex]?.focus();
-  }
 
   return (
     <section className={styles.hero}>
@@ -89,100 +53,14 @@ export function Hero() {
 
           <div className={styles.side}>
             <AcUnit className={styles.ac} />
-
-            <div
-              className={styles.panel}
-              role="group"
-              aria-labelledby="hero-question"
-            >
-              {done ? (
-                <>
-                  <span className={styles.panelLabel}>Готово</span>
-                  <b id="hero-question" className={styles.question}>
-                    Подобрал три модели
-                  </b>
-                  <p className={styles.panelText}>
-                    Под помещение до {answers.area} м². Смотрите ниже — они
-                    с ценами и характеристиками.
-                  </p>
-                  <div className={styles.resultActions}>
-                    <Button to="/#quiz" size="lg" className={styles.wide}>
-                      Показать модели
-                    </Button>
-                    <button
-                      type="button"
-                      className={styles.restart}
-                      onClick={restart}
-                    >
-                      <RotateCcw size={14} aria-hidden />
-                      Пройти заново
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className={styles.bar} aria-hidden>
-                    <span
-                      className={styles.barFill}
-                      style={{
-                        width: `${(step / QUIZ_QUESTIONS.length) * 100}%`,
-                      }}
-                    />
-                  </div>
-
-                  <span className={styles.panelLabel} aria-live="polite">
-                    Шаг {step + 1} из {QUIZ_QUESTIONS.length}
-                  </span>
-                  <b id="hero-question" className={styles.question}>
-                    {question.title}
-                  </b>
-
-                  <div
-                    ref={optionsRef}
-                    className={styles.options}
-                    role="radiogroup"
-                    aria-label={question.title}
-                    onKeyDown={onKeyDown}
-                  >
-                    {question.options.map((option) => (
-                      <button
-                        key={option.value}
-                        type="button"
-                        role="radio"
-                        aria-checked={answers[question.key] === option.value}
-                        className={styles.option}
-                        onClick={() => choose(question.key, option.value)}
-                      >
-                        <span className={styles.optionLabel}>
-                          {option.label}
-                        </span>
-                        {option.hint && (
-                          <span className={styles.optionHint}>
-                            {option.hint}
-                          </span>
-                        )}
-                        <ArrowRight
-                          size={16}
-                          className={styles.optionArrow}
-                          aria-hidden
-                        />
-                      </button>
-                    ))}
-                  </div>
-
-                  {step > 0 ? (
-                    <button type="button" className={styles.back} onClick={back}>
-                      <ArrowLeft size={14} aria-hidden />
-                      Назад
-                    </button>
-                  ) : (
-                    <p className={styles.panelNote}>
-                      В конце — три модели с ценами. Телефон не спрашиваю.
-                    </p>
-                  )}
-                </>
-              )}
-            </div>
+            <QuizPanel
+              answers={answers}
+              step={step}
+              done={done}
+              onChoose={choose}
+              onBack={back}
+              onRestart={restart}
+            />
           </div>
 
           {/* Кнопки «подобрать» здесь больше нет: она вела к подбору,

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { Link } from "react-router";
 import { RotateCcw } from "lucide-react";
 import { Container } from "~/components/ui/Container/Container";
@@ -6,6 +6,7 @@ import { Button } from "~/components/ui/Button/Button";
 import { ProductCard } from "~/components/catalog/ProductCard/ProductCard";
 import type { CatalogProduct } from "~/lib/queries";
 import { solveQuiz } from "~/lib/quiz";
+import { useScrollIntoViewOnce } from "~/hooks/useScrollIntoViewOnce";
 import { useQuiz } from "../useQuiz";
 import styles from "./QuizResult.module.scss";
 
@@ -22,33 +23,13 @@ type Props = {
  * с ответами, поэтому в пререндеренном HTML её нет — и не должно быть,
  * это состояние конкретного посетителя.
  *
- * Прокрутка сюда — единственная на весь подбор, и случается ровно в момент,
- * когда собран последний ответ. Приход по готовой ссылке (все четыре ответа
- * уже в адресе) прокрутку не запускает: человек не проходил подбор
- * и не ждёт прыжка — ему показывают страницу с начала.
+ * Прокрутка сюда — единственная на весь подбор и случается ровно в момент,
+ * когда собран последний ответ; за это отвечает useScrollIntoViewOnce.
  */
 export function QuizResult({ products }: Props) {
   const { answers, done, restart } = useQuiz();
   const ref = useRef<HTMLElement>(null);
-  // null — эффект ещё не отработал ни разу. Первый проход только
-  // запоминает состояние, чтобы готовая ссылка не считалась «переходом».
-  const wasDone = useRef<boolean | null>(null);
-
-  useEffect(() => {
-    if (wasDone.current === null) {
-      wasDone.current = done;
-      return;
-    }
-    if (done && !wasDone.current) {
-      const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)")
-        .matches;
-      ref.current?.scrollIntoView({
-        behavior: smooth ? "smooth" : "auto",
-        block: "start",
-      });
-    }
-    wasDone.current = done;
-  }, [done]);
+  useScrollIntoViewOnce(done, ref);
 
   if (!done) return null;
 
@@ -86,9 +67,8 @@ export function QuizResult({ products }: Props) {
             <div className={styles.fallback}>
               <b>Подберу индивидуально</b>
               <p>
-                Под такое помещение нужен блок мощнее, чем есть сейчас
-                в наличии. У поставщика больше 4000 моделей — привезу
-                под заказ.
+                Под такое помещение нужен блок мощнее, чем есть сейчас в
+                наличии. У поставщика больше 4000 моделей — привезу под заказ.
               </p>
               <Link to="/#lead" className={styles.fallbackLink}>
                 Оставить заявку

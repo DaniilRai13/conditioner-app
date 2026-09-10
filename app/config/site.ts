@@ -13,7 +13,7 @@
  * конкурировать с настоящим сайтом за те же запросы. Дубль на чужом
  * домене хуже, чем отсутствие сайта: поисковик выберет из двух сам.
  */
-export const PREVIEW_URL = import.meta.env.VITE_PREVIEW_URL ?? "";
+const PREVIEW_URL = import.meta.env.VITE_PREVIEW_URL ?? "";
 export const IS_PREVIEW = PREVIEW_URL !== "";
 
 export const site = {

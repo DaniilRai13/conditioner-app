@@ -13,91 +13,31 @@ import {
   navVariants,
   navItemVariants,
 } from "~/lib/animations";
+import { useMounted } from "~/hooks/useMounted";
+import { useLockBodyScroll } from "~/hooks/useLockBodyScroll";
+import { useFocusTrap } from "~/hooks/useFocusTrap";
 import styles from "./Header.module.scss";
 
 export function Header() {
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const location = useLocation();
   const burgerRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
 
-  // Портал бьёт в document.body, которого нет во время пререндера.
-  useEffect(() => setMounted(true), []);
+  const mounted = useMounted();
+  useLockBodyScroll(open);
+  useFocusTrap(open, dialogRef, {
+    restoreTo: burgerRef,
+    onEscape: () => setOpen(false),
+  });
 
-  // Закрываем меню при переходе: без этого после клика по пункту
-  // остаётся открытая шторка поверх новой страницы.
+  // Закрываем шторку при переходе: без этого после клика по пункту она
+  // остаётся висеть поверх новой страницы.
   //
   // Ключ, а не pathname: он меняется у каждой записи истории, в том числе
   // при переходе на текущую же страницу. По pathname шторка оставалась
-  // висеть, если с главной нажать «Главная».
+  // открытой, если с главной нажать «Главная».
   useEffect(() => setOpen(false), [location.key]);
-
-  // Блокируем прокрутку под открытым меню.
-  useEffect(() => {
-    if (!open) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = previous;
-    };
-  }, [open]);
-
-  /**
-   * Управление фокусом. При открытии он уходит внутрь шторки, при закрытии
-   * возвращается на кнопку — иначе после Escape человек с клавиатуры
-   * оказывается в начале страницы и не понимает, где он был.
-   *
-   * Плюс ловушка: Tab не должен уводить на страницу, скрытую под шторкой.
-   */
-  const wasOpen = useRef(false);
-
-  useEffect(() => {
-    if (!open) {
-      // На первом рендере шторка и так закрыта, возвращать фокус неоткуда.
-      // Без этой проверки при загрузке страницы фокус молча уезжает на бургер.
-      if (wasOpen.current) burgerRef.current?.focus();
-      return;
-    }
-    wasOpen.current = true;
-
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-
-    const focusable = () =>
-      Array.from(
-        dialog.querySelectorAll<HTMLElement>(
-          "a[href], button:not([disabled]), [tabindex]:not([tabindex='-1'])",
-        ),
-      );
-
-    focusable()[0]?.focus();
-
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") {
-        setOpen(false);
-        return;
-      }
-      if (e.key !== "Tab") return;
-
-      const items = focusable();
-      if (items.length === 0) return;
-
-      const first = items[0];
-      const last = items[items.length - 1];
-
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    }
-
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [open]);
 
   return (
     <header className={styles.header}>

@@ -1,19 +1,15 @@
-import { useMemo, useState } from "react";
-import { useSearchParams } from "react-router";
+import { useState } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
 import type { CatalogProduct } from "~/lib/queries";
 import { ProductCard } from "../ProductCard/ProductCard";
 import { RangeFilter } from "../RangeFilter/RangeFilter";
 import { formatPrice } from "~/lib/format";
+import { useCatalogFilters, PAGE } from "./useCatalogFilters";
 import styles from "./CatalogView.module.scss";
 
 type Props = {
   products: CatalogProduct[];
 };
-
-/** Сколько карточек показываем сразу. Остальные лежат в разметке скрытыми:
- * поисковик их видит, человек разворачивает кнопкой. */
-const PAGE = 12;
 
 const SORT_OPTIONS = [
   { value: "", label: "По умолчанию" },
@@ -27,9 +23,6 @@ const SORT_OPTIONS = [
  * граница, ниже которой блок тише шёпота. */
 const NOISE_STEPS = [25, 30, 40];
 
-const floorTo = (v: number, step: number) => Math.floor(v / step) * step;
-const ceilTo = (v: number, step: number) => Math.ceil(v / step) * step;
-
 /**
  * Витрина каталога: фильтры колонкой слева, товары справа.
  *
@@ -37,118 +30,26 @@ const ceilTo = (v: number, step: number) => Math.ceil(v / step) * step;
  * занимали бы два ряда над выдачей. В колонке они видны всё время, и менять
  * их можно не прокручивая страницу вверх.
  *
- * Фильтр по площади отвечает на вопрос, с которым приходят: «у меня комната
- * N метров, что подойдёт». Поэтому он оставляет модели, рассчитанные
- * НЕ МЕНЬШЕ чем на N. До этого было наоборот, и для комнаты в 20 м² выдача
- * предлагала блок на 18 — заведомо слабый.
- *
- * Состояние живёт в URL: так ссылку на отфильтрованную выдачу можно
- * отправить, а кнопка «назад» работает как ожидается.
+ * Компонент занимается только разметкой. Отбор, сортировка, показ
+ * по частям и состояние в адресе страницы — в `useCatalogFilters`.
  */
 export function CatalogView({ products }: Props) {
-  const [params, setParams] = useSearchParams();
+  const {
+    bounds,
+    filters: { area, priceFrom, priceTo, noise, comp, wifi, sort },
+    filtered,
+    shown,
+    rest,
+    showMore,
+    activeCount,
+    update,
+    reset,
+  } = useCatalogFilters(products);
+
+  // Единственное состояние, которое остаётся здесь: открыта ли панель
+  // на узком экране. Это про показ, а не про отбор, и в адресе ему делать
+  // нечего — ссылкой делятся ради выдачи, а не ради открытой панели.
   const [openOnMobile, setOpenOnMobile] = useState(false);
-
-  // Границы считаются по выборке, а не задаются числами: на странице
-  // категории диапазоны другие — у мобильных цена до 2 640, у мульти-сплитов
-  // от 4 640.
-  const bounds = useMemo(() => {
-    if (products.length === 0) {
-      return { areaMin: 0, areaMax: 0, priceMin: 0, priceMax: 0 };
-    }
-    const areas = products.map((p) => p.specs.areaM2 ?? 0).filter(Boolean);
-    const prices = products.map((p) => p.price);
-    return {
-      areaMin: floorTo(Math.min(...areas), 5),
-      areaMax: ceilTo(Math.max(...areas), 5),
-      priceMin: floorTo(Math.min(...prices), 100),
-      priceMax: ceilTo(Math.max(...prices), 100),
-    };
-  }, [products]);
-
-  const area = Number(params.get("area")) || bounds.areaMin;
-  const priceFrom = Number(params.get("pmin")) || bounds.priceMin;
-  const priceTo = Number(params.get("pmax")) || bounds.priceMax;
-  const noise = Number(params.get("noise")) || null;
-  const comp = params.get("comp");
-  const wifi = params.get("wifi") === "1";
-  const sort = params.get("sort") ?? "";
-
-  const filtered = useMemo(() => {
-    let list = products;
-
-    if (area > bounds.areaMin) {
-      list = list.filter((p) => {
-        // Модель без указанной площади пропускаем всегда: спрятать товар
-        // из-за дырки в данных хуже, чем показать его лишний раз.
-        if (p.specs.areaM2 == null) return true;
-        return p.specs.areaM2 >= area;
-      });
-    }
-    if (priceFrom > bounds.priceMin) {
-      list = list.filter((p) => p.price >= priceFrom);
-    }
-    if (priceTo < bounds.priceMax) {
-      list = list.filter((p) => p.price <= priceTo);
-    }
-    if (noise) {
-      list = list.filter(
-        (p) => p.specs.noiseDb != null && p.specs.noiseDb <= noise,
-      );
-    }
-    if (comp === "inverter") list = list.filter((p) => p.specs.isInverter);
-    if (comp === "on-off") list = list.filter((p) => !p.specs.isInverter);
-    if (wifi) list = list.filter((p) => p.specs.hasWifi);
-
-    if (sort === "price-asc")
-      list = [...list].sort((a, b) => a.price - b.price);
-    if (sort === "price-desc")
-      list = [...list].sort((a, b) => b.price - a.price);
-    if (sort === "area-desc")
-      list = [...list].sort(
-        (a, b) => (b.specs.areaM2 ?? 0) - (a.specs.areaM2 ?? 0),
-      );
-    // Модели без указанного шума уводим в конец, а не считаем самыми тихими.
-    if (sort === "noise-asc")
-      list = [...list].sort(
-        (a, b) => (a.specs.noiseDb ?? 999) - (b.specs.noiseDb ?? 999),
-      );
-
-    return list;
-  }, [products, area, priceFrom, priceTo, noise, comp, wifi, sort, bounds]);
-
-  const [shown, setShown] = useState(PAGE);
-
-  // Смена фильтра возвращает список к первым двенадцати. Ключ собран
-  // из значений в адресе, а не из черновиков ползунка, поэтому сброс
-  // происходит один раз на отпускании, а не на каждом шаге перетаскивания.
-  const filterKey = `${area}|${priceFrom}|${priceTo}|${noise}|${comp}|${wifi}|${sort}`;
-  const [prevKey, setPrevKey] = useState(filterKey);
-  if (prevKey !== filterKey) {
-    setPrevKey(filterKey);
-    setShown(PAGE);
-  }
-
-  const rest = filtered.length - shown;
-
-  function update(patch: Record<string, number | string | null>) {
-    const next = new URLSearchParams(params);
-    for (const [key, value] of Object.entries(patch)) {
-      if (value === null || value === "") next.delete(key);
-      else next.set(key, String(value));
-    }
-    // replace, чтобы каждое движение фильтра не засоряло историю браузера.
-    setParams(next, { replace: true, preventScrollReset: true });
-  }
-
-  const activeCount =
-    (area > bounds.areaMin ? 1 : 0) +
-    (priceFrom > bounds.priceMin || priceTo < bounds.priceMax ? 1 : 0) +
-    (noise ? 1 : 0) +
-    (comp ? 1 : 0) +
-    (wifi ? 1 : 0);
-
-  const reset = () => setParams({}, { replace: true });
 
   return (
     <div className={styles.layout}>
@@ -348,11 +249,7 @@ export function CatalogView({ products }: Props) {
             </div>
 
             {rest > 0 && (
-              <button
-                type="button"
-                className={styles.more}
-                onClick={() => setShown(shown + PAGE)}
-              >
+              <button type="button" className={styles.more} onClick={showMore}>
                 Показать ещё {Math.min(PAGE, rest)}
                 <span className={styles.moreRest}>осталось {rest}</span>
               </button>
