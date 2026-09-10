@@ -7,7 +7,7 @@ import { Card } from "~/components/ui/Card/Card";
 import { Faq } from "~/components/sections/Faq/Faq";
 import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { services, getService } from "~/data/services";
-import { site } from "~/config/site";
+import { seo } from "~/lib/seo";
 import styles from "./service.module.scss";
 
 export function loader({ params }: Route.LoaderArgs) {
@@ -17,11 +17,13 @@ export function loader({ params }: Route.LoaderArgs) {
 }
 
 export function meta({ loaderData }: Route.MetaArgs) {
-  if (!loaderData) return [{ title: `Услуга — ${site.name}` }];
-  return [
-    { title: `${loaderData.service.h1} — ${site.name}` },
-    { name: "description", content: loaderData.service.lead },
-  ];
+  if (!loaderData) return seo({ title: "Услуга", path: "/services" });
+  const { service } = loaderData;
+  return seo({
+    title: service.h1,
+    description: service.lead,
+    path: `/services/${service.slug}`,
+  });
 }
 
 export default function ServicePage({ loaderData }: Route.ComponentProps) {

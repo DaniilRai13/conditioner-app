@@ -4,12 +4,15 @@ import { Container } from "~/components/ui/Container/Container";
 import { Button } from "~/components/ui/Button/Button";
 import { solutions, areaLabel } from "~/data/solutions";
 import { site } from "~/config/site";
+import { seo } from "~/lib/seo";
 import styles from "./not-found.module.scss";
 
-export const meta: MetaFunction = () => [
-  { title: `Страница не найдена — ${site.name}` },
-  { name: "robots", content: "noindex, follow" },
-];
+export const meta: MetaFunction = () =>
+  seo({
+    title: "Страница не найдена",
+    path: "/404",
+    robots: "noindex, follow",
+  });
 
 export default function NotFound() {
   return (

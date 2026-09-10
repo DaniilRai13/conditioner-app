@@ -6,15 +6,15 @@ import { Card } from "~/components/ui/Card/Card";
 import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
 import { coverage } from "~/data/about";
 import { site } from "~/config/site";
+import { seo } from "~/lib/seo";
 import styles from "./contacts.module.scss";
 
-export const meta: MetaFunction = () => [
-  { title: `Контакты — ${site.name}` },
-  {
-    name: "description",
-    content: `Телефон, мессенджеры и часы работы. Установка и обслуживание кондиционеров в ${site.region}.`,
-  },
-];
+export const meta: MetaFunction = () =>
+  seo({
+    title: "Контакты",
+    description: `Телефон, мессенджеры и часы работы. Установка и обслуживание кондиционеров в ${site.region}.`,
+    path: "/contacts",
+  });
 
 // Основная разметка организации живёт здесь — на странице контактов,
 // где собраны все данные о бизнесе (PLAN.md §9).

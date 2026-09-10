@@ -7,7 +7,7 @@ import { CatalogView } from "~/components/catalog/CatalogView/CatalogView";
 import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { getCatalogProducts, getCategoriesWithCount } from "~/lib/queries";
 import { getCategory } from "~/data/categories";
-import { site } from "~/config/site";
+import { seo } from "~/lib/seo";
 import styles from "./catalog-category.module.scss";
 
 export function loader({ params }: Route.LoaderArgs) {
@@ -24,12 +24,15 @@ export function loader({ params }: Route.LoaderArgs) {
 }
 
 export function meta({ loaderData }: Route.MetaArgs) {
-  if (!loaderData) return [{ title: `Каталог — ${site.name}` }];
+  if (!loaderData) return seo({ title: "Каталог", path: "/catalog" });
   const { category } = loaderData;
-  return [
-    { title: `${category.h1} в Минске — ${site.name}` },
-    { name: "description", content: category.lead },
-  ];
+  return seo({
+    title: `${category.h1} в Минске`,
+    // Одного лида мало: у двух категорий он короче 70 символов, и в выдаче
+    // строка обрывалась на полуслове описания. Хвост общий и правдивый.
+    description: `${category.lead} Подбор, доставка и установка в Минске и области.`,
+    path: `/catalog/${category.slug}`,
+  });
 }
 
 export default function CatalogCategory({ loaderData }: Route.ComponentProps) {

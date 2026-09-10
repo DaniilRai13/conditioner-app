@@ -10,7 +10,7 @@ import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { solutions, getSolution, areaLabel } from "~/data/solutions";
 import { getSolutionProducts } from "~/lib/queries";
 import { STANDARD_INSTALL_INCLUDES, EXTRA_CHARGES } from "~/config/pricing";
-import { site } from "~/config/site";
+import { seo } from "~/lib/seo";
 import styles from "./solution.module.scss";
 
 export function loader({ params }: Route.LoaderArgs) {
@@ -27,12 +27,15 @@ export function loader({ params }: Route.LoaderArgs) {
 }
 
 export function meta({ loaderData }: Route.MetaArgs) {
-  if (!loaderData) return [{ title: `Решение — ${site.name}` }];
+  if (!loaderData) return seo({ title: "Решение", path: "/solutions" });
   const { solution } = loaderData;
-  return [
-    { title: `${solution.h1} — подбор и установка | ${site.name}` },
-    { name: "description", content: solution.intro[0] },
-  ];
+  return seo({
+    // Без хвоста «— подбор и установка»: вместе с названием сайта
+    // заголовок доходил до 75 символов, а сам h1 уже всё говорит.
+    title: solution.h1,
+    description: solution.intro[0],
+    path: `/solutions/${solution.slug}`,
+  });
 }
 
 export default function SolutionPage({ loaderData }: Route.ComponentProps) {
@@ -54,7 +57,7 @@ export default function SolutionPage({ loaderData }: Route.ComponentProps) {
         </div>
       </PageHeader>
 
-      <Section className={styles.top} title="Какая нужна мощность">
+      <Section title="Какая нужна мощность">
         <div className={styles.text}>
           {solution.powerHint.map((p) => (
             <p key={p.slice(0, 24)}>{p}</p>

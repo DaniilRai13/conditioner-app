@@ -6,6 +6,7 @@ import { Button } from "~/components/ui/Button/Button";
 import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { articles, getArticle, formatDate } from "~/data/articles";
 import { site } from "~/config/site";
+import { seo } from "~/lib/seo";
 import styles from "./article.module.scss";
 
 export function loader({ params }: Route.LoaderArgs) {
@@ -15,11 +16,16 @@ export function loader({ params }: Route.LoaderArgs) {
 }
 
 export function meta({ loaderData }: Route.MetaArgs) {
-  if (!loaderData) return [{ title: `Статья — ${site.name}` }];
-  return [
-    { title: `${loaderData.article.h1} — ${site.name}` },
-    { name: "description", content: loaderData.article.lead },
-  ];
+  if (!loaderData) return seo({ title: "Статья", path: "/articles" });
+  const { article } = loaderData;
+  return seo({
+    title: article.h1,
+    description: article.lead,
+    path: `/articles/${article.slug}`,
+    // Статьи — единственный тип контента, где og:type имеет значение:
+    // соцсети показывают у них дату и автора вместо карточки сайта.
+    type: "article",
+  });
 }
 
 export default function ArticlePage({ loaderData }: Route.ComponentProps) {

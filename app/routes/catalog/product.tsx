@@ -16,13 +16,18 @@ import { ProductCard } from "~/components/catalog/ProductCard/ProductCard";
 import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { getProductBySlug, getSimilarProducts } from "~/lib/queries";
 import { getCategory } from "~/data/categories";
-import { formatPrice, formatArea, formatKw } from "~/lib/format";
+import {
+  formatPrice,
+  formatArea,
+  formatKw,
+  seoProductName,
+} from "~/lib/format";
 import {
   installPriceFor,
   PRICES_CONFIRMED,
   STANDARD_INSTALL_INCLUDES,
 } from "~/config/pricing";
-import { site } from "~/config/site";
+import { seo } from "~/lib/seo";
 import styles from "./product.module.scss";
 
 export function loader({ params }: Route.LoaderArgs) {
@@ -37,17 +42,23 @@ export function loader({ params }: Route.LoaderArgs) {
 }
 
 export function meta({ loaderData }: Route.MetaArgs) {
-  if (!loaderData) return [{ title: `Кондиционер — ${site.name}` }];
+  if (!loaderData) return seo({ title: "Кондиционер", path: "/catalog" });
   const { product } = loaderData;
-  return [
-    { title: `${product.name} — купить в Минске | ${site.name}` },
-    {
-      name: "description",
-      content:
-        product.description ||
-        `${product.name}: ${formatArea(product.specs.areaM2) ?? ""}. Продажа и установка в Минске и области.`,
-    },
-  ];
+  // Бюджет поиска — около 60 символов. Хвост «— купить в Минске» занимает
+  // 18, остальное отдаём имени модели; названия сайта здесь нет.
+  return seo({
+    title: `${seoProductName(
+      product.brand,
+      product.model,
+      product.specs.areaM2,
+      42
+    )} — купить в Минске`,
+    brandSuffix: false,
+    description:
+      product.description ||
+      `${product.brand} ${product.model} — ${formatArea(product.specs.areaM2) ?? "сплит-система"}. Продажа и установка в Минске и области.`,
+    path: `/product/${product.slug}`,
+  });
 }
 
 export default function ProductPage({ loaderData }: Route.ComponentProps) {

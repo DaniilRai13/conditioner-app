@@ -6,7 +6,7 @@ import { SupplierNote } from "~/components/catalog/SupplierNote/SupplierNote";
 import { CatalogView } from "~/components/catalog/CatalogView/CatalogView";
 import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { getCatalogProducts, getCategoriesWithCount } from "~/lib/queries";
-import { site } from "~/config/site";
+import { seo } from "~/lib/seo";
 import styles from "./catalog.module.scss";
 
 export function loader() {
@@ -21,14 +21,12 @@ export function loader() {
 }
 
 export function meta() {
-  return [
-    { title: `Каталог кондиционеров — ${site.name}` },
-    {
-      name: "description",
-      content:
-        "Отобранные модели кондиционеров для квартиры, дома и офиса. Сплит-системы, мульти-сплит, мобильные и полупромышленные с установкой в Минске.",
-    },
-  ];
+  return seo({
+    title: "Каталог кондиционеров",
+    description:
+      "Отобранные модели кондиционеров для квартиры, дома и офиса. Сплит-системы, мульти-сплит, мобильные и полупромышленные с установкой в Минске.",
+    path: "/catalog",
+  });
 }
 
 export default function Catalog({ loaderData }: Route.ComponentProps) {

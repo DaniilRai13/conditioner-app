@@ -4,17 +4,16 @@ import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
 import { Section } from "~/components/ui/Section/Section";
 import { Card } from "~/components/ui/Card/Card";
 import { articles, formatDate } from "~/data/articles";
-import { site } from "~/config/site";
+import { seo } from "~/lib/seo";
 import styles from "./articles.module.scss";
 
-export const meta: MetaFunction = () => [
-  { title: `Полезное — ${site.name}` },
-  {
-    name: "description",
-    content:
+export const meta: MetaFunction = () =>
+  seo({
+    title: "Полезное",
+    description:
       "Как выбрать кондиционер по площади, чем инвертор отличается от обычного и когда нужна чистка. Разбираю без маркетинга.",
-  },
-];
+    path: "/articles",
+  });
 
 export default function Articles() {
   return (

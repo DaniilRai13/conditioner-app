@@ -4,17 +4,16 @@ import { Section } from "~/components/ui/Section/Section";
 import { Card } from "~/components/ui/Card/Card";
 import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { aboutIntro, principles } from "~/data/about";
-import { site } from "~/config/site";
+import { seo } from "~/lib/seo";
 import styles from "./about.module.scss";
 
-export const meta: MetaFunction = () => [
-  { title: `Обо мне — ${site.name}` },
-  {
-    name: "description",
-    content:
+export const meta: MetaFunction = () =>
+  seo({
+    title: "Обо мне",
+    description:
       "Работаю один: подбираю, привожу, устанавливаю и обслуживаю кондиционеры в Минске и области. Без посредников и лишних наценок.",
-  },
-];
+    path: "/about",
+  });
 
 export default function About() {
   return (

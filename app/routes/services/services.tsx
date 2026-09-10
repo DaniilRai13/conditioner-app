@@ -7,17 +7,16 @@ import { IconBox } from "~/components/ui/IconBox/IconBox";
 import { WhyMe } from "~/components/sections/WhyMe/WhyMe";
 import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { services } from "~/data/services";
-import { site } from "~/config/site";
+import { seo } from "~/lib/seo";
 import styles from "./services.module.scss";
 
-export const meta: MetaFunction = () => [
-  { title: `Услуги — ${site.name}` },
-  {
-    name: "description",
-    content:
+export const meta: MetaFunction = () =>
+  seo({
+    title: "Услуги",
+    description:
       "Продажа, установка, обслуживание и ремонт кондиционеров в Минске и области. Работает один специалист — от подбора до сервиса.",
-  },
-];
+    path: "/services",
+  });
 
 export default function Services() {
   return (

@@ -6,7 +6,7 @@ import { Button } from "~/components/ui/Button/Button";
 import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { solutions, areaLabel } from "~/data/solutions";
 import { getSolutionPriceFrom } from "~/lib/queries";
-import { site } from "~/config/site";
+import { seo } from "~/lib/seo";
 import styles from "./solutions.module.scss";
 
 export function loader() {
@@ -23,14 +23,12 @@ export function loader() {
 }
 
 export function meta() {
-  return [
-    { title: `Готовые решения по площади — ${site.name}` },
-    {
-      name: "description",
-      content:
-        "Подобранные комплекты кондиционеров под спальню, гостиную, студию и офис. С расчётом мощности и составом монтажа.",
-    },
-  ];
+  return seo({
+    title: "Готовые решения по площади",
+    description:
+      "Подобранные комплекты кондиционеров под спальню, гостиную, студию и офис. С расчётом мощности и составом монтажа.",
+    path: "/solutions",
+  });
 }
 
 export default function Solutions({ loaderData }: Route.ComponentProps) {

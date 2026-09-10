@@ -2,18 +2,18 @@ import type { MetaFunction } from "react-router";
 import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
 import { Section } from "~/components/ui/Section/Section";
 import { site } from "~/config/site";
+import { seo } from "~/lib/seo";
 import styles from "./privacy.module.scss";
 
-export const meta: MetaFunction = () => [
-  { title: `Политика обработки персональных данных — ${site.name}` },
-  {
-    name: "description",
-    content:
+export const meta: MetaFunction = () =>
+  seo({
+    title: "Политика обработки персональных данных",
+    description:
       "Какие данные собираются через формы сайта, с какой целью, сколько хранятся и какие права есть у пользователя.",
-  },
-  // Юридический текст не должен конкурировать в выдаче с коммерческими страницами.
-  { name: "robots", content: "noindex, follow" },
-];
+    path: "/privacy",
+    // Юридический текст не должен конкурировать в выдаче с коммерческими страницами.
+    robots: "noindex, follow",
+  });
 
 /**
  * TODO: черновик под Закон РБ №99-З «О защите персональных данных».
