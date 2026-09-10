@@ -9,6 +9,7 @@ import {
 
 import type { Route } from "./+types/root";
 import { Header } from "~/components/layout/Header/Header";
+import { AnchorScroll } from "~/components/layout/AnchorScroll/AnchorScroll";
 import { PageDecor } from "./components/layout/PageDecor/PageDecor";
 import { Footer } from "~/components/layout/Footer/Footer";
 import { site } from "./config/site";
@@ -31,6 +32,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
+        {/* Строго перед ScrollRestoration, см. комментарий в компоненте. */}
+        <AnchorScroll />
         <ScrollRestoration />
         <Scripts />
       </body>
