@@ -2,8 +2,7 @@ import type { MetaFunction } from "react-router";
 import type { Route } from "./+types/home";
 import { getCatalogProducts } from "~/lib/queries";
 import { Hero } from "./Hero/Hero";
-import { HERO_AVIF, HERO_SIZES } from "./Hero/heroImage";
-import { Quiz } from "./Quiz/Quiz";
+import { QuizResult } from "./QuizResult/QuizResult";
 import { SolutionsPreview } from "./SolutionsPreview/SolutionsPreview";
 import { ServicesPreview } from "./ServicesPreview/ServicesPreview";
 import { WhyMe } from "~/components/sections/WhyMe/WhyMe";
@@ -12,58 +11,40 @@ import { Faq } from "~/components/sections/Faq/Faq";
 import { faq } from "~/data/faq";
 import { Section } from "~/components/ui/Section/Section";
 import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
-import { site } from "~/config/site";
+import { seo } from "~/lib/seo";
 
 export function loader() {
-  // Квизу нужен весь каталог: он фильтрует его на клиенте по ответам.
+  // Подбору нужен весь каталог: он фильтрует его на клиенте по ответам.
   return { products: getCatalogProducts() };
 }
-
-/**
- * Предзагрузка LCP-картинки. Без неё браузер найдёт <img> только после
- * разбора разметки — на медленной сети это заметные полсекунды к LCP.
- *
- * Тип указан явно: браузеры без поддержки AVIF просто проигнорируют
- * эту ссылку и возьмут WebP из <picture>. Лишней загрузки не будет.
- */
-export const links = () => [
-  {
-    rel: "preload",
-    as: "image",
-    type: "image/avif",
-    imageSrcSet: HERO_AVIF,
-    imageSizes: HERO_SIZES,
-    fetchPriority: "high",
-    // На экранах до 480px картинка скрыта (mq(xs) в Hero.module.scss),
-    // и предзагружать её там — тратить канал самых слабых устройств
-    // на то, чего они не увидят. Значение должно совпадать с брейкпоинтом xs.
-    media: "(min-width: 481px)",
-  },
-];
 
 /**
  * Canonical жёстко на «/»: ответы квиза живут в query-параметрах главной,
  * и без этого каждая комбинация ответов уехала бы в индекс отдельной
  * страницей с одинаковым содержимым.
  */
-export const meta: MetaFunction = () => [
-  { tagName: "link", rel: "canonical", href: site.url },
-  { title: `${site.name} — установка кондиционеров в Минске и области` },
-  {
-    name: "description",
-    content:
+export const meta: MetaFunction = () =>
+  seo({
+    // Не «Установка кондиционеров в Минске и области»: ровно так называется
+    // страница услуги, и два одинаковых заголовка в индексе конкурировали
+    // бы между собой. Здесь — как в H1, с продажей.
+    title: "Продажа и установка кондиционеров в Минске",
+    description:
       "Подберу, поставлю и настрою кондиционер под ваши задачи. Работает один специалист — без посредников и лишних наценок.",
-  },
-];
+    path: "/",
+  });
 
-// Семь секций (PLAN.md §4). Порядок не случайный: квиз стоит вторым,
-// пока внимание максимально, а FAQ идёт перед формой — снимает последние
-// возражения ровно перед тем, как просить контакты.
+// Семь секций (PLAN.md §4). Порядок не случайный: подбор идёт в первом
+// экране, пока внимание максимально, а FAQ стоит перед формой — снимает
+// последние возражения ровно перед тем, как просить контакты.
+//
+// QuizResult ничего не рисует, пока подбор не закончен, поэтому на свежей
+// странице между hero и решениями его просто нет.
 export default function Home({ loaderData }: Route.ComponentProps) {
   return (
     <main>
       <Hero />
-      <Quiz products={loaderData.products} />
+      <QuizResult products={loaderData.products} />
       <SolutionsPreview />
       <ServicesPreview />
       <WhyMe />

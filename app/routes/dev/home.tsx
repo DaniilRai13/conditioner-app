@@ -8,8 +8,7 @@ import { steps } from "~/data/steps";
 import { site } from "~/config/site";
 import { getSolutionPriceFrom } from "~/lib/queries";
 import { formatPrice } from "~/lib/format";
-import heroAvif from "~/assets/hero-unit-1080.avif";
-import heroWebp from "~/assets/hero-unit-1080.webp";
+import { AcUnit } from "~/components/decor/AcUnit/AcUnit";
 import styles from "./home.module.scss";
 
 /**
@@ -89,10 +88,9 @@ export default function DevHome() {
           </div>
 
           <div className={styles.heroMedia}>
-            <picture>
-              <source type="image/avif" srcSet={heroAvif} />
-              <img src={heroWebp} alt="" width={1080} height={608} />
-            </picture>
+            {/* Нарисованный блок вместо стоковой фотографии: та тянула
+                ореол от вырезания и 323 КБ в сборку. */}
+            <AcUnit />
             <span className={styles.badge}>
               <b>5 лет</b>
               гарантия

@@ -1,0 +1,93 @@
+@use "mixins" as *;
+
+// Все размеры внутри — в cqw, процентах от собственной ширины блока.
+// Родитель задаёт только ширину; высота, скругления, толщина жалюзи
+// и длина потока считаются от неё. Так компонент одинаково выглядит
+// и на 8rem в углу, и на 40rem во весь экран, и медиазапросы ему не нужны.
+.unit {
+  position: relative;
+  aspect-ratio: 26 / 17;
+  container-type: inline-size;
+  pointer-events: none;
+}
+
+// Корпус. Скругление сверху заметно больше, чем снизу: у настенных
+// блоков верх скруглён по всей глубине, а низ подрезан под жалюзи.
+.body {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 30.8cqw;
+  background: linear-gradient(180deg, #fff 0%, #dfe4ee 100%);
+  border-radius: 4.8cqw 4.8cqw 1.9cqw 1.9cqw;
+  box-shadow:
+    inset 0 -1.2cqw 2.5cqw rgb(40 46 70 / 8%),
+    0 5.8cqw 11.5cqw rgb(0 0 0 / 35%);
+}
+
+// Жалюзи: частые тёмные линии в светлом пазу. Толщина в cqw, поэтому
+// на маленьком размере они сливаются в серую полосу — ровно так же,
+// как настоящие жалюзи с расстояния.
+.louver {
+  position: absolute;
+  right: 5.8cqw;
+  bottom: 2.9cqw;
+  left: 5.8cqw;
+  height: 5.8cqw;
+  background: repeating-linear-gradient(
+    180deg,
+    #7b839a 0 0.8cqw,
+    #eef1f6 0.8cqw 3.1cqw
+  );
+  border-radius: 0.9cqw;
+}
+
+.display {
+  position: absolute;
+  top: 7.7cqw;
+  right: 7.7cqw;
+  color: #5a6480;
+  font-family: var(--font-display);
+  font-size: 5.8cqw;
+  font-weight: 600;
+  line-height: 1;
+}
+
+// Поток — три расходящиеся полосы от жалюзи вниз. Размытие тоже в cqw:
+// в пикселях мелкий блок выглядел бы залитым, а крупный — резким.
+.flow {
+  position: absolute;
+  top: 30.8cqw;
+  right: 7.7cqw;
+  left: 7.7cqw;
+  height: 34.6cqw;
+  background:
+    linear-gradient(180deg, rgb(96 165 250 / 55%), transparent) 10% 0 / 12% 100%
+      no-repeat,
+    linear-gradient(180deg, rgb(96 165 250 / 45%), transparent) 50% 0 / 12% 100%
+      no-repeat,
+    linear-gradient(180deg, rgb(96 165 250 / 35%), transparent) 90% 0 / 12% 100%
+      no-repeat;
+  filter: blur(1.9cqw);
+}
+
+// Дыхание. Отключается системной настройкой через сброс в _reset.scss,
+// там animation-duration гасится !important.
+.breathing {
+  transform-origin: 50% 0;
+  animation: breathe 5s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.75;
+    scale: 0.94 1;
+  }
+
+  50% {
+    opacity: 1;
+    scale: 1.04 1.06;
+  }
+}

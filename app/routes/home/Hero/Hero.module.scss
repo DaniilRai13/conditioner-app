@@ -1,19 +1,18 @@
 @use "mixins" as *;
 
+// Тёмный блок «Глубина»: градиент и дуга снизу — из миксина.
 .hero {
-  // Система координат для картинки, которая ниже 1024 уходит из потока.
-  // overflow скрывает её выносы за края — иначе появится горизонтальная прокрутка.
-  position: relative;
+  @include deep-block;
+
   overflow: hidden;
-  background: linear-gradient(180deg, #fdfeff 0%, var(--bg) 100%);
 }
 
 // Свет и глубина фона собраны на псевдоэлементах, а не на самой секции:
 // так их три слоя, они не мешают друг другу и ничего не весят.
-// Оба лежат ниже картинки (z-index 2) и текста (z-index 3).
+// Оба лежат ниже содержимого (z-index 1).
 
-// Слой 1 — свет: белое пятно за блоком и холодное свечение под ним,
-// намёк на поток воздуха.
+// Слой 1 — свет: мягкое пятно за панелью и холодное свечение под ней.
+// На графите оба слабые: белый текст сам даёт контраст.
 .hero::before {
   content: "";
   position: absolute;
@@ -21,20 +20,19 @@
   background:
     radial-gradient(
       46% 58% at 74% 34%,
-      rgb(255 255 255 / 95%) 0%,
+      rgb(255 255 255 / 9%) 0%,
       transparent 70%
     ),
     radial-gradient(
       38% 46% at 80% 64%,
-      rgb(59 91 254 / 13%) 0%,
+      rgb(59 91 254 / 24%) 0%,
       transparent 72%
-    ),
-    radial-gradient(52% 44% at 14% 8%, rgb(59 91 254 / 7%) 0%, transparent 70%);
+    );
   pointer-events: none;
 }
 
 // Слой 2 — сетка стены. Растворяется маской к краям, поэтому читается
-// только за кондиционером и не превращает фон в миллиметровку.
+// только за панелью и не превращает фон в миллиметровку.
 .hero::after {
   content: "";
   position: absolute;
@@ -42,12 +40,12 @@
   background-image:
     repeating-linear-gradient(
       90deg,
-      rgb(59 91 254 / 7%) 0 1px,
+      rgb(255 255 255 / 7%) 0 1px,
       transparent 1px 5.5rem
     ),
     repeating-linear-gradient(
       0deg,
-      rgb(59 91 254 / 7%) 0 1px,
+      rgb(255 255 255 / 7%) 0 1px,
       transparent 1px 5.5rem
     );
   mask-image: radial-gradient(58% 68% at 74% 42%, #000 0%, transparent 76%);
@@ -61,39 +59,59 @@
   );
 
   @include mq(sm) {
-    // На телефоне картинка внизу и сетка за ней смотрелась бы мусором.
+    // На телефоне панель во всю ширину, сетка за ней смотрелась бы мусором.
     display: none;
   }
 }
 
+// Четыре области вместо двух колонок. Кнопки и полоса преимуществ —
+// отдельные элементы сетки, потому что на широком и узком экране они
+// стоят в разных местах, а разметка должна остаться одна.
+//
+// На десктопе они уходят под текст в левую колонку: правая выше почти
+// на две сотни пикселей, и без них под кнопками зияла пустота.
+// align-items: start, а не center — при центровании разница высот
+// делилась пополам и половина повисала НАД заголовком.
 .grid {
-  // Система координат для картинки на десктопе. Ниже 1024 отдаём эту роль
-  // .hero: там картинка должна доставать и до полосы преимуществ,
-  // а она лежит уже за пределами сетки.
   position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.05fr);
-  gap: 2.5rem;
-  align-items: center;
-  padding-block: 4.5rem 3.5rem;
+  grid-template-areas:
+    "content side"
+    "actions side"
+    "list    side";
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  grid-template-rows: auto auto 1fr;
+  gap: 2rem 3rem;
+  align-items: start;
+  padding-block: 3.5rem calc(3.5rem + var(--arc));
 
+  // Одна колонка. Кнопки опускаются ПОД панель: между кондиционером
+  // и панелью ничего стоять не должно — поток упирается в её стекло,
+  // и разорви эту пару, обе половины теряют смысл.
   @include mq(lg) {
-    position: static;
+    grid-template-areas:
+      "content"
+      "side"
+      "actions"
+      "list";
     grid-template-columns: 1fr;
-    gap: 0rem;
-    padding-block: 2.5rem;
+    grid-template-rows: auto;
+    gap: 2rem;
+    padding-block: 2.5rem calc(2.5rem + var(--arc));
   }
 }
 
 .content {
-  position: relative;
-  z-index: 3;
+  grid-area: content;
   min-width: 0;
 }
 
+// Ярлык — приглушённым белым, а не фирменным синим: синий на графите
+// не читается, а ярлыку и не нужно спорить с кнопкой за внимание.
 .kicker {
   margin-bottom: 1.25rem;
-  color: var(--brand-600);
+  color: var(--ink-400);
   font-weight: 600;
 
   @include text-preset(caption);
@@ -124,8 +142,9 @@
 }
 
 .lead {
-  max-width: 42ch;
-  margin-bottom: 2rem;
+  max-width: 44ch;
+  // Отступ снизу теперь даёт сетка: кнопки — её отдельный элемент.
+  margin-bottom: 0;
 
   @include text-preset(body);
 }
@@ -133,6 +152,7 @@
 .actions {
   display: flex;
   flex-wrap: wrap;
+  grid-area: actions;
   gap: 0.75rem;
 
   @include mq(xs) {
@@ -140,62 +160,240 @@
   }
 }
 
-// --- изображение ---
+// Вторая кнопка — стекло, а не белая заливка: белая на графите вышла бы
+// тяжелее синей, и главное действие перестало бы быть главным.
+// Селектор удвоен: у .secondary из модуля кнопки та же специфичность,
+// и без этого побеждал бы тот, чей файл попал в бандл позже.
+.actions .glass {
+  background: rgb(255 255 255 / 10%);
+  border-color: rgb(255 255 255 / 28%);
+  color: #fff;
 
-// Картинка выведена из потока на всех экранах: она декоративная и не должна
-// растягивать секцию. Правая колонка сетки при этом сохраняется пустой —
-// именно она держит текст в левой половине.
+  &:hover:not(:disabled) {
+    background: rgb(255 255 255 / 18%);
+    border-color: rgb(255 255 255 / 45%);
+    color: #fff;
+  }
+}
+
+// --- нарисованный блок над панелью ---
 //
-// Ширины обязаны совпадать с HERO_SIZES в heroImage.ts, иначе браузер
-// выберет по srcset не тот файл.
-.image {
-  position: absolute;
-  z-index: 2;
-  top: 60%;
-  right: 0;
-  width: 57%;
-  height: auto;
-  transform: translateY(-50%);
+// Блок и панель — одна колонка: панель затянута под струю отрицательным
+// отступом, поэтому поток упирается в стекло, а не висит в воздухе.
+// Отступ в процентах, а не в rem: он обязан меняться вместе с шириной
+// блока, иначе на узком экране панель наезжала бы на жалюзи.
+//
+// Своего адаптива блоку не нужно — внутри у него всё в процентах
+// от собственной ширины. Здесь задаётся только ширина.
 
-  // Декорация: не должна перехватывать клики по тексту под ней.
-  pointer-events: none;
+.side {
+  display: flex;
+  flex-direction: column;
+  grid-area: side;
+  min-width: 0;
+}
 
-  // Ниже 1024 ложится под текст, отсчёт идёт уже от .hero.
+.ac {
+  width: 78%;
+  margin-inline: auto;
+
+  // Одна колонка: блок уходит к правому краю. По центру он повисает
+  // между текстом сверху и панелью снизу — предмет сам по себе,
+  // ни к чему не привязанный. У края он читается как деталь над панелью,
+  // и струя падает на её правую половину, мимо подписи «шаг 1 из 4».
   @include mq(lg) {
-    top: 4.5rem;
-    right: -6%;
-    width: 70vw;
-    transform: none;
+    width: 52%;
+    margin-inline: auto 0;
   }
 
-  // На телефоне опускается ещё ниже — под заголовок, кнопки и полосу преимуществ.
+  // На телефоне блок занимает почти всю колонку, и по центру ему уже
+  // самое место: пустоты по бокам, из-за которой он «уезжал», просто нет.
   @include mq(sm) {
-    top: auto;
-    right: -9%;
-    bottom: 1.5rem;
-    width: 130vw;
+    width: 82%;
+    margin-inline: auto;
   }
-  @include mq(xs) {
-    display: none;
+}
+
+// --- панель с первым вопросом ---
+//
+// Тёмное стекло, как карточки на витрине «Глубина»: белая панель на
+// графите перетянула бы на себя весь экран, а ей нужно быть рядом
+// с текстом, а не вместо него.
+
+.panel {
+  min-width: 0;
+  // Затягиваем панель под поток: величина подобрана так, чтобы струя
+  // уходила за стекло примерно на треть своей длины.
+  margin-top: -14%;
+  padding: 1.5rem;
+  background: rgb(255 255 255 / 8%);
+  border: 1px solid rgb(255 255 255 / 14%);
+  border-radius: var(--radius-card);
+  backdrop-filter: blur(0.75rem);
+
+  // Нахлёст считается от ширины блока: чем он уже, тем короче струя
+  // и тем меньше её нужно прятать. Доля срезаемого потока везде одна.
+  @include mq(lg) {
+    margin-top: -9%;
+  }
+
+  @include mq(sm) {
+    margin-top: -15%;
+    padding: 1.25rem 1rem;
+  }
+}
+
+.bar {
+  overflow: hidden;
+  height: 0.25rem;
+  margin-bottom: 1.25rem;
+  background: rgb(255 255 255 / 14%);
+  border-radius: var(--radius-pill);
+}
+
+.barFill {
+  display: block;
+  height: 100%;
+  background: #fff;
+  transition: width var(--transition);
+}
+
+.panelLabel {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: var(--ink-400);
+
+  @include text-preset(label);
+}
+
+.question {
+  display: block;
+  margin-bottom: 1rem;
+  color: #fff;
+
+  @include text-preset(h3);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+// Сетка, а не flex: подсказка занимает всё место между ярлыком и стрелкой,
+// и на узком экране её можно уронить под ярлык, не трогая стрелку.
+.option {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  column-gap: 0.625rem;
+  align-items: baseline;
+  padding: 0.875rem 1rem;
+  background: rgb(255 255 255 / 8%);
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: var(--radius-control);
+  color: #fff;
+  text-align: left;
+  transition:
+    background-color var(--transition),
+    border-color var(--transition);
+
+  @include focus-ring;
+
+  &:hover {
+    background: rgb(255 255 255 / 14%);
+    border-color: rgb(255 255 255 / 30%);
+  }
+
+  // На крупных телефонах ярлык и подсказка в одну строку не помещаются:
+  // подсказка уходит под ярлык, стрелка растягивается на обе строки.
+  @include mq(xxs) {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+.optionLabel {
+  font-weight: 600;
+}
+
+.optionHint {
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+
+  @include mq(xxs) {
+    grid-column: 1;
+  }
+}
+
+.optionArrow {
+  align-self: center;
+  color: rgb(255 255 255 / 70%);
+
+  @include mq(xxs) {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+  }
+}
+
+.panelNote {
+  margin: 1rem 0 0;
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}
+
+.panelText {
+  margin: 0;
+  color: var(--ink-600);
+
+  @include text-preset(body);
+}
+
+.resultActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 1.25rem;
+}
+
+// Кнопка во всю ширину панели: в состоянии результата она одна,
+// и прижатая к левому краю выглядела бы обрывком строки.
+.resultActions .wide {
+  width: 100%;
+}
+
+.back,
+.restart {
+  display: inline-flex;
+  gap: 0.375rem;
+  align-items: center;
+  margin-top: 1rem;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+  @include focus-ring;
+
+  &:hover {
+    color: #fff;
   }
 }
 
 // --- полоса преимуществ ---
-// Компактная строка сразу под кнопками, без разделительной линии:
-// в макете это подпись к hero, а не самостоятельная секция.
+// Компактная строка, без разделительной линии: в макете это подпись
+// к hero, а не самостоятельная секция. Живёт внутри сетки, в левой
+// колонке под кнопками, и закрывает пустоту от разницы высот колонок.
 
 .list {
-  position: relative;
-  z-index: 3;
   display: flex;
   flex-wrap: wrap;
+  grid-area: list;
   gap: 1.25rem 2.5rem;
   margin: 0;
-  padding-bottom: 3rem;
-
-  @include mq(lg) {
-    padding-bottom: 2rem;
-  }
+  padding: 0;
+  list-style: none;
 
   @include mq(xxs) {
     gap: 1rem;
