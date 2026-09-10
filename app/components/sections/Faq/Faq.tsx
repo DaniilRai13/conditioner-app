@@ -1,4 +1,5 @@
-import { ChevronDown } from "lucide-react";
+import { Link } from "react-router";
+import { ChevronDown, ArrowRight } from "lucide-react";
 import type { FaqItem } from "~/data/faq";
 import styles from "./Faq.module.scss";
 
@@ -40,6 +41,11 @@ export function Faq({ items }: Props) {
               <ChevronDown className={styles.chevron} size={20} aria-hidden />
             </summary>
             <p className={styles.answer}>{item.a}</p>
+            {item.link && (
+              <Link to={item.link.to} className={styles.answerLink}>
+                {item.link.label} <ArrowRight size={16} aria-hidden />
+              </Link>
+            )}
           </details>
         ))}
       </div>
