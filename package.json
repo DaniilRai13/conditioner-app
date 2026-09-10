@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "react-router dev",
-    "build": "react-router build",
+    "build": "react-router build && node scripts/make-404.ts",
     "preview": "vite preview",
     "typecheck": "react-router typegen && tsc",
     "lint": "oxlint",
@@ -13,7 +13,8 @@
     "format": "prettier --write \"app/**/*.{ts,tsx,scss}\"",
     "check:quiz": "node scripts/check-quiz.ts",
     "import:catalog": "node scripts/import-catalog.ts",
-    "catalog:variants": "node scripts/catalog-variants.ts"
+    "catalog:variants": "node scripts/catalog-variants.ts",
+    "build:preview": "react-router build --mode preview && node scripts/make-404.ts"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.3.0",
