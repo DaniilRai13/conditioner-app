@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { ChevronDown, ArrowRight } from "lucide-react";
 import type { FaqItem } from "~/data/faq";
+import { faqJsonLd, jsonLdProps } from "~/lib/json-ld";
 import styles from "./Faq.module.scss";
 
 type Props = {
@@ -21,16 +22,6 @@ type Props = {
 export function Faq({ items }: Props) {
   if (items.length === 0) return null;
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: items.map((item) => ({
-      "@type": "Question",
-      name: item.q,
-      acceptedAnswer: { "@type": "Answer", text: item.a },
-    })),
-  };
-
   return (
     <>
       <div className={styles.list}>
@@ -49,10 +40,7 @@ export function Faq({ items }: Props) {
           </details>
         ))}
       </div>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script {...jsonLdProps(faqJsonLd(items))} />
     </>
   );
 }

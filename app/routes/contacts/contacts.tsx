@@ -7,6 +7,7 @@ import { LeadForm } from "~/components/forms/LeadForm/LeadForm";
 import { coverage } from "~/data/about";
 import { site } from "~/config/site";
 import { seo } from "~/lib/seo";
+import { businessJsonLd, jsonLdProps } from "~/lib/json-ld";
 import styles from "./contacts.module.scss";
 
 export const meta: MetaFunction = () =>
@@ -15,23 +16,6 @@ export const meta: MetaFunction = () =>
     description: `Телефон, мессенджеры и часы работы. Установка и обслуживание кондиционеров в ${site.region}.`,
     path: "/contacts",
   });
-
-// Основная разметка организации живёт здесь — на странице контактов,
-// где собраны все данные о бизнесе (PLAN.md §9).
-const localBusiness = {
-  "@context": "https://schema.org",
-  "@type": "HVACBusiness",
-  name: site.name,
-  description: `Продажа, установка и обслуживание кондиционеров в ${site.region}`,
-  telephone: site.phone,
-  areaServed: site.region,
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: site.city,
-    addressCountry: "BY",
-  },
-  url: site.url,
-};
 
 export default function Contacts() {
   return (
@@ -104,10 +88,9 @@ export default function Contacts() {
         </div>
       </Section>
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusiness) }}
-      />
+      {/* Разметка организации живёт здесь, на странице со всеми данными
+          о бизнесе: поисковику незачем встречать её на каждой странице. */}
+      <script {...jsonLdProps(businessJsonLd())} />
     </main>
   );
 }

@@ -15,6 +15,8 @@ import { Card } from "~/components/ui/Card/Card";
 import { ProductCard } from "~/components/catalog/ProductCard/ProductCard";
 import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { getProductBySlug, getSimilarProducts } from "~/lib/queries";
+import { productJsonLd, jsonLdProps } from "~/lib/json-ld";
+import { getHighlights } from "~/lib/product-view";
 import { getCategory } from "~/data/categories";
 import {
   formatPrice,
@@ -51,7 +53,7 @@ export function meta({ loaderData }: Route.MetaArgs) {
       product.brand,
       product.model,
       product.specs.areaM2,
-      42
+      42,
     )} — купить в Минске`,
     brandSuffix: false,
     description:
@@ -67,54 +69,7 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
 
   const install = specs.areaM2 ? installPriceFor(specs.areaM2) : null;
 
-  const highlights = [
-    specs.areaM2 && {
-      icon: Snowflake,
-      label: "Площадь",
-      value: formatArea(specs.areaM2),
-    },
-    specs.coolingKw && {
-      icon: Wind,
-      label: "Охлаждение",
-      value: formatKw(specs.coolingKw),
-    },
-    specs.heatingKw && {
-      icon: Flame,
-      label: "Обогрев",
-      value: formatKw(specs.heatingKw),
-    },
-    specs.noiseDb && {
-      icon: Volume2,
-      label: "Шум",
-      value: `от ${specs.noiseDb} дБ`,
-    },
-    specs.minHeatTemp !== undefined && {
-      icon: Thermometer,
-      label: "Обогрев до",
-      value: `${specs.minHeatTemp} °C`,
-    },
-    specs.hasWifi && { icon: Wifi, label: "Wi-Fi", value: "есть" },
-  ].filter(Boolean) as {
-    icon: typeof Snowflake;
-    label: string;
-    value: string;
-  }[];
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: product.name,
-    brand: { "@type": "Brand", name: product.brand },
-    description: product.description,
-    offers: {
-      "@type": "Offer",
-      price: product.price,
-      priceCurrency: "BYN",
-      availability: product.inStock
-        ? "https://schema.org/InStock"
-        : "https://schema.org/PreOrder",
-    },
-  };
+  const highlights = getHighlights(specs);
 
   return (
     <main>
@@ -239,10 +194,7 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
         ]}
       />
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script {...jsonLdProps(productJsonLd(product))} />
     </main>
   );
 }

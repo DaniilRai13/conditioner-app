@@ -7,6 +7,7 @@ import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { articles, getArticle, formatDate } from "~/data/articles";
 import { site } from "~/config/site";
 import { seo } from "~/lib/seo";
+import { articleJsonLd, jsonLdProps } from "~/lib/json-ld";
 import styles from "./article.module.scss";
 
 export function loader({ params }: Route.LoaderArgs) {
@@ -31,16 +32,6 @@ export function meta({ loaderData }: Route.MetaArgs) {
 export default function ArticlePage({ loaderData }: Route.ComponentProps) {
   const { article } = loaderData;
   const others = articles.filter((a) => a.slug !== article.slug);
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: article.h1,
-    description: article.lead,
-    datePublished: article.date,
-    author: { "@type": "Organization", name: site.name },
-    publisher: { "@type": "Organization", name: site.name },
-  };
 
   return (
     <main>
@@ -114,10 +105,7 @@ export default function ArticlePage({ loaderData }: Route.ComponentProps) {
         ]}
       />
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script {...jsonLdProps(articleJsonLd(article))} />
     </main>
   );
 }

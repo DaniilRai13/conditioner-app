@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { ChevronRight } from "lucide-react";
 import { site } from "~/config/site";
+import { breadcrumbsJsonLd, jsonLdProps } from "~/lib/json-ld";
 import styles from "./Breadcrumbs.module.scss";
 
 export type Crumb = {
@@ -18,17 +19,6 @@ type Props = {
  */
 export function Breadcrumbs({ items }: Props) {
   const all: Crumb[] = [{ label: "Главная", to: "/" }, ...items];
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: all.map((c, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      name: c.label,
-      ...(c.to ? { item: `${site.url}${c.to === "/" ? "" : c.to}` } : {}),
-    })),
-  };
 
   return (
     <>
@@ -50,10 +40,7 @@ export function Breadcrumbs({ items }: Props) {
           ))}
         </ol>
       </nav>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script {...jsonLdProps(breadcrumbsJsonLd(items))} />
     </>
   );
 }
