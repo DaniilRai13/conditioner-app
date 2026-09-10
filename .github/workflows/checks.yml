@@ -1,0 +1,52 @@
+# Проверки на каждый push и pull request.
+#
+# Выкладки здесь нет: хостинг ещё не выбран (PLAN.md §10). Когда выберем,
+# сюда добавится шаг деплоя, а ключи лягут в GitHub Secrets — Settings →
+# Secrets and variables → Actions.
+#
+# Смысл проверок в том, чтобы поломка находилась в момент, когда её
+# сделали, а не через неделю при сборке для показа заказчику.
+
+name: Проверки
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Типы
+        run: npm run typecheck
+
+      - name: Линтер
+        run: npm run lint
+
+      # Главный риск подбора — комбинация ответов, на которой выдача пуста
+      # и человек упирается в тупик. Прогоняем все сто сорок четыре.
+      - name: Подбор
+        run: npm run check:quiz
+
+      # Разметка сообщения в телеграм ломается тихо: бот молчит, а узнаёшь
+      # об этом от заказчика, который не дождался заявки.
+      - name: Заявка
+        run: npm run check:lead
+
+      - name: Сборка
+        run: npm run build
