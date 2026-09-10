@@ -1,9 +1,5 @@
 import type { Config } from "@react-router/dev/config";
-import { services } from "./app/data/services";
-import { articles } from "./app/data/articles";
-import { categories } from "./app/data/categories";
-import { solutions } from "./app/data/solutions";
-import { getProductSlugs } from "./app/lib/queries";
+import { dynamicPaths } from "./app/lib/sitemap";
 
 export default {
   // Рантайм-сервера нет: сайт целиком уезжает на CDN статикой.
@@ -21,11 +17,11 @@ export default {
     return [
       // Черновики из routes/dev в сборку не идут.
       ...getStaticPaths().filter((path) => !path.startsWith("/dev/")),
-      ...services.map((s) => `/services/${s.slug}`),
-      ...articles.map((a) => `/articles/${a.slug}`),
-      ...categories.map((c) => `/catalog/${c.slug}`),
-      ...getProductSlugs().map((slug) => `/product/${slug}`),
-      ...solutions.map((s) => `/solutions/${s.slug}`),
+      // Динамические пути — из того же модуля, что и карта сайта:
+      // так собранное и заявленное поисковику не могут разойтись.
+      ...dynamicPaths(),
+      "/sitemap.xml",
+      "/robots.txt",
     ];
   },
 } satisfies Config;
