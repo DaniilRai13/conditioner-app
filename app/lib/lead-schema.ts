@@ -24,7 +24,26 @@ export const leadSchema = z.object({
     message: "Без согласия я не смогу обработать заявку",
   }),
 
-  source: z.enum(["hero", "quiz", "product", "solution", "footer", "modal", "home"]),
+  source: z.enum([
+    "hero",
+    "quiz",
+    "product",
+    "solution",
+    "footer",
+    "modal",
+    "home",
+  ]),
+
+  /**
+   * Полный адрес страницы, с которой ушла заявка.
+   *
+   * `source` говорит, какая это была форма, но не где она стояла: форма
+   * «footer» есть на десятке страниц, и по ней не понять, читал человек
+   * про спальню или про офис. Адрес отвечает на это одной строкой,
+   * а заодно сразу видно, пришла заявка с боевого сайта или с локального.
+   */
+  page: z.string().max(300).optional(),
+
   productSlug: z.string().optional(),
   quizAnswers: z.record(z.string(), z.string()).optional(),
 

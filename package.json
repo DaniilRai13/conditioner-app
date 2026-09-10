@@ -14,7 +14,10 @@
     "check:quiz": "node scripts/check-quiz.ts",
     "import:catalog": "node scripts/import-catalog.ts",
     "catalog:variants": "node scripts/catalog-variants.ts",
-    "build:preview": "react-router build --mode preview && node scripts/make-404.ts"
+    "build:preview": "react-router build --mode preview && node scripts/make-404.ts",
+    "check:lead": "node scripts/check-lead.ts",
+    "tg:check": "node scripts/telegram-check.ts",
+    "serve": "node scripts/serve.ts"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.3.0",
