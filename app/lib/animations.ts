@@ -43,3 +43,24 @@ export const navItemVariants: Variants = {
   hidden: { opacity: 0, y: 15 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.2 } },
 };
+
+/**
+ * Всплывающее уведомление: выезжает из-за правого края и слегка
+ * подпрыгивает. Пружина только на входе — на выходе она читалась бы
+ * как «уведомление не хочет уходить».
+ */
+export const toastVariants: Variants = {
+  hidden: { opacity: 0, x: 24, scale: 0.96 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    transition: { type: "spring", duration: 0.45, bounce: 0.3 },
+  },
+  exit: {
+    opacity: 0,
+    x: 24,
+    scale: 0.98,
+    transition: { duration: 0.2, ease: "easeInOut" },
+  },
+};

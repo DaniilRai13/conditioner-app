@@ -166,26 +166,6 @@
   @include text-preset(caption);
 }
 
-.done {
-  padding: 2rem;
-  background: var(--surface-accent);
-  border-radius: var(--radius-banner);
-  box-shadow: 0 14px 34px rgb(73 82 126 / 28%);
-  color: rgb(255 255 255 / 82%);
-
-  @include mq(sm) {
-    padding: 1.25rem;
-  }
-}
-
-.doneTitle {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: #fff;
-
-  @include text-preset(h3);
-}
-
 // Инверсия: белая кнопка на индиго. Фирменный синий здесь два близких
 // тёмных цвета подряд — кнопка перестаёт читаться действием.
 // Селектор удвоен намеренно: у собственного правила Button
