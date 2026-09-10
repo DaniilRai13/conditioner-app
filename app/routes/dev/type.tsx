@@ -82,6 +82,41 @@ export default function DevType() {
         crumbs={[{ label: "Шрифты" }]}
       />
 
+      {/* Отдельный вопрос: h3 остался на Manrope, пока h1 и h2 уехали
+          в Oswald. Здесь он в обоих вариантах и в тех местах, где реально
+          встречается: заголовок карточки, вопрос в FAQ, шапка панели. */}
+      <Section
+        title="Подзаголовки h3"
+        lead="Сейчас h1 и h2 набраны Oswald, а h3 остался на Manrope. Слева как есть, справа — если перевести и его."
+      >
+        <div className={styles.h3grid}>
+          {[
+            ["Manrope — как сейчас", ""],
+            ["Oswald — если перевести", styles.h3oswald],
+          ].map(([name, cls]) => (
+            <div key={name} className={`${styles.h3col} ${cls}`}>
+              <span className={styles.label}>{name}</span>
+              <div className={styles.h3card}>
+                <h3 className={styles.h3}>Кондиционер для спальни</h3>
+                <p className={styles.body}>до 20 м² · от 1 265 р.</p>
+              </div>
+              <div className={styles.h3card}>
+                <h3 className={styles.h3}>Сколько занимает монтаж?</h3>
+                <p className={styles.body}>
+                  Стандартная установка сплит-системы — 3–4 часа.
+                </p>
+              </div>
+              <div className={styles.h3card}>
+                <h3 className={styles.h3}>Замер и консультация бесплатно</h3>
+                <p className={styles.body}>
+                  Назовите площадь и этаж — посчитаю мощность и стоимость.
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Section>
+
       <Section>
         <div className={styles.list}>
           {PAIRS.map((p, i) => (
