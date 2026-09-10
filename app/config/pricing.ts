@@ -30,17 +30,48 @@ export const PRICE_MODE: "split" | "turnkey" = "split";
  */
 export const PRICES_CONFIRMED = false;
 
-/** Строки прайса на монтаж. Мощность в BTU — так их маркируют производители. */
+/**
+ * Строки прайса на монтаж. Мощность в BTU — так их маркируют производители.
+ * areaTo — та же граница числом: по ней страница цен берёт из каталога
+ * «оборудование от» и строит ссылку в каталог с фильтром.
+ */
 export const installRows = [
-  { btu: "07", kw: "2,0", area: "до 20 м²", price: INSTALL_PRICE.upTo25m2 },
-  { btu: "09", kw: "2,6", area: "до 25 м²", price: INSTALL_PRICE.upTo25m2 },
-  { btu: "12", kw: "3,5", area: "до 35 м²", price: INSTALL_PRICE.upTo50m2 },
-  { btu: "18", kw: "5,3", area: "до 50 м²", price: INSTALL_PRICE.upTo50m2 },
-  { btu: "24", kw: "7,0", area: "до 70 м²", price: INSTALL_PRICE.over50m2 },
+  {
+    btu: "07",
+    kw: "2,0",
+    area: "до 20 м²",
+    areaTo: 20,
+    price: INSTALL_PRICE.upTo25m2,
+  },
+  {
+    btu: "09",
+    kw: "2,6",
+    area: "до 25 м²",
+    areaTo: 25,
+    price: INSTALL_PRICE.upTo25m2,
+  },
+  {
+    btu: "12",
+    kw: "3,5",
+    area: "до 35 м²",
+    areaTo: 35,
+    price: INSTALL_PRICE.upTo50m2,
+  },
+  {
+    btu: "18",
+    kw: "5,3",
+    area: "до 50 м²",
+    areaTo: 50,
+    price: INSTALL_PRICE.upTo50m2,
+  },
+  {
+    btu: "24",
+    kw: "7,0",
+    area: "до 70 м²",
+    areaTo: 70,
+    price: INSTALL_PRICE.over50m2,
+  },
 ] as const;
-
-/** Округление цены «от» вверх, до кратного. */
-export const PRICE_ROUNDING = 50;
 
 /** Состав стандартного монтажа. Один источник для всех страниц решений. */
 export const STANDARD_INSTALL_INCLUDES = [
@@ -62,8 +93,4 @@ export function installPriceFor(areaM2: number): number {
   if (areaM2 <= 25) return INSTALL_PRICE.upTo25m2;
   if (areaM2 <= 50) return INSTALL_PRICE.upTo50m2;
   return INSTALL_PRICE.over50m2;
-}
-
-export function roundPrice(value: number): number {
-  return Math.ceil(value / PRICE_ROUNDING) * PRICE_ROUNDING;
 }

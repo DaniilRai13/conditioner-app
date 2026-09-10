@@ -6,9 +6,9 @@ import { nav, site, FEATURES } from "~/config/site";
 import styles from "./Footer.module.scss";
 
 // Подвал — полная карта сайта: сюда уходит то, чему не хватило места
-// в меню из пяти пунктов (PLAN.md §4).
+// в основном меню (PLAN.md §4). Цены здесь не дублируются —
+// они в общем списке разделов.
 const extraLinks = [
-  { to: "/price", label: "Цены на монтаж" },
   { to: "/articles", label: "Полезное" },
   ...(FEATURES.showPortfolio ? [{ to: "/portfolio", label: "Портфолио" }] : []),
   ...(FEATURES.showReviews ? [{ to: "/reviews", label: "Отзывы" }] : []),
