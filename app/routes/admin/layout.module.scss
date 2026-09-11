@@ -1,0 +1,550 @@
+// Оформление админки.
+//
+// Раньше она была нарочно никакой: белая колонка, прижатая к краю, и серое
+// поле справа — вид служебной панели любого хостинга. Теперь она сделана
+// из того же материала, что сайт: те же токены (`--deep-900`, `--ink-900`,
+// `--radius-banner`), тот же Manrope, тот же градиент «Глубины», что в шапке
+// страниц и на экране входа.
+//
+// Токены сайта берутся из :root и не переопределяются: у админки нет своей
+// палитры, и заводить её значило бы поддерживать вторую. Здесь объявлены
+// только те переменные, которых на сайте нет, — служебные цвета состояний.
+// Объявлены на .shell, а не в модуле кнопок: CSS-переменные наследуются,
+// и так их видят все вложенные элементы, включая покрашенные другим
+// модулем. В самом модуле объявить их нельзя — там имена классов
+// хешируются, и совпадения с разметкой не будет.
+
+.shell {
+  --accent: var(--surface-accent);
+  --accent-dark: var(--deep-700);
+  --ink-soft: var(--ink-600);
+  --ink-mute: var(--ink-400);
+  --line: var(--border);
+  --danger: #b42318;
+  --danger-bg: #fef2f2;
+  --warn-bg: #fffbeb;
+  --warn-line: #fde68a;
+  --ok: #15803d;
+  --radius: var(--radius-control);
+
+  /*
+   * Объём. Тень сайта (--shadow-card) рассчитана на редкие крупные карточки
+   * среди воздуха; в админке карточек по двадцать на экране, и от такой
+   * тени они выглядят наклейками, лежащими вплотную к фону.
+   *
+   * Три слоя вместо одного. Первый — контактная тень в пиксель: она
+   * прижимает предмет к поверхности и даёт краю определённость. Второй
+   * и третий — рассеянные, разной мягкости: они и создают ощущение высоты.
+   * Оттенок не чёрный, а тёмно-синий из палитры: серая тень на голубоватом
+   * фоне выглядит грязью.
+   */
+  --lift: 0 1px 1px rgb(38 44 71 / 5%), 0 3px 6px rgb(38 44 71 / 5%),
+    0 8px 18px rgb(38 44 71 / 5%);
+  --lift-hover: 0 1px 1px rgb(38 44 71 / 6%), 0 6px 14px rgb(38 44 71 / 9%),
+    0 18px 36px rgb(38 44 71 / 8%);
+
+  /*
+   * Заливка карточки. Не плоский белый, а едва заметный уклон к низу
+   * и светлая линия по верхней кромке — так ведёт себя поверхность,
+   * на которую падает свет сверху. Разница в пару единиц яркости,
+   * по отдельности незаметная, но именно она отличает предмет от пятна.
+   */
+  --card-fill: linear-gradient(180deg, #fff 0%, #fafbfe 100%);
+  --card-edge: inset 0 1px 0 #fff;
+
+  display: grid;
+  grid-template-columns: 16rem minmax(0, 1fr);
+  // Ряды прижаты к верху. Без этого `min-height: 100vh` раздаёт лишнюю
+  // высоту рядам поровну: на широком экране ряд один и разницы нет,
+  // а на узком их два — шапка и содержимое, — и между ними появляется
+  // пустая полоса в треть экрана. Выглядит как сломанная вёрстка, хотя
+  // сетка отрабатывает ровно так, как её попросили.
+  align-content: start;
+  gap: 1.25rem;
+  min-height: 100vh;
+  padding: 1.25rem;
+  background: var(--bg);
+  color: var(--ink-900);
+  font-family: var(--font-sans);
+  font-size: 15px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    // Просвет между тёмной шапкой и содержимым. Здесь он единственное,
+    // что их разделяет: на широком экране эту работу делает вертикальная
+    // граница меню, а в одну колонку её нет, и в один рем заголовок
+    // раздела прилипал к панели.
+    gap: 1.625rem;
+    padding: 0.75rem;
+    // Место под нижнюю панель: она вне потока, и без запаса последняя
+    // карточка списка оказывается за ней — а именно до неё и прокручивают.
+    padding-bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+// =====================================================================
+// Меню: тёмный остров, а не колонка от края до края
+// =====================================================================
+//
+// Отступ со всех сторон и своя тень — панель лежит НА странице, а не
+// делит её пополам. Разница не только в красоте: прижатая к краю колонка
+// читается как часть окна браузера, а отдельная карточка — как предмет,
+// с которым работают. И тёмное пятно перестаёт спорить с содержимым
+// за внимание: у него есть граница, за которую оно не выходит.
+
+.side {
+  position: sticky;
+  top: 1.25rem;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow: hidden;
+  // Не 100vh: панель уже отступила сверху и снизу, и без вычета её низ
+  // уезжал бы за край экрана ровно на величину отступов.
+  height: calc(100dvh - 2.5rem);
+  padding: 1.5rem 1rem 1rem;
+  background: linear-gradient(
+    165deg,
+    var(--deep-900) 0%,
+    var(--deep-700) 55%,
+    var(--surface-accent) 100%
+  );
+  border-radius: var(--radius-banner);
+  box-shadow:
+    0 1px 2px rgb(15 23 42 / 6%),
+    0 18px 40px rgb(38 44 71 / 22%);
+  color: rgb(255 255 255 / 76%);
+
+  @media (max-width: 900px) {
+    // relative, а не static: сетка стены рисуется абсолютным ::after
+    // с inset: 0, и без позиционированного предка она растянулась бы
+    // на всю страницу поверх содержимого.
+    position: relative;
+    top: auto;
+    flex-direction: row;
+    align-items: center;
+    height: auto;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-card);
+
+    // Разделы, публикация и подпись переехали в нижнюю панель и шторку.
+    // Наверху остаётся название: без него непонятно, куда попал, а места
+    // оно занимает одну строку.
+    .nav,
+    .publish,
+    .foot {
+      display: none;
+    }
+  }
+}
+
+// Сетка стены — та же, что в первом экране сайта и на входе. Растворяется
+// маской, иначе фон превращается в миллиметровку.
+.side::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgb(255 255 255 / 6%) 0 1px,
+      transparent 1px 4rem
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgb(255 255 255 / 6%) 0 1px,
+      transparent 1px 4rem
+    );
+  mask-image: radial-gradient(80% 40% at 50% 12%, #000 0%, transparent 76%);
+  pointer-events: none;
+}
+
+// Всё содержимое — над сеткой. Иначе она ложится поверх текста.
+.brand,
+.nav,
+.publish,
+.foot {
+  position: relative;
+  z-index: 1;
+}
+
+// Публикация прижата к низу, над подписью пользователя. margin-top: auto
+// переехал сюда с .foot: два элемента с ним подряд поделили бы пустоту
+// между собой, и блок повис бы посреди панели.
+.publish {
+  margin-top: auto;
+
+  @media (max-width: 900px) {
+    margin-top: 0;
+    // В полосе телефона встаёт между названием и кнопками пользователя.
+    order: 2;
+  }
+}
+
+.brand {
+  display: flex;
+  gap: 0.625rem;
+  align-items: center;
+  padding-inline: 0.75rem;
+  text-decoration: none;
+
+  @media (max-width: 900px) {
+    padding-inline: 0;
+    margin-right: auto;
+  }
+}
+
+// Светлый кружок под эмблемой. Буква в знаке тёмно-синяя, и без подложки
+// на градиенте панели от неё осталось бы синее пятно.
+.brandMark {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.brandLogo {
+  width: 1.625rem;
+  height: auto;
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.brandName {
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.brandNote {
+  color: rgb(255 255 255 / 50%);
+  font-size: 0.75rem;
+
+  @media (max-width: 900px) {
+    display: none;
+  }
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.link {
+  position: relative;
+  display: flex;
+  gap: 0.625rem;
+  align-items: center;
+  padding: 0.5625rem 0.75rem;
+  border-radius: var(--radius-control);
+  color: rgb(255 255 255 / 72%);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--transition),
+    color var(--transition);
+
+  &:hover {
+    background: rgb(255 255 255 / 8%);
+    color: #fff;
+  }
+
+  svg {
+    flex: none;
+    width: 1.0625rem;
+    height: 1.0625rem;
+    opacity: 0.75;
+  }
+}
+
+.active {
+  background: rgb(255 255 255 / 14%);
+  color: #fff;
+  font-weight: 600;
+
+  svg {
+    opacity: 1;
+  }
+}
+
+// Метка слева, в поле отступа панели: подсвеченная плашка сама по себе
+// на тёмном читается слабо, а вертикальная черта видна сразу и не зависит
+// от того, насколько удачно легла прозрачность.
+.active::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -0.5rem;
+  width: 3px;
+  height: 1.125rem;
+  translate: 0 -50%;
+  background: #fff;
+  border-radius: 2px;
+}
+
+// Подпись пользователя. margin-top: auto здесь больше не нужен — низ
+// панели держит блок публикации, который стоит выше.
+.foot {
+  display: flex;
+  gap: 0.625rem;
+  align-items: center;
+  padding-top: 0.875rem;
+  border-top: 1px solid rgb(255 255 255 / 12%);
+
+  @media (max-width: 900px) {
+    padding-top: 0;
+    border-top: none;
+    order: 3;
+  }
+}
+
+// Кружок с первой буквой имени. Аватар заводить негде и незачем —
+// администраторов двое, и различать их нужно только на глаз.
+.avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  background: rgb(255 255 255 / 16%);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.who {
+  min-width: 0;
+  margin-right: auto;
+  line-height: 1.25;
+}
+
+.name {
+  display: block;
+  overflow: hidden;
+  color: #fff;
+  font-size: 0.875rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.role {
+  color: rgb(255 255 255 / 45%);
+  font-size: 0.75rem;
+}
+
+// Кнопки на тёмном: общая .ghost из ui.module.scss рассчитана на светлый
+// фон и превратилась бы здесь в белый прямоугольник.
+.sideAction {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  background: transparent;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: var(--radius-control);
+  color: rgb(255 255 255 / 70%);
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    color var(--transition);
+
+  &:hover {
+    background: rgb(255 255 255 / 12%);
+    color: #fff;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+/*
+ * Выход помечен красным.
+ *
+ * Не заливкой, а контуром и значком: рядом стоит ссылка на сайт, и две
+ * сплошные кнопки на тёмной панели спорили бы друг с другом. Заливка
+ * появляется при наведении — когда уже ясно, что целятся именно сюда.
+ *
+ * Оттенок тот же, что у ошибок на форме входа: на тёмном фоне обычный
+ * красный уходит в бурый, и светлый #fca5a5 — единственный, который
+ * на нём читается.
+ */
+.exit {
+  border-color: rgb(252 165 165 / 32%);
+  color: #fca5a5;
+
+  &:hover {
+    background: rgb(180 35 24 / 38%);
+    border-color: #fca5a5;
+    color: #fff;
+  }
+
+  &:focus-visible {
+    outline-color: #fca5a5;
+  }
+}
+
+// =====================================================================
+// Рабочая область
+// =====================================================================
+
+// Во всю доступную ширину, без общего ограничения.
+//
+// Ограничение здесь стояло ради длины строки — и обрезало четверть широкого
+// монитора полосой пустоты, в которую не помещался ещё один ряд плиток.
+// Длину строки ограничивает тот, у кого есть строки: пояснение под
+// заголовком раздела. Сетки и таблицы от лишней ширины только выигрывают.
+.main {
+  min-width: 0;
+  padding-block: 0.25rem;
+}
+
+// Показывается, пока проверяется сохранённая сессия, и когда сессия есть,
+// а профиля в базе нет.
+.splash {
+  padding: 4rem 1.5rem;
+  color: var(--ink-600);
+  font-family: var(--font-sans);
+  text-align: center;
+}
+
+// =====================================================================
+// Нижняя панель телефона: четыре раздела и кнопка меню посередине
+// =====================================================================
+//
+// Шесть разделов в полосу шириной с телефон не встают — на узком экране
+// на вкладку остаётся около сорока точек, и подписи начинают обрезаться.
+// Поэтому в полосе четыре самых частых, а середина открывает меню целиком.
+//
+// Внизу, а не вверху: там до неё дотягивается большой палец. Верх экрана
+// телефона отдают самому редкому, а разделы переключают чаще всего.
+
+.bar {
+  display: none;
+
+  @media (max-width: 900px) {
+    position: fixed;
+    z-index: 40;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    left: 0.75rem;
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+    padding: 0.375rem;
+    // Отступ снизу под индикатор домой у айфона. Без viewport-fit=cover
+    // env() равен нулю, и остаётся обычный отступ — сломаться тут нечему.
+    padding-bottom: calc(0.375rem + env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(
+      110deg,
+      var(--deep-900) 0%,
+      var(--deep-700) 55%,
+      var(--surface-accent) 100%
+    );
+    border-radius: var(--radius-banner);
+    box-shadow:
+      0 1px 2px rgb(15 23 42 / 8%),
+      0 0.75rem 2rem rgb(38 44 71 / 35%);
+  }
+}
+
+.tab {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.1875rem;
+  align-items: center;
+  min-width: 0;
+  padding: 0.4375rem 0.125rem;
+  border-radius: var(--radius-control);
+  color: rgb(255 255 255 / 72%);
+  font-size: 0.6875rem;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  transition:
+    background-color var(--transition),
+    color var(--transition);
+
+  svg {
+    width: 1.125rem;
+    height: 1.125rem;
+    opacity: 0.75;
+  }
+
+  &:hover {
+    color: #fff;
+  }
+}
+
+.tabOn {
+  background: rgb(255 255 255 / 14%);
+  color: #fff;
+  font-weight: 600;
+
+  svg {
+    opacity: 1;
+  }
+}
+
+// Кнопка меню приподнята над полосой и белая: она единственная здесь
+// не про переход, а про «показать всё остальное», и обязана отличаться
+// от вкладок не размером, а ролью.
+.menuButton {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  // Выступает над панелью на треть: так её находят, не читая.
+  margin-top: -1rem;
+  background: #fff;
+  border: 3px solid var(--deep-700);
+  border-radius: 50%;
+  color: var(--deep-900);
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    translate var(--transition);
+
+  &:hover {
+    translate: 0 -2px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+// Открытое меню: кнопка темнеет, чтобы крестик читался как «закрыть»,
+// а не как ещё одно действие поверх светлого круга.
+.menuOn {
+  background: var(--deep-900);
+  color: #fff;
+}

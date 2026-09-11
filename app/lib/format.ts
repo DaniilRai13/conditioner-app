@@ -60,3 +60,21 @@ export function formatKw(value?: number): string | null {
   if (!value) return null;
   return `${value.toLocaleString("ru-RU")} кВт`;
 }
+
+/**
+ * Путь для подписи ссылки. Свой домен убираем, чужой оставляем целиком:
+ * заявка с незнакомого адреса — это либо зеркало, либо чья-то копия сайта,
+ * и такое должно бросаться в глаза, а не прятаться за коротким «/price».
+ */
+export function shortPage(page: string): string {
+  try {
+    const url = new URL(page);
+    const path = url.pathname + url.search;
+    const local = url.hostname === "localhost" || url.hostname === "127.0.0.1";
+    // Локальные адреса подписываем с портом: только по нему и видно,
+    // с какого из локальных серверов пришла проверка.
+    return local ? `${url.host}${path}` : path;
+  } catch {
+    return page;
+  }
+}

@@ -1,8 +1,8 @@
 import { createServer } from "node:http";
-import { readDevVars } from "./dev-vars.ts";
+import { devEnv } from "./dev-vars.ts";
 import { readFile, stat } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
-import { handleLead, type LeadEnv } from "../app/lib/lead-handler.ts";
+import { handleLead } from "../app/lib/lead-handler.ts";
 
 /**
  * Локальный просмотр собранного сайта вместе с приёмом заявки.
@@ -68,7 +68,7 @@ async function resolveFile(pathname: string): Promise<string | null> {
   return null;
 }
 
-const env = await readDevVars();
+const env = await devEnv();
 
 if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) {
   console.warn("В .dev.vars нет ключей телеграма — форма ответит ошибкой.");

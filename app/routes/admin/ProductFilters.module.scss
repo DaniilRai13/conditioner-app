@@ -1,0 +1,184 @@
+// Панель отбора товаров. Переменные приходят из .shell в layout.module.scss.
+//
+// Оформление повторяет витринное, но акцент фиолетовый (--accent), а не
+// фирменный синий сайта: в админке синий нигде больше не встречается,
+// и одна синяя фишка среди фиолетовых кнопок читалась бы как чужая.
+
+.panel {
+  // Ползунок площади взят с витрины, а там акцент фирменный синий.
+  // Переменную он читает с предка — красим в фиолетовый админки.
+  --range-accent: var(--accent);
+
+  display: grid;
+  gap: 0.875rem;
+  align-content: start;
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+.head {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.clear {
+  display: inline-flex;
+  gap: 0.3125rem;
+  align-items: center;
+  background: none;
+  border: none;
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  svg {
+    width: 0.8125rem;
+    height: 0.8125rem;
+  }
+}
+
+.group {
+  display: grid;
+  gap: 0.4375rem;
+}
+
+.label {
+  color: var(--ink-600);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.chip {
+  padding: 0.25rem 0.5625rem;
+  background: var(--bg);
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  color: var(--ink-600);
+  font: inherit;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+
+  &:hover {
+    border-color: var(--accent);
+    color: var(--ink-900);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+.on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+
+  &:hover {
+    background: var(--accent-dark);
+    color: #fff;
+  }
+}
+
+.select {
+  width: 100%;
+  padding: 0.4375rem 0.625rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  color: var(--ink-900);
+  font: inherit;
+  font-size: 0.875rem;
+
+  &:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgb(73 82 126 / 16%);
+    outline: none;
+  }
+}
+
+.pair {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: 1fr 1fr;
+}
+
+.field {
+  display: flex;
+  gap: 0.375rem;
+  align-items: center;
+  padding: 0.3125rem 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+
+  span {
+    color: var(--ink-mute);
+    font-size: 0.75rem;
+  }
+
+  input {
+    // Ширина от нуля: у числового поля своя ширина по умолчанию, и в узкой
+    // колонке пара «от/до» из-за неё расходилась за край панели.
+    width: 100%;
+    min-width: 0;
+    background: none;
+    border: none;
+    color: var(--ink-900);
+    font: inherit;
+    font-size: 0.875rem;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &:focus-within {
+    border-color: var(--accent);
+  }
+}
+
+.hint {
+  color: var(--ink-mute);
+  font-size: 0.75rem;
+}
+
+.check {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  color: var(--ink-900);
+  font-size: 0.875rem;
+  cursor: pointer;
+
+  input {
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+}

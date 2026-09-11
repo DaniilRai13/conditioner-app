@@ -1,0 +1,35 @@
+// Раздел цен. Переменные приходят из .shell в layout.module.scss.
+
+.cards {
+  display: grid;
+  gap: 1rem;
+  // Две колонки там, где помещаются: карточки здесь короткие, и в одну
+  // колонку страница растягивается на два экрана из ничего.
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+}
+
+// Подпись под названием класса: мощность в BTU и киловаттах.
+.sub {
+  display: block;
+  margin-top: 0.125rem;
+  color: var(--ink-mute);
+  font-size: 0.8125rem;
+}
+
+.priceCell {
+  width: 9rem;
+}
+
+.confirmCell {
+  width: 12rem;
+}
+
+.rowError,
+.error {
+  color: var(--danger);
+  font-size: 0.8125rem;
+}
+
+.error {
+  margin: 0.5rem 0 0;
+}

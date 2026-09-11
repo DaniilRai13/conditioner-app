@@ -1,0 +1,458 @@
+// Вход в админку.
+//
+// Цвета — токены сайта: свою палитру админка не заводит, иначе пришлось бы
+// поддерживать вторую и сверять её с первой на глаз. Литералами остались
+// только служебные красные и цвет заливки под автозаполнение — на сайте
+// таких состояний нет, и заводить ради них общий токен не за чем.
+//
+// Файл написан от узкого экрана к широкому, в отличие от сайта. Причина
+// в том, что тёмный экран здесь — состояние по умолчанию, а двухпанельная
+// раскладка появляется только когда есть куда её положить. Обратный
+// порядок заставил бы отменять тёмный фон на каждом правиле.
+
+// =====================================================================
+// Узкий экран: тёмный экран целиком, кондиционер над формой
+// =====================================================================
+
+.page {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  overflow: hidden;
+  min-height: 100vh;
+  // dvh — на телефоне адресная строка съедает часть vh, и низ формы
+  // оказывался за краем экрана.
+  min-height: 100dvh;
+  background: linear-gradient(
+    160deg,
+    var(--deep-900) 0%,
+    var(--deep-700) 55%,
+    var(--surface-accent) 100%
+  );
+  color: rgb(255 255 255 / 82%);
+  font-family: var(--font-sans);
+}
+
+// Сетка стены — та же, что в первом экране сайта. Растворяется маской,
+// иначе фон превращается в миллиметровку.
+.page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgb(255 255 255 / 7%) 0 1px,
+      transparent 1px 5.5rem
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgb(255 255 255 / 7%) 0 1px,
+      transparent 1px 5.5rem
+    );
+  mask-image: radial-gradient(70% 46% at 50% 34%, #000 0%, transparent 78%);
+  pointer-events: none;
+}
+
+.formSide {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem 1.25rem;
+}
+
+// Кондиционер над формой — тот же компонент, что в первом экране сайта.
+// Ширина в процентах: внутри у него всё считается от собственной ширины,
+// своего адаптива ему не нужно.
+.unitMobile {
+  align-self: center;
+  width: min(78%, 17rem);
+  // Карточка заходит под струю: иначе поток обрывается в воздухе,
+  // а вместе с ним пропадает и смысл рисунка.
+  margin-bottom: -14%;
+}
+
+.card {
+  width: 100%;
+  max-width: 25rem;
+  margin-inline: auto;
+  padding: 1.75rem 1.375rem;
+  background: rgb(255 255 255 / 8%);
+  border: 1px solid rgb(255 255 255 / 14%);
+  border-radius: 14px;
+  backdrop-filter: blur(0.75rem);
+}
+
+// Название над формой: тёмной колонки на узком экране нет, и без него
+// непонятно, куда вообще попал.
+.mobileMark {
+  display: flex;
+  gap: 0.625rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  color: rgb(255 255 255 / 58%);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+// Светлый кружок под эмблемой. Буква в знаке тёмно-синяя: и на тёмном
+// экране, и на стеклянной карточке без подложки от неё осталось бы
+// синее пятно без формы.
+.markChip {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.markLogo {
+  width: 1.5rem;
+  height: auto;
+}
+
+.title {
+  position: relative;
+  margin: 0 0 0.5rem;
+  padding-top: 0.875rem;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+// Короткая черта над заголовком: даёт форме опору и отделяет её
+// от подписи выше.
+.title::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2rem;
+  height: 3px;
+  background: rgb(255 255 255 / 70%);
+  border-radius: 2px;
+}
+
+.subtitle {
+  margin: 0 0 1.75rem;
+  color: rgb(255 255 255 / 60%);
+  font-size: 0.9375rem;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.label {
+  color: rgb(255 255 255 / 58%);
+  font-size: 0.8125rem;
+}
+
+.input {
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  background: rgb(255 255 255 / 8%);
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 8px;
+  font: inherit;
+  color: #fff;
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease;
+
+  &::placeholder {
+    color: rgb(255 255 255 / 40%);
+  }
+
+  &:focus {
+    border-color: rgb(255 255 255 / 55%);
+    // Кольцо тенью, а не outline: outline не скругляется по границе поля
+    // в части браузеров и рисует прямоугольник поверх скруглённого.
+    box-shadow: 0 0 0 3px rgb(255 255 255 / 14%);
+    outline: none;
+  }
+
+  &[aria-invalid="true"] {
+    border-color: #fca5a5;
+  }
+}
+
+// Автозаполнение браузера заливает поле своим жёлтым — на тёмном это
+// выглядит грубо и нечитаемо. Отменить фон нельзя, но можно закрасить
+// его собственной внутренней тенью: приём древний, зато работает везде.
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #fff;
+  box-shadow: 0 0 0 1000px #39406a inset;
+  caret-color: #fff;
+}
+
+.fieldError {
+  color: #fca5a5;
+  font-size: 0.8125rem;
+}
+
+.alert {
+  margin: 1.25rem 0 0;
+  padding: 0.75rem 1rem;
+  background: rgb(180 35 24 / 22%);
+  border: 1px solid rgb(252 165 165 / 45%);
+  border-radius: 8px;
+  color: #fecaca;
+  font-size: 0.875rem;
+}
+
+// Белая кнопка на тёмном: единственный по-настоящему заметный элемент
+// экрана, и он же единственное действие.
+.submit {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 0.6875rem 1rem;
+  background: #fff;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--deep-900);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 140ms ease;
+
+  &:hover:not(:disabled) {
+    background: rgb(255 255 255 / 88%);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+}
+
+.note {
+  margin: 1.75rem 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgb(255 255 255 / 14%);
+  color: rgb(255 255 255 / 55%);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+// Левая колонка на узком экране не нужна: её содержимое — украшение,
+// а место нужно форме.
+.brand {
+  display: none;
+}
+
+// =====================================================================
+// Широкий экран: две панели, светлая карточка
+// =====================================================================
+
+@media (min-width: 1024px) {
+  .page {
+    grid-template-columns: 1.05fr 1fr;
+    background: var(--bg);
+    color: var(--ink-900);
+  }
+
+  // Сетка стены переезжает в левую колонку — на светлой половине
+  // ей делать нечего.
+  .page::after {
+    content: none;
+  }
+
+  .brand {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    padding: 3rem;
+    background: linear-gradient(
+    160deg,
+    var(--deep-900) 0%,
+    var(--deep-700) 55%,
+    var(--surface-accent) 100%
+  );
+    color: rgb(255 255 255 / 78%);
+  }
+
+  .brand::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(
+        90deg,
+        rgb(255 255 255 / 7%) 0 1px,
+        transparent 1px 5.5rem
+      ),
+      repeating-linear-gradient(
+        0deg,
+        rgb(255 255 255 / 7%) 0 1px,
+        transparent 1px 5.5rem
+      );
+    mask-image: radial-gradient(62% 58% at 50% 45%, #000 0%, transparent 78%);
+    pointer-events: none;
+  }
+
+  .mark {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    color: #fff;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .brandBody {
+    position: relative;
+    z-index: 1;
+    max-width: 26rem;
+  }
+
+  .unit {
+    width: 68%;
+    margin-bottom: 2.5rem;
+  }
+
+  .brandTitle {
+    margin: 0 0 0.875rem;
+    color: #fff;
+    font-size: clamp(1.75rem, 2.4vw, 2.25rem);
+    font-weight: 600;
+    line-height: 1.15;
+  }
+
+  .brandText {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .brandFoot {
+    position: relative;
+    z-index: 1;
+    color: rgb(255 255 255 / 45%);
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+  }
+
+  .formSide {
+    padding: 3rem 2rem;
+  }
+
+  // Кондиционер здесь уже есть в левой колонке — второй был бы лишним.
+  .unitMobile {
+    display: none;
+  }
+
+  .mobileMark {
+    display: none;
+  }
+
+  .card {
+    padding: 2.5rem;
+    background: #fff;
+    border-color: var(--border);
+    border-radius: 12px;
+    box-shadow:
+      0 1px 2px rgb(15 23 42 / 4%),
+      0 12px 28px rgb(15 23 42 / 8%);
+    backdrop-filter: none;
+  }
+
+  .title {
+    color: var(--ink-900);
+  }
+
+  .title::before {
+    background: var(--surface-accent);
+  }
+
+  .subtitle {
+    color: var(--ink-400);
+  }
+
+  .label {
+    color: var(--ink-600);
+  }
+
+  .input {
+    background: #fff;
+    border-color: var(--border);
+    color: var(--ink-900);
+
+    &::placeholder {
+      color: var(--ink-400);
+    }
+
+    &:focus {
+      border-color: var(--surface-accent);
+      box-shadow: 0 0 0 3px rgb(73 82 126 / 22%);
+    }
+
+    &[aria-invalid="true"] {
+      border-color: #b42318;
+    }
+  }
+
+  .input:-webkit-autofill,
+  .input:-webkit-autofill:hover,
+  .input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--ink-900);
+    box-shadow: 0 0 0 1000px #fff inset;
+    caret-color: var(--ink-900);
+  }
+
+  .fieldError {
+    color: #b42318;
+  }
+
+  .alert {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #b42318;
+  }
+
+  .submit {
+    background: var(--surface-accent);
+    color: #fff;
+    font-weight: 500;
+
+    &:hover:not(:disabled) {
+      background: var(--deep-700);
+    }
+
+    &:focus-visible {
+      outline-color: var(--surface-accent);
+    }
+  }
+
+  .note {
+    border-top-color: var(--border);
+    color: var(--ink-400);
+  }
+}

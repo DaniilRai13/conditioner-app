@@ -1,4 +1,8 @@
 import type { LeadInput } from "./lead-schema";
+// С расширением: этот модуль запускает и Node напрямую (scripts/check-lead.ts,
+// lead-handler.ts), а он импорт без расширения не находит. Соседний импорт
+// типа обходится без него только потому, что типы Node стирает, не разрешая.
+import { shortPage } from "./format.ts";
 
 /**
  * Заявка в текст для телеграма.
@@ -53,23 +57,6 @@ const QUIZ_SHORT: Record<string, string> = {
 const escape = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-/**
- * Путь для подписи ссылки. Свой домен убираем, чужой оставляем целиком:
- * заявка с незнакомого адреса — это либо зеркало, либо чья-то копия сайта,
- * и такое должно бросаться в глаза, а не прятаться за коротким «/price».
- */
-function shortPage(page: string): string {
-  try {
-    const url = new URL(page);
-    const path = url.pathname + url.search;
-    const local = url.hostname === "localhost" || url.hostname === "127.0.0.1";
-    // Локальные адреса подписываем с портом: только по нему и видно,
-    // с какого из локальных серверов пришла проверка.
-    return local ? `${url.host}${path}` : path;
-  } catch {
-    return page;
-  }
-}
 
 /** Минское время: сервер стоит неизвестно где, а звонить будут отсюда. */
 function minskTime(now: Date): string {

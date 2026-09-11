@@ -1,0 +1,305 @@
+// Раздел заявок. Переменные приходят из .shell в layout.module.scss.
+
+.grid {
+  display: grid;
+  gap: 0.875rem;
+  // min(): без него на телефоне единственная колонка получает минимум
+  // в 17rem и вылезает за экран — сетка честно выполняет то, что просили,
+  // а страница едет вбок.
+  grid-template-columns: repeat(auto-fill, minmax(min(17rem, 100%), 1fr));
+}
+
+// =====================================================================
+// Карточка
+// =====================================================================
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.875rem 1rem;
+  background: var(--card-fill);
+  border: 1px solid var(--line);
+  border-bottom-color: #dde3ef;
+  border-left: 3px solid transparent;
+  border-radius: var(--radius-card);
+  box-shadow: var(--card-edge), var(--lift);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition),
+    translate var(--transition);
+
+  // При наведении карточка поднимается: тень растёт и размывается,
+  // как у предмета, который отодвинули от поверхности. Без сдвига одна
+  // тень читалась бы просто как смена цвета.
+  &:hover {
+    border-color: var(--accent);
+    box-shadow: var(--card-edge), var(--lift-hover);
+    translate: 0 -2px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+// Необработанные помечены полосой слева. В списке из полусотни карточек
+// статус читают не глазами по одной, а пятном — и видно, сколько работы
+// осталось. Полоса заложена в рамку у всех карточек прозрачной: иначе
+// появление цвета сдвигало бы содержимое на три точки.
+.fresh {
+  border-left-color: var(--accent);
+}
+
+.cardTop {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.125rem;
+}
+
+.when {
+  color: var(--ink-mute);
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+.status {
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.stNew {
+  background: var(--accent);
+  color: #fff;
+}
+
+// Голубой, а не серый: «перезвонил» и «отказ» оба были бледными,
+// и в списке они не различались — а это противоположные исходы.
+.stCalled {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.stWork {
+  background: #fef3c7;
+  color: #7c5312;
+}
+
+.stDone {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.stRejected {
+  background: #f1f3f7;
+  color: var(--ink-400);
+}
+
+.name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+// Номер не переносится: в узкой карточке он рвался по дефису посреди цифр
+// и переставал читаться как телефон.
+.phone {
+  color: var(--ink-600);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+// Две строки: по ним заявку узнают, а читают её целиком уже в панели.
+// С тремя карточки разъезжаются по высоте и сетка перестаёт читаться рядами.
+.message {
+  display: -webkit-box;
+  overflow: hidden;
+  margin-top: 0.25rem;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  color: var(--ink-600);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.cardFoot {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.625rem;
+}
+
+.hasNote {
+  color: var(--ink-mute);
+  font-size: 0.75rem;
+}
+
+// =====================================================================
+// Панель
+// =====================================================================
+
+// Позвонить — главное действие по заявке, и на телефоне оно же единственное.
+// По содержимому, а не во всю ширину: растянутая на панель кнопка была
+// втрое выше соседних полей и читалась баннером, а не действием.
+.call {
+  display: inline-flex;
+  justify-self: start;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.375rem 0.8125rem;
+  // Высота задана явно. Из ресета сюда наследуется line-height: 1.625 —
+  // он рассчитан на абзацы текста и добавлял кнопке по восемь точек сверху
+  // и снизу: строка одна, а место занято как под три.
+  line-height: 1.2;
+  // Градиент и светлая кромка сверху: у плоской заливки кнопка выглядит
+  // наклеенным прямоугольником, а не чем-то, что можно нажать.
+  background: linear-gradient(180deg, #545e8f 0%, var(--accent) 100%);
+  border-radius: var(--radius-control);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 22%),
+    0 1px 2px rgb(38 44 71 / 20%),
+    0 4px 10px rgb(38 44 71 / 18%);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    background var(--transition),
+    box-shadow var(--transition),
+    translate var(--transition);
+
+  &:hover {
+    background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 22%),
+      0 2px 4px rgb(38 44 71 / 22%),
+      0 8px 18px rgb(38 44 71 / 20%);
+    translate: 0 -1px;
+  }
+
+  // Нажатие опускает кнопку к поверхности: тень схлопывается.
+  &:active {
+    box-shadow: inset 0 1px 2px rgb(20 24 40 / 25%);
+    translate: 0 1px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  svg {
+    width: 0.9375rem;
+    height: 0.9375rem;
+  }
+}
+
+// Комментарий подписан. Без подписи серая плашка с текстом читается как
+// что угодно — от заметки мастера до системного сообщения, — а это
+// единственное на экране, что написал человек своими словами.
+.comment {
+  display: grid;
+  gap: 0.375rem;
+}
+
+.commentLabel {
+  color: var(--ink-mute);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+// Цитата утоплена, а не поднята: чужие слова лежат НА панели, а не над ней.
+// Внутренняя тень по верхнему краю и светлая линия по нижнему — ровно
+// наоборот тому, что делает карточка, и разница читается сразу.
+.fullMessage {
+  margin: 0;
+  padding: 0.75rem 0.875rem;
+  background: linear-gradient(180deg, #eef2fb 0%, #f4f7fd 100%);
+  // Полоса слева, как у цитаты: отделяет чужие слова от наших подписей.
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius-control) var(--radius-control) 0;
+  box-shadow:
+    inset 0 1px 2px rgb(38 44 71 / 8%),
+    inset 0 -1px 0 rgb(255 255 255 / 70%);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+// =====================================================================
+// Сводка
+// =====================================================================
+
+// Всё, что только читают, — одной плашкой. Она утоплена в панель той же
+// внутренней тенью, что и цитата: у полей ниже объём наружу, у справки
+// внутрь, и глазу не нужно читать, чтобы понять, где что.
+.summary {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0.25rem 0.875rem;
+  background: linear-gradient(180deg, #eef2fb 0%, #f6f8fd 100%);
+  border: 1px solid #dfe5f3;
+  border-radius: var(--radius-card);
+  box-shadow:
+    inset 0 1px 2px rgb(38 44 71 / 7%),
+    inset 0 -1px 0 rgb(255 255 255 / 70%);
+}
+
+.summaryRow {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  font-size: 0.8125rem;
+
+  // Разделители между строками, кроме последней. Точечная линия, а не
+  // сплошная: сплошные в плашке из пяти строк превращают её в таблицу.
+  & + & {
+    border-top: 1px solid rgb(38 44 71 / 8%);
+  }
+
+  dt {
+    flex: none;
+    color: var(--ink-mute);
+  }
+
+  dd {
+    min-width: 0;
+    margin: 0;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+}
+
+.strong {
+  font-weight: 600;
+}
+
+.done {
+  margin-left: auto;
+}
+
+.savedLine {
+  min-height: 1rem;
+  margin: 0;
+}
+
+.error {
+  margin: 0;
+  color: var(--danger);
+}

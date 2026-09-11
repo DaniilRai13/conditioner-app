@@ -1,0 +1,32 @@
+// Раздел отзывов. Переменные приходят из .shell в layout.module.scss.
+
+.list {
+  display: grid;
+  gap: 0.875rem;
+  // Отзыв — короткая карточка, и в одну колонку страница растягивается
+  // впустую. Порог по ширине держит текстовое поле пригодным для чтения.
+  grid-template-columns: repeat(auto-fit, minmax(min(24rem, 100%), 1fr));
+}
+
+.item {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+// Удаление — единственное необратимое действие на карточке, и стоит оно
+// в стороне от остальных, у противоположного края.
+.remove {
+  margin-left: auto;
+}
+
+.error {
+  margin: 0;
+  color: var(--danger);
+}

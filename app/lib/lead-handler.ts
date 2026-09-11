@@ -1,7 +1,7 @@
 // С расширением .ts: этот модуль запускает и Node напрямую — локальный
 // сервер scripts/serve.ts, — а он без расширения импорт не находит.
 // Сборщикам явное расширение не мешает (tsconfig: allowImportingTsExtensions).
-import { leadSchema } from "./lead-schema.ts";
+import { leadSchema, type LeadInput } from "./lead-schema.ts";
 import { formatLeadMessage } from "./lead-message.ts";
 
 /**
@@ -28,7 +28,68 @@ export type LeadEnv = {
   TELEGRAM_CHAT_ID?: string;
   /** Адрес сайта для ссылки на товар в сообщении. */
   SITE_URL?: string;
+
+  /** Проект Supabase — чтобы заявка осталась в базе, а не только в чате. */
+  SUPABASE_URL?: string;
+  /**
+   * Сервисный ключ. Обходит RLS — поэтому живёт ТОЛЬКО на сервере и никогда
+   * не получает префикс VITE_: с ним он уехал бы в браузер, и любой желающий
+   * читал бы чужие заявки вместе с телефонами.
+   *
+   * Анонимным ключом здесь не обойтись: политика на leads запрещает анониму
+   * и чтение, и запись — ровно затем, чтобы список с персональными данными
+   * нельзя было выкачать из браузера.
+   */
+  SUPABASE_SERVICE_ROLE_KEY?: string;
 };
+
+/**
+ * Заявка в базу.
+ *
+ * Отдельно от телеграма и намеренно необязательно. Телеграм — уведомление:
+ * он должен сработать сейчас, иначе заявка потеряна. База — архив: он нужен,
+ * чтобы через месяц ответить, сколько было обращений и сколько закрыто.
+ *
+ * Если база недоступна, заявка всё равно доходит до мастера, и говорить
+ * человеку «не отправилось» из-за архива нельзя — он отправит ещё раз,
+ * и в чате окажется дубль. Поэтому ошибка только в журнал.
+ */
+async function saveLead(lead: LeadInput, env: LeadEnv): Promise<void> {
+  if (!env.SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY) {
+    console.error(
+      "Заявка не сохранена: нет SUPABASE_URL или SUPABASE_SERVICE_ROLE_KEY.\n" +
+        "В телеграм она ушла, но в админке её не будет."
+    );
+    return;
+  }
+
+  try {
+    const res = await fetch(`${env.SUPABASE_URL}/rest/v1/leads`, {
+      method: "POST",
+      headers: {
+        apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+        "Content-Type": "application/json",
+        Prefer: "return=minimal",
+      },
+      body: JSON.stringify({
+        name: lead.name,
+        phone: lead.phone,
+        message: lead.message ?? "",
+        source: lead.source,
+        page: lead.page ?? "",
+        product_slug: lead.productSlug ?? null,
+        quiz_answers: lead.quizAnswers ?? {},
+      }),
+    });
+
+    if (!res.ok) {
+      console.error(`Заявка не сохранена: Supabase ${res.status}`, await res.text());
+    }
+  } catch (error) {
+    console.error("Заявка не сохранена: запрос к Supabase не прошёл", error);
+  }
+}
 
 const json = (body: unknown, status: number) =>
   new Response(JSON.stringify(body), {
@@ -103,8 +164,13 @@ export async function handleLead(
     // Ответ телеграма пишем в лог целиком — там лежит причина
     // («chat not found», «can't parse entities»), без неё чинить нечего.
     console.error("Телеграм отказал:", res.status, await res.text());
+
+    // В базу всё равно кладём: заявка была настоящая, человек её отправил,
+    // и терять её из-за неполадки в чате нельзя. Мастер увидит её в админке.
+    await saveLead(lead, env);
     return json({ error: "telegram" }, 502);
   }
 
+  await saveLead(lead, env);
   return json({ ok: true }, 200);
 }

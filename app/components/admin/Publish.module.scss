@@ -1,0 +1,118 @@
+// Кнопка «Опубликовать» в тёмном меню админки.
+//
+// Переменные приходят из .shell в layout.module.scss.
+
+.box {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.375rem;
+  padding: 0.75rem;
+  // Стекло поверх градиента, а не сплошная заливка: под блоком идёт
+  // тот же градиент, что и под меню, и любой плотный цвет разрезал бы
+  // панель надвое.
+  background: rgb(255 255 255 / 8%);
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: var(--radius-control);
+
+  @media (max-width: 900px) {
+    // В верхней полосе телефона места нет: оставляем одну кнопку,
+    // подписи прячем.
+    padding: 0;
+    background: none;
+    border: none;
+  }
+}
+
+.line {
+  display: flex;
+  gap: 0.4375rem;
+  align-items: flex-start;
+  color: rgb(255 255 255 / 82%);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+
+  svg {
+    flex: none;
+    width: 0.875rem;
+    height: 0.875rem;
+    margin-top: 0.0625rem;
+  }
+
+  @media (max-width: 900px) {
+    display: none;
+  }
+}
+
+.ok {
+  color: rgb(255 255 255 / 55%);
+}
+
+.bad {
+  color: #fca5a5;
+}
+
+.note {
+  color: rgb(255 255 255 / 45%);
+  font-size: 0.75rem;
+
+  @media (max-width: 900px) {
+    display: none;
+  }
+}
+
+// Белая кнопка на тёмном: на этой панели она единственное действие,
+// и полутон сделал бы её неотличимой от пунктов меню.
+.button {
+  display: flex;
+  gap: 0.4375rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.125rem;
+  padding: 0.4375rem 0.75rem;
+  background: #fff;
+  border: none;
+  border-radius: var(--radius-control);
+  color: var(--deep-900);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    translate var(--transition);
+
+  &:hover {
+    background: rgb(255 255 255 / 88%);
+    translate: 0 -1px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  @media (max-width: 900px) {
+    margin-top: 0;
+  }
+}
+
+// Значок ожидания. С системной настройкой «меньше движения» ресет
+// обнуляет длительность — тогда признаком работы остаётся подпись
+// «Собираю сайт» и пропавшая кнопка.
+.spin {
+  animation: publish-spin 900ms linear infinite;
+}
+
+@keyframes publish-spin {
+  to {
+    rotate: 360deg;
+  }
+}

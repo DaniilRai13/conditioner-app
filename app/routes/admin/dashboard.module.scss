@@ -1,0 +1,410 @@
+// Главная админки. Переменные приходят из .shell в layout.module.scss.
+
+// Заголовок части раздела и кнопки справа от него.
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ranges {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.1875rem;
+  background: var(--bg-alt);
+  border-radius: var(--radius-pill);
+}
+
+.range {
+  padding: 0.25rem 0.75rem;
+  background: none;
+  border: none;
+  border-radius: var(--radius-pill);
+  color: var(--ink-600);
+  font: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    color var(--transition);
+
+  &:hover {
+    color: var(--ink-900);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+.rangeOn {
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgb(15 23 42 / 8%);
+  color: var(--ink-900);
+  font-weight: 600;
+}
+
+// =====================================================================
+// Плитки с числами
+// =====================================================================
+
+.tiles {
+  display: grid;
+  gap: 0.875rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
+  margin-bottom: 1.25rem;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  padding: 1rem 1.125rem;
+  background: var(--card-fill);
+  border: 1px solid var(--line);
+  border-bottom-color: #dde3ef;
+  border-radius: var(--radius-card);
+  box-shadow: var(--card-edge), var(--lift);
+  color: inherit;
+  text-decoration: none;
+}
+
+/*
+ * Тёмная плитка — одна на весь экран.
+ *
+ * Тот же градиент «Глубины», что у меню слева и у шапки сайта: цвет здесь
+ * не для разнообразия, а чтобы число, ради которого сюда заходят, нашлось
+ * раньше остальных. Покрась половину плиток — и правило перестанет
+ * работать: там, где выделено всё, не выделено ничего.
+ */
+.tileAccent {
+  background: linear-gradient(
+    150deg,
+    var(--deep-900) 0%,
+    var(--deep-700) 55%,
+    var(--surface-accent) 100%
+  );
+  border-color: var(--deep-700);
+  // Тень насыщеннее и дальше: тёмный предмет на светлом фоне отбрасывает
+  // заметную тень, а общая --lift рассчитана на белые карточки и под ним
+  // просто не видна.
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 14%),
+    0 2px 4px rgb(38 44 71 / 18%),
+    0 10px 24px rgb(38 44 71 / 22%);
+  color: #fff;
+
+  .tileLabel {
+    color: rgb(255 255 255 / 90%);
+  }
+
+  .tileHint {
+    color: rgb(255 255 255 / 55%);
+  }
+}
+
+.tileLink {
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+
+  &:hover {
+    border-color: var(--accent);
+    box-shadow: var(--card-edge), var(--lift-hover);
+    translate: 0 -2px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+// Наведение на тёмную: своя тень, иначе общая подставляет светлую кромку
+// поверх градиента и по верхнему краю проступает белая полоса.
+.tileAccent.tileLink:hover {
+  border-color: var(--surface-accent);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 14%),
+    0 4px 8px rgb(38 44 71 / 22%),
+    0 16px 34px rgb(38 44 71 / 28%);
+}
+
+.tileValue {
+  // tabular-nums: иначе при обновлении числа плитки едва заметно дёргаются
+  // по ширине, и глаз ловит движение там, где ничего не произошло.
+  font-size: 1.875rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.tileLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.tileHint {
+  color: var(--ink-mute);
+  font-size: 0.75rem;
+}
+
+// =====================================================================
+// Графики и колонки
+// =====================================================================
+
+.charts,
+.columns,
+.texts {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  margin-bottom: 1.25rem;
+}
+
+.texts {
+  align-items: start;
+}
+
+// Первый экран занимает всю ширину: в нём длинные тексты, и в узкой
+// колонке заголовок сайта не виден целиком — а править его вслепую нельзя.
+.wide {
+  grid-column: 1 / -1;
+}
+
+.chartTitle,
+.cardTitle {
+  margin: 0 0 0.75rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.cardTitle {
+  margin-bottom: 0.5rem;
+}
+
+.placeholder {
+  margin: 0;
+  padding: 1.25rem 0;
+  color: var(--ink-mute);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+// =====================================================================
+// Списки
+// =====================================================================
+
+.sources {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.source {
+  display: grid;
+  gap: 0.5rem;
+  align-items: baseline;
+  grid-template-columns: 1fr auto auto;
+  font-size: 0.875rem;
+
+  b {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.sourceHint {
+  min-width: 6.5rem;
+  color: var(--ink-mute);
+  font-size: 0.75rem;
+  text-align: right;
+}
+
+.todo {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/*
+ * Пункт — белая карточка на фиолетовой подложке, а не строка текста.
+ *
+ * Подсветкой фона здесь обойтись нельзя: карточка «Требует внимания»
+ * сама светло-фиолетовая, а подсветка была того же тона — наведение
+ * не давало вообще ничего, мышь ходила по списку, и он не отзывался.
+ * Белое на фиолетовом различимо всегда, и есть куда двигаться при
+ * наведении: рамка, тень, сдвиг.
+ *
+ * И это честнее по смыслу: каждый пункт — отдельное дело со своей
+ * ссылкой, а не строчка перечисления.
+ */
+.todoLink {
+  display: flex;
+  gap: 0.625rem;
+  align-items: center;
+  padding: 0.625rem 0.75rem;
+  background: var(--surface);
+  border: 1px solid #dee4f3;
+  border-radius: var(--radius-control);
+  box-shadow: 0 1px 1px rgb(38 44 71 / 5%);
+  color: var(--ink-900);
+  font-size: 0.875rem;
+  line-height: 1.35;
+  text-decoration: none;
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition),
+    translate var(--transition);
+
+  &:hover {
+    border-color: var(--accent);
+    box-shadow:
+      0 1px 2px rgb(38 44 71 / 8%),
+      0 6px 14px rgb(38 44 71 / 12%);
+    translate: 0 -1px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  // Значок раздела заливается акцентом, стрелка едет вправо — два движения
+  // в одну сторону: «нажми, и перейдёшь туда».
+  &:hover .todoIcon {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  &:hover .todoArrow {
+    translate: 3px 0;
+    color: var(--accent);
+  }
+}
+
+.todoIcon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.875rem;
+  height: 1.875rem;
+  background: var(--bg-alt);
+  border-radius: var(--radius-control);
+  color: var(--accent);
+  transition:
+    background-color var(--transition),
+    color var(--transition);
+
+  svg {
+    width: 0.9375rem;
+    height: 0.9375rem;
+  }
+}
+
+.todoText {
+  display: grid;
+  gap: 0.0625rem;
+  min-width: 0;
+
+  b {
+    font-weight: 600;
+  }
+
+  span {
+    color: var(--ink-mute);
+    font-size: 0.8125rem;
+  }
+}
+
+.todoArrow {
+  flex: none;
+  width: 0.9375rem;
+  height: 0.9375rem;
+  margin-left: auto;
+  color: var(--ink-400);
+  transition:
+    translate var(--transition),
+    color var(--transition);
+}
+
+.more {
+  display: inline-flex;
+  gap: 0.375rem;
+  align-items: center;
+  color: var(--accent);
+  font-size: 0.875rem;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+}
+
+.leads {
+  display: grid;
+  gap: 0.125rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lead {
+  display: grid;
+  gap: 0.25rem 1rem;
+  align-items: baseline;
+  grid-template-columns: 5rem 1fr auto;
+  padding: 0.5rem 0;
+  font-size: 0.875rem;
+
+  & + & {
+    border-top: 1px solid var(--line);
+  }
+
+  @media (max-width: 560px) {
+    // На телефоне три колонки в 360 точек не умещаются, и телефон
+    // переносится посреди номера. Складываем в строки.
+    grid-template-columns: 1fr auto;
+  }
+}
+
+.leadWhen {
+  color: var(--ink-mute);
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+.leadWho {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  min-width: 0;
+}
+
+.leadFrom {
+  color: var(--ink-mute);
+  font-size: 0.8125rem;
+  text-align: right;
+}
+
+.fields {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.error {
+  margin: 0.5rem 0 0;
+  color: var(--danger);
+  font-size: 0.875rem;
+}

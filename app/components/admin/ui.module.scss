@@ -1,0 +1,470 @@
+// Мелкие элементы админки.
+//
+// Собраны из токенов сайта: те же радиусы, та же мягкая тень, тот же
+// Manrope. Раньше здесь стояли свои числа и свои серые — админка выглядела
+// панелью управления хостингом, приделанной сбоку. Теперь общее с сайтом
+// не только имя в углу.
+//
+// Переменные приходят снаружи — из .shell в layout.module.scss и .page
+// в LoginForm.module.scss. Объявить их здесь нельзя: в CSS-модуле имена
+// классов хешируются, и селектор не совпал бы ни с чем в разметке.
+
+// =====================================================================
+// Заголовок раздела
+// =====================================================================
+
+.head {
+  margin-bottom: 1.25rem;
+}
+
+// Заголовок и кнопки в один ряд. Выравнивание по центру, а не по базовой
+// линии: в ряду стоят заголовок, выпадающий список и кнопка — у них разная
+// высота, и по базовой линии список повисает выше остальных на величину
+// собственных отступов.
+.headRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.headTitle {
+  margin: 0;
+  margin-right: auto;
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+// Пояснение — отдельным блоком под рядом, а не элементом того же flex.
+// Внутри ряда его приходилось выталкивать на новую строку через
+// flex-basis: 100%, а max-width тут же это ограничение снимал: базовый
+// размер зажимается максимальным, и абзац снова влезал рядом с кнопками.
+.headText {
+  max-width: 46rem;
+  margin: 0.5rem 0 0;
+  color: var(--ink-mute);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+// Поля в шапке раздела ужимаются по содержимому. Базовые 100% рассчитаны
+// на поле внутри .field, где оно занимает всю колонку; в ряду с кнопками
+// та же сотня процентов означает «вся строка», и выпадающий список
+// растягивался во всю ширину, выдавливая остальное на другие строки.
+.headRow .control {
+  width: auto;
+}
+
+// Подзаголовок внутри раздела: «Что входит и сроки», «Блоки на сайте».
+.subhead {
+  margin: 2rem 0 0.875rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+
+// =====================================================================
+// Кнопки
+// =====================================================================
+
+.button {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.9375rem;
+  background: var(--accent);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+
+  &:hover:not(:disabled) {
+    background: var(--accent-dark);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+.ghost {
+  background: var(--surface);
+  border-color: var(--line);
+  color: var(--ink-600);
+  font-weight: 500;
+
+  &:hover:not(:disabled) {
+    background: var(--bg-alt);
+    border-color: var(--accent);
+    color: var(--ink-900);
+  }
+}
+
+.danger {
+  background: var(--surface);
+  border-color: var(--line);
+  color: var(--danger);
+  font-weight: 500;
+
+  &:hover:not(:disabled) {
+    background: var(--danger-bg);
+    border-color: currentcolor;
+  }
+}
+
+.small {
+  padding: 0.3125rem 0.6875rem;
+  font-size: 0.8125rem;
+}
+
+// Кнопка в работе: значок крутится.
+//
+// Значок, а не отдельный индикатор рядом: подменять содержимое кнопки
+// на кружок значит менять её ширину, и соседние кнопки прыгают. Здесь
+// крутится то, что и так нарисовано, — стрелки обновления для этого
+// и годятся лучше всего.
+//
+// С системной настройкой «меньше движения» ресет обнуляет длительность,
+// и вращения не будет. Поэтому признак работы не только в нём: кнопка
+// становится нерабочей и бледной, а подпись меняется на «Обновляю…».
+.busy {
+  cursor: progress;
+
+  svg {
+    animation: button-spin 900ms linear infinite;
+  }
+}
+
+@keyframes button-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+// =====================================================================
+// Поля
+// =====================================================================
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.label {
+  color: var(--ink-600);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.control {
+  width: 100%;
+  padding: 0.5rem 0.6875rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--ink-900);
+  font: inherit;
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+
+  &::placeholder {
+    color: var(--ink-400);
+  }
+
+  &:focus {
+    border-color: var(--accent);
+    // Кольцо тенью, а не outline: outline не скругляется по границе поля
+    // в части браузеров и рисует прямоугольник поверх скруглённого.
+    box-shadow: 0 0 0 3px rgb(73 82 126 / 16%);
+    outline: none;
+  }
+}
+
+.hint {
+  color: var(--ink-mute);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+// Галочка. Нативный input в браузерах разных размеров и цветов, а на
+// тёмном акценте сайта системный синий выглядит чужим.
+.check {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  cursor: pointer;
+
+  input {
+    flex: none;
+    width: 1.0625rem;
+    height: 1.0625rem;
+    margin-top: 0.125rem;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+}
+
+.checkText {
+  line-height: 1.35;
+}
+
+.checkHint {
+  display: block;
+  margin-top: 0.125rem;
+  color: var(--ink-mute);
+  font-size: 0.8125rem;
+}
+
+// =====================================================================
+// Блоки
+// =====================================================================
+
+.card {
+  padding: 1.125rem;
+  background: var(--card-fill);
+  border: 1px solid var(--line);
+  // Нижняя кромка темнее остальных: у предмета, лежащего на поверхности,
+  // нижний край всегда в собственной тени. Одна строка, а карточка
+  // перестаёт быть прямоугольником, нарисованным на фоне.
+  border-bottom-color: #dde3ef;
+  border-radius: var(--radius-card);
+  box-shadow: var(--card-edge), var(--lift);
+}
+
+// Фиолетовая карточка: блок, в котором что-то делают.
+//
+// Заливка светлая, а не насыщенная: внутри живут поля ввода и ссылки,
+// и на глубоком фоне их пришлось бы перекрашивать все до единой. Здесь
+// же работает только подложка, а содержимое остаётся прежним.
+//
+// Рамка заметно темнее заливки — иначе на голубоватом фоне страницы
+// светло-фиолетовое пятно выглядит не карточкой, а следом от чего-то.
+.cardAccent {
+  background: linear-gradient(180deg, #eef1fb 0%, #e7ebf9 100%);
+  border-color: #d3daf0;
+  border-bottom-color: #c6cfe9;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 70%),
+    var(--lift);
+}
+
+// Сообщение над списком: предупреждение или пояснение.
+.notice {
+  display: flex;
+  gap: 0.625rem;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+  padding: 0.8125rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+
+  svg {
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    margin-top: 0.125rem;
+  }
+}
+
+.noticeWarn {
+  background: var(--warn-bg);
+  border-color: var(--warn-line);
+  color: #7c5312;
+}
+
+.noticeInfo {
+  background: var(--bg-alt);
+  border-color: var(--border);
+  color: var(--ink-600);
+}
+
+.state {
+  padding: 2.5rem 1rem;
+  color: var(--ink-mute);
+  text-align: center;
+}
+
+.error {
+  padding: 0.8125rem 1rem;
+  background: var(--danger-bg);
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-card);
+  color: var(--danger);
+}
+
+// =====================================================================
+// Таблица
+// =====================================================================
+
+// Контейнер для запроса ширины. Сам ничего не рисует: его дело — дать
+// вложенным правилам мерить место, которое реально досталось таблице.
+//
+// inline-size, а не size: высоту таблица определяет сама, и containment
+// по обеим осям обнулил бы её собственную высоту.
+.tableBox {
+  container-type: inline-size;
+}
+
+// Обёртка с прокруткой: на телефоне таблица с четырьмя колонками шире
+// экрана, и без неё страница едет горизонтально целиком, вместе с меню.
+.tableWrap {
+  overflow-x: auto;
+  background: var(--card-fill);
+  border: 1px solid var(--line);
+  border-bottom-color: #dde3ef;
+  border-radius: var(--radius-card);
+  box-shadow: var(--card-edge), var(--lift);
+}
+
+.table {
+  width: 100%;
+  min-width: 34rem;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 0.75rem 0.875rem;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    color: var(--ink-mute);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  thead tr {
+    border-bottom: 1px solid var(--line);
+  }
+
+  tbody tr + tr {
+    border-top: 1px solid var(--line);
+  }
+
+  tbody tr:hover {
+    background: rgb(73 82 126 / 3%);
+  }
+}
+
+// Карточки вместо таблицы на узком экране — для таблиц с полями ввода.
+//
+// Разметка остаётся таблицей, меняется только показ: display у ячеек,
+// подписи из data-label. Вторая разметка «для телефона» означала бы два
+// куска JSX с одними и теми же обработчиками, которые расходятся при
+// первой же правке — и расходятся молча, потому что на широком экране
+// всё по-прежнему верно.
+@container (max-width: 44rem) {
+  .asCards {
+    overflow: visible;
+    background: none;
+    border: none;
+    box-shadow: none;
+
+    .table {
+      min-width: 0;
+    }
+
+    thead {
+      // Подписи переезжают в сами ячейки: шапка над карточками
+      // относилась бы к первой из них.
+      display: none;
+    }
+
+    tbody,
+    tr,
+    td {
+      display: block;
+    }
+
+    tr {
+      margin-bottom: 0.875rem;
+      padding: 0.875rem 1rem;
+      background: var(--card-fill);
+      border: 1px solid var(--line);
+      border-bottom-color: #dde3ef;
+      border-radius: var(--radius-card);
+      box-shadow: var(--card-edge), var(--lift);
+    }
+
+    tbody tr + tr {
+      border-top: 1px solid var(--line);
+    }
+
+    tbody tr:hover {
+      background: var(--surface);
+    }
+
+    td {
+      padding: 0.4375rem 0;
+      // Ширины колонок снимаем. Они заданы страницами ради таблицы —
+      // «статус 8.5rem», «заметка 11rem», — а в карточке ячейка идёт
+      // во всю строку, и та же величина превращает её в узкий столбик
+      // посреди пустого места.
+      width: auto;
+      min-width: 0;
+      max-width: none;
+    }
+
+    td + td {
+      border-top: 1px solid var(--line);
+    }
+
+    // Пустая ячейка в карточке — пустая строка с подписью и ничем после неё.
+    td:empty {
+      display: none;
+    }
+
+    td[data-label]::before {
+      content: attr(data-label);
+      display: block;
+      margin-bottom: 0.25rem;
+      color: var(--ink-mute);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+  }
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.1875rem 0.5625rem;
+  background: var(--bg-alt);
+  border-radius: var(--radius-pill);
+  color: var(--ink-600);
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.saved {
+  color: var(--ok);
+  font-size: 0.75rem;
+}

@@ -1,0 +1,125 @@
+// Раздел работ. Переменные приходят из .shell в layout.module.scss.
+
+.list {
+  display: grid;
+  gap: 0.875rem;
+}
+
+.item {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.gallery {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(7rem, 100%), 1fr));
+}
+
+.shot {
+  position: relative;
+  margin: 0;
+}
+
+.photo {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  object-fit: cover;
+}
+
+// Крестик поверх снимка. Тёмная подложка, а не красная кнопка: красных
+// кнопок на карточке и так две, и третья превращает галерею в панель
+// опасных действий.
+.removePhoto {
+  position: absolute;
+  top: 0.375rem;
+  right: 0.375rem;
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: rgb(15 23 42 / 55%);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color var(--transition);
+
+  &:hover {
+    background: var(--danger);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 1px;
+  }
+
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+// Подпись к спрятанному input type=file: выглядит и ведёт себя как кнопка.
+.upload {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.3125rem 0.6875rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  color: var(--ink-600);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+
+  &:hover {
+    background: var(--bg-alt);
+    border-color: var(--accent);
+    color: var(--ink-900);
+  }
+
+  // Обводка по подписи: у спрятанного поля её не видно, а обойти форму
+  // с клавиатуры нужно так же, как мышью.
+  &:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgb(73 82 126 / 16%);
+  }
+
+  input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+.remove {
+  margin-left: auto;
+}
+
+.error {
+  margin: 0;
+  color: var(--danger);
+}

@@ -84,6 +84,7 @@ Disallow: /
 
   return `User-agent: *
 Allow: /
+Disallow: /admin
 
 Sitemap: ${root}/sitemap.xml
 `;

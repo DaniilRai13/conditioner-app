@@ -1,0 +1,238 @@
+// Шторка меню на телефоне. Переменные приходят из .shell.
+
+.layer {
+  position: fixed;
+  z-index: 60;
+  inset: 0;
+
+  // На большом экране шторки нет: там слева стоит меню целиком,
+  // и открывать её нечем и незачем.
+  @media (min-width: 901px) {
+    display: none;
+  }
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(15 23 42 / 45%);
+  border: none;
+  // Кнопка ради клика по затемнению, но не ради фокуса: закрывает Escape,
+  // а лишняя остановка в кольце Tab только мешает.
+  cursor: default;
+  animation: menu-fade-in 180ms ease both;
+
+  &.out {
+    animation: menu-fade-out 180ms ease both;
+  }
+}
+
+.sheet {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  left: 0.75rem;
+  display: grid;
+  gap: 1rem;
+  overflow-y: auto;
+  max-height: calc(100dvh - 4rem);
+  padding: 0.75rem 1rem 1rem;
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(
+    165deg,
+    var(--deep-900) 0%,
+    var(--deep-700) 55%,
+    var(--surface-accent) 100%
+  );
+  border-radius: var(--radius-banner);
+  box-shadow:
+    0 1px 2px rgb(15 23 42 / 10%),
+    0 -0.5rem 2rem rgb(38 44 71 / 30%),
+    0 -1.5rem 3.5rem rgb(38 44 71 / 24%);
+  color: rgb(255 255 255 / 76%);
+  animation: menu-slide-in 240ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+
+  // Уход — отдельные кадры, а не reverse у тех же: смена направления
+  // не перезапускает анимацию (имя прежнее, время уже за концом), шторка
+  // исчезала бы рывком, а `animationend` не пришёл бы вовсе.
+  &.out {
+    animation: menu-slide-out 220ms cubic-bezier(0.4, 0, 0.7, 0.3) both;
+  }
+}
+
+@keyframes menu-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes menu-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes menu-slide-in {
+  from {
+    translate: 0 100%;
+    opacity: 0;
+  }
+}
+
+// Уход — только сдвиг, без растворения. Шторка, которая одновременно
+// уезжает и тает, исчезает раньше, чем доедет, и движение читается
+// оборванным. Ощущение «убрали» берёт на себя гаснущее затемнение.
+@keyframes menu-slide-out {
+  to {
+    translate: 0 100%;
+  }
+}
+
+.grip {
+  justify-self: center;
+  width: 2.25rem;
+  height: 0.25rem;
+  background: rgb(255 255 255 / 26%);
+  border-radius: 999px;
+}
+
+.links {
+  display: grid;
+  gap: 0.25rem;
+  // Две колонки: шесть разделов в один столбец занимают пол-экрана,
+  // и до кнопки публикации под ними приходится прокручивать.
+  grid-template-columns: 1fr 1fr;
+}
+
+.link {
+  display: flex;
+  gap: 0.625rem;
+  align-items: center;
+  padding: 0.6875rem 0.75rem;
+  border-radius: var(--radius-control);
+  color: rgb(255 255 255 / 76%);
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition:
+    background-color var(--transition),
+    color var(--transition);
+
+  &:hover {
+    background: rgb(255 255 255 / 8%);
+    color: #fff;
+  }
+
+  svg {
+    flex: none;
+    width: 1.0625rem;
+    height: 1.0625rem;
+    opacity: 0.75;
+  }
+}
+
+.active {
+  background: rgb(255 255 255 / 14%);
+  color: #fff;
+  font-weight: 600;
+
+  svg {
+    opacity: 1;
+  }
+}
+
+.publish {
+  display: grid;
+}
+
+.foot {
+  display: flex;
+  gap: 0.625rem;
+  align-items: center;
+  padding-top: 0.875rem;
+  border-top: 1px solid rgb(255 255 255 / 12%);
+}
+
+.avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  background: rgb(255 255 255 / 16%);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.who {
+  min-width: 0;
+  margin-right: auto;
+  line-height: 1.25;
+}
+
+.name {
+  display: block;
+  overflow: hidden;
+  color: #fff;
+  font-size: 0.875rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.role {
+  color: rgb(255 255 255 / 45%);
+  font-size: 0.75rem;
+}
+
+.action {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  background: transparent;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: var(--radius-control);
+  color: rgb(255 255 255 / 70%);
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    color var(--transition);
+
+  &:hover {
+    background: rgb(255 255 255 / 12%);
+    color: #fff;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+// Выход помечен красным. Контуром и значком, а не заливкой: рядом стоит
+// ссылка на сайт, и две сплошные кнопки спорили бы друг с другом.
+// Оттенок тот же, что у ошибок на форме входа: на тёмном обычный красный
+// уходит в бурый, и светлый #fca5a5 — единственный, который на нём читается.
+.exit {
+  border-color: rgb(252 165 165 / 32%);
+  color: #fca5a5;
+
+  &:hover {
+    background: rgb(180 35 24 / 38%);
+    border-color: #fca5a5;
+    color: #fff;
+  }
+
+  &:focus-visible {
+    outline-color: #fca5a5;
+  }
+}

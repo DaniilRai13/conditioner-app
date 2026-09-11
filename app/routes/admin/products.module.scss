@@ -1,0 +1,315 @@
+// Раздел товаров. Переменные приходят из .shell в layout.module.scss.
+
+// Через flex-basis, а не width: ширину полей в шапке раздела снимает
+// правило .headRow .control, и оно специфичнее одиночного класса.
+.search {
+  flex: 0 1 14rem;
+}
+
+// =====================================================================
+// Раскладка: фильтры колонкой слева, плитки справа
+// =====================================================================
+//
+// Так же, как на витрине. Колонка, а не полоса сверху: полосой условия
+// заняли бы ряд над списком и уехали бы за верхний край при прокрутке,
+// а в колонке они видны всё время и меняются на месте.
+
+.layout {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: 13.5rem minmax(0, 1fr);
+  align-items: start;
+
+  // Слева уже стоит тёмное меню, и третья колонка на среднем экране
+  // оставила бы плиткам полосу в два ряда. Ниже этого порога панель
+  // складывается под кнопку.
+  @media (max-width: 1100px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.side {
+  position: sticky;
+  top: 1.25rem;
+
+  @media (max-width: 1100px) {
+    position: static;
+    display: none;
+  }
+}
+
+.open {
+  @media (max-width: 1100px) {
+    display: block;
+  }
+}
+
+.toggle {
+  display: none;
+  gap: 0.5rem;
+  align-items: center;
+  justify-self: start;
+  padding: 0.5rem 0.9375rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  color: var(--ink-600);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 1100px) {
+    display: inline-flex;
+  }
+}
+
+.toggleCount {
+  display: grid;
+  place-items: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding-inline: 0.25rem;
+  background: var(--accent);
+  border-radius: var(--radius-pill);
+  color: #fff;
+  font-size: 0.75rem;
+}
+
+.main {
+  min-width: 0;
+}
+
+.count {
+  margin: 0 0 0.75rem;
+  color: var(--ink-mute);
+  font-size: 0.875rem;
+}
+
+// =====================================================================
+// Плитки
+// =====================================================================
+
+.grid {
+  display: grid;
+  gap: 0.875rem;
+  // 11rem — примерно ширина, при которой название модели ещё влезает
+  // в две строки. Уже — и почти каждая плитка обрывается многоточием.
+  grid-template-columns: repeat(auto-fill, minmax(min(9.5rem, 100%), 1fr));
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 0.75rem;
+  background: var(--card-fill);
+  border: 1px solid var(--line);
+  border-bottom-color: #dde3ef;
+  border-radius: var(--radius-card);
+  box-shadow: var(--card-edge), var(--lift);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition),
+    translate var(--transition);
+
+  &:hover {
+    border-color: var(--accent);
+    box-shadow: var(--card-edge), var(--lift-hover);
+    translate: 0 -2px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+// Скрытые товары приглушены: в сетке из полусотни плиток значок в углу
+// теряется, а бледная плитка видна боковым зрением.
+.dimmed {
+  background: var(--bg);
+
+  .thumb,
+  .tileName {
+    opacity: 0.55;
+  }
+}
+
+// Фон белый, а не --bg-alt: снимки поставщика сняты на белом и своего
+// прозрачного фона не имеют. На голубоватой плашке белый прямоугольник
+// снимка виден границей, и товар выглядит вырезанным ножницами.
+// Ровно то же правило и по той же причине — в ProductCard на сайте.
+.thumb {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: var(--surface);
+  border-radius: var(--radius-control);
+
+  img,
+  .noPhoto {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+// Пусто — значит пусто: белая плашка читалась бы как снимок, который
+// не загрузился. Штриховка та же, что у карточки товара на сайте.
+//
+// Только рисунок, без размеров: класс вешается и на плитку, и на снимок
+// в панели, а они разной величины. Размер задаёт тот, кто его знает.
+.noPhoto {
+  display: block;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--border) 0 0.5rem,
+    transparent 0.5rem 1rem
+  );
+  opacity: 0.5;
+}
+
+.marks {
+  position: absolute;
+  top: 0.375rem;
+  right: 0.375rem;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.mark {
+  display: grid;
+  place-items: center;
+  width: 1.375rem;
+  height: 1.375rem;
+  background: var(--accent);
+  border-radius: 50%;
+  color: #fff;
+
+  svg {
+    width: 0.8125rem;
+    height: 0.8125rem;
+  }
+}
+
+.markOff {
+  background: var(--ink-400);
+}
+
+.tileName {
+  // Две строки: с одной обрывается почти каждое название, с тремя плитки
+  // разъезжаются по высоте и сетка перестаёт читаться рядами.
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.tileMeta {
+  color: var(--ink-600);
+  font-size: 0.8125rem;
+}
+
+.tileTier {
+  margin-top: auto;
+  color: var(--ink-mute);
+  font-size: 0.75rem;
+}
+
+// =====================================================================
+// Форма в панели
+// =====================================================================
+
+.supplier {
+  display: flex;
+  gap: 0.875rem;
+  align-items: flex-start;
+}
+
+// Тот же белый, что и в плитке, и по той же причине.
+.supplierPhoto {
+  flex: none;
+  width: 4.5rem;
+  height: 4.5rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  object-fit: contain;
+}
+
+.facts {
+  display: grid;
+  gap: 0.3125rem;
+  margin: 0;
+
+  div {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  dt {
+    min-width: 4.5rem;
+    color: var(--ink-mute);
+    font-size: 0.8125rem;
+  }
+
+  dd {
+    margin: 0;
+    font-size: 0.8125rem;
+  }
+}
+
+.locked {
+  margin: 0;
+  padding: 0.625rem 0.75rem;
+  background: var(--bg-alt);
+  border-radius: var(--radius-control);
+  color: var(--ink-600);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.flags {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.savedLine {
+  min-height: 1rem;
+  margin: 0;
+}
+
+.error {
+  margin: 0;
+  color: var(--danger);
+}
+
+.siteLink {
+  display: inline-flex;
+  gap: 0.4375rem;
+  align-items: center;
+  color: var(--ink-600);
+  font-size: 0.875rem;
+
+  svg {
+    width: 0.9375rem;
+    height: 0.9375rem;
+  }
+}
+
+.done {
+  margin-left: auto;
+}

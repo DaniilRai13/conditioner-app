@@ -8,10 +8,7 @@ import {
 } from "react-router";
 
 import type { Route } from "./+types/root";
-import { Header } from "~/components/layout/Header/Header";
 import { AnchorScroll } from "~/components/layout/AnchorScroll/AnchorScroll";
-import { PageDecor } from "./components/layout/PageDecor/PageDecor";
-import { Footer } from "~/components/layout/Footer/Footer";
 import { site } from "./config/site";
 
 // Шрифт ставится локально, без запроса к Google Fonts — иначе теряем LCP.
@@ -27,6 +24,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        {/*
+          Значок вкладки — вектором. Он один на все размеры: и на 16 точек
+          в списке вкладок, и на 32 на плотном экране, и в закладках.
+          Растровые копии для этого пришлось бы держать в четырёх размерах
+          и пересобирать все четыре при каждой правке знака.
+
+          Растр остаётся для домашнего экрана: iOS и Android требуют PNG
+          и рисуют его поверх собственного фона — сюда SVG не годится.
+        */}
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+        {/* Цвет адресной строки на телефоне: фирменный синий вместо
+            системного серого. Мелочь, которую замечают только когда её нет. */}
+        <meta name="theme-color" content="#0b40d8" />
+
         <Meta />
         <Links />
       </head>
@@ -41,15 +55,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+/**
+ * Корень — только оболочка документа. Шапка и подвал переехали
+ * в routes/public.tsx: раньше они приходили всему подряд, и админка
+ * открывалась с меню «Каталог, Решения, Услуги» над формой входа.
+ */
 export default function App() {
-  return (
-    <>
-      <PageDecor />
-      <Header />
-      <Outlet />
-      <Footer />
-    </>
-  );
+  return <Outlet />;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
