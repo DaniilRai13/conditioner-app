@@ -5,23 +5,12 @@ import { ProductCard } from "../ProductCard/ProductCard";
 import { RangeFilter } from "../RangeFilter/RangeFilter";
 import { formatPrice } from "~/lib/format";
 import { useCatalogFilters, PAGE } from "./useCatalogFilters";
+import { NOISE_STEPS, SORT_OPTIONS } from "~/lib/product-filter";
 import styles from "./CatalogView.module.scss";
 
 type Props = {
   products: CatalogProduct[];
 };
-
-const SORT_OPTIONS = [
-  { value: "", label: "По умолчанию" },
-  { value: "price-asc", label: "Сначала дешевле" },
-  { value: "price-desc", label: "Сначала дороже" },
-  { value: "area-desc", label: "Сначала мощнее" },
-  { value: "noise-asc", label: "Сначала тише" },
-] as const;
-
-/** Пороги шума. Числа не выдуманы: у нас разброс 19–54.8 дБ, и 25 дБ —
- * граница, ниже которой блок тише шёпота. */
-const NOISE_STEPS = [25, 30, 40];
 
 /**
  * Витрина каталога: фильтры колонкой слева, товары справа.

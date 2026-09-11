@@ -1,5 +1,13 @@
 @use "mixins" as *;
 
+// Акцент — через --range-accent с запасным вариантом.
+//
+// На сайте это фирменный синий, и переопределять переменную никто
+// не обязан. Нужна она админке: там весь интерфейс фиолетовый, и синий
+// бегунок среди фиолетовых фишек читался бы как деталь из другой
+// программы. Переменная дешевле второго компонента — разметка, поведение
+// и доступность у них были бы одни и те же, различался бы один цвет.
+
 .wrap {
   display: flex;
   flex-direction: column;
@@ -37,7 +45,7 @@
   // Подсветка на всей коробке, а не на самом input: рамка нарисована
   // здесь, и обводка фокуса внутри висела бы отдельно от неё.
   &:focus-within {
-    border-color: var(--brand-600);
+    border-color: var(--range-accent, var(--brand-600));
   }
 }
 
@@ -105,7 +113,7 @@
     // Половина разницы между высотой бегунка и дорожкой, со знаком минус:
     // иначе бегунок сидит на дорожке, а не по её центру.
     margin-top: -0.4375rem;
-    background: var(--brand-600);
+    background: var(--range-accent, var(--brand-600));
     border: 2px solid var(--surface);
     border-radius: 50%;
     box-shadow: 0 1px 3px rgb(15 23 42 / 25%);
@@ -115,7 +123,7 @@
   &::-moz-range-thumb {
     width: 1.125rem;
     height: 1.125rem;
-    background: var(--brand-600);
+    background: var(--range-accent, var(--brand-600));
     border: 2px solid var(--surface);
     border-radius: 50%;
     box-shadow: 0 1px 3px rgb(15 23 42 / 25%);
