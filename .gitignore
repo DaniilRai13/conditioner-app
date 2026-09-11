@@ -52,3 +52,6 @@ pnpm-debug.log*
 
 # --- React Router typegen ---
 .react-router/
+
+# --- отметка о сборке: пересоздаётся при каждой сборке ---
+public/build-info.json

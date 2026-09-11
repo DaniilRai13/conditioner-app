@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "react-router dev",
-    "build": "react-router build && node scripts/make-404.ts",
+    "build": "node scripts/fetch-data.ts && react-router build && node scripts/make-404.ts",
     "preview": "vite preview",
     "typecheck": "react-router typegen && tsc",
     "lint": "oxlint",
@@ -14,10 +14,14 @@
     "check:quiz": "node scripts/check-quiz.ts",
     "import:catalog": "node scripts/import-catalog.ts",
     "catalog:variants": "node scripts/catalog-variants.ts",
-    "build:preview": "react-router build --mode preview && node scripts/make-404.ts",
+    "build:preview": "node scripts/fetch-data.ts && react-router build --mode preview && node scripts/make-404.ts",
     "check:lead": "node scripts/check-lead.ts",
     "tg:check": "node scripts/telegram-check.ts",
-    "serve": "node scripts/serve.ts"
+    "serve": "node scripts/serve.ts",
+    "seed:make": "node scripts/make-seed.ts",
+    "data:pull": "node scripts/fetch-data.ts",
+    "check:db": "node scripts/check-db.ts",
+    "logo": "node scripts/make-logo.ts"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.3.0",

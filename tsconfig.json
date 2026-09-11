@@ -9,7 +9,10 @@
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "types": ["node", "vite/client"],
     "target": "ES2022",
-    "module": "ES2022",
+    // ESNext, а не ES2022, ради `with { type: "json" }`: снимки базы
+    // импортируются с атрибутом, потому что того требует Node, который
+    // запускает скрипты напрямую. В ES2022 атрибут ещё не разрешён.
+    "module": "ESNext",
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
     "rootDirs": [".", "./.react-router/types"],

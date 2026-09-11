@@ -1,0 +1,78 @@
+{
+  "installRows": [
+    {
+      "btu": "07",
+      "kw": "2,0",
+      "area": "до 20 м²",
+      "areaTo": 20,
+      "price": 450,
+      "isConfirmed": false
+    },
+    {
+      "btu": "09",
+      "kw": "2,6",
+      "area": "до 25 м²",
+      "areaTo": 25,
+      "price": 450,
+      "isConfirmed": false
+    },
+    {
+      "btu": "12",
+      "kw": "3,5",
+      "area": "до 35 м²",
+      "areaTo": 35,
+      "price": 600,
+      "isConfirmed": false
+    },
+    {
+      "btu": "18",
+      "kw": "5,3",
+      "area": "до 50 м²",
+      "areaTo": 50,
+      "price": 600,
+      "isConfirmed": false
+    },
+    {
+      "btu": "24",
+      "kw": "7,0",
+      "area": "до 70 м²",
+      "areaTo": 70,
+      "price": 800,
+      "isConfirmed": false
+    }
+  ],
+  "pricesConfirmed": false,
+  "installIncludes": [
+    "Трасса до 3 метров",
+    "Кронштейны для наружного блока",
+    "Вакуумирование магистрали",
+    "Пусконаладка и проверка"
+  ],
+  "extraCharges": [
+    "Штробление стен",
+    "Трасса свыше 3 метров",
+    "Работа с автовышки",
+    "Демонтаж старого блока"
+  ],
+  "deliveryDays": "5–10 дней",
+  "showPortfolio": false,
+  "showReviews": false,
+  "contacts": {
+    "phone": "+375 (00) 000-00-00",
+    "telegram": "",
+    "viber": "",
+    "whatsapp": "",
+    "email": "",
+    "workHours": "Пн–Вс, 8:00–21:00"
+  },
+  "legal": {
+    "entity": "ИП Фамилия И. О.",
+    "unp": "000000000",
+    "address": "г. Минск"
+  },
+  "hero": {
+    "title": "",
+    "subtitle": ""
+  },
+  "dashboardNote": "Доделать меню"
+}

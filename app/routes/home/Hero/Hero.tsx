@@ -5,6 +5,7 @@ import { AcUnit } from "~/components/decor/AcUnit/AcUnit";
 import { advantages } from "~/data/advantages";
 import { useQuiz } from "../useQuiz";
 import { QuizPanel } from "./QuizPanel";
+import { hero } from "~/config/site";
 import styles from "./Hero.module.scss";
 
 /**
@@ -42,13 +43,11 @@ export function Hero() {
             {/* Ключевая фраза остаётся в H1: это второй по весу сигнал после
                 <title>, а сайт живёт с локального поиска. */}
             <p className={styles.kicker}>Подбор за 4 вопроса</p>
-            <h1 className={styles.title}>
-              Продажа и установка кондиционеров в Минске и области
-            </h1>
-            <p className={styles.lead}>
-              Не знаете, какой нужен? Ответьте на четыре вопроса — покажу три
-              модели под ваше помещение. Без звонка и без телефона.
-            </p>
+            {/* Заголовок и вводка правятся в админке. Значения по умолчанию
+                лежат в HERO_DEFAULTS: пустое поле в базе не должно оставлять
+                первый экран без H1 — это главный текст страницы для поиска. */}
+            <h1 className={styles.title}>{hero.title}</h1>
+            <p className={styles.lead}>{hero.subtitle}</p>
           </div>
 
           <div className={styles.side}>
