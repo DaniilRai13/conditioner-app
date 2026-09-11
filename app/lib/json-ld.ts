@@ -52,9 +52,16 @@ export function businessJsonLd(): JsonLd {
 }
 
 /**
- * Товар с ценой. `availability` берётся из данных поставщика: обещать
- * наличие, которого нет, — прямая дорога к пометке о недостоверных данных
- * в панели вебмастера.
+ * Товар с ценой.
+ *
+ * `BackOrder` у всех позиций, а не `InStock`: своего склада нет, техника
+ * заказывается у поставщика после обращения. Флаг `inStock` из выгрузки
+ * означает наличие у него, и выдавать его за своё нельзя — недостоверные
+ * данные о наличии поисковик отмечает в панели вебмастера, а человек
+ * узнаёт правду по телефону и перестаёт верить остальному, включая цены.
+ *
+ * `price` при этом — минимальная: на странице она подписана «от».
+ * Для этого в разметке и существует `priceSpecification` с `minPrice`.
  */
 export function productJsonLd(product: Product): JsonLd {
   return {
@@ -65,11 +72,14 @@ export function productJsonLd(product: Product): JsonLd {
     description: product.description,
     offers: {
       "@type": "Offer",
-      price: product.price,
       priceCurrency: "BYN",
-      availability: product.inStock
-        ? "https://schema.org/InStock"
-        : "https://schema.org/PreOrder",
+      price: product.price,
+      priceSpecification: {
+        "@type": "PriceSpecification",
+        minPrice: product.price,
+        priceCurrency: "BYN",
+      },
+      availability: "https://schema.org/BackOrder",
     },
   };
 }

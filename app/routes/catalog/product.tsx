@@ -1,13 +1,5 @@
 import { Link } from "react-router";
-import {
-  Check,
-  Snowflake,
-  Flame,
-  Volume2,
-  Wifi,
-  Wind,
-  Thermometer,
-} from "lucide-react";
+import { Check } from "lucide-react";
 import type { Route } from "./+types/product";
 import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
 import { Section } from "~/components/ui/Section/Section";
@@ -18,12 +10,7 @@ import { getProductBySlug, getSimilarProducts } from "~/lib/queries";
 import { productJsonLd, jsonLdProps } from "~/lib/json-ld";
 import { getHighlights } from "~/lib/product-view";
 import { getCategory } from "~/data/categories";
-import {
-  formatPrice,
-  formatArea,
-  formatKw,
-  seoProductName,
-} from "~/lib/format";
+import { formatPrice, formatArea, seoProductName } from "~/lib/format";
 import {
   installPriceFor,
   PRICES_CONFIRMED,
@@ -104,12 +91,15 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
 
           <div className={styles.info}>
             <span className={styles.brand}>{product.brand}</span>
-            <p className={styles.stock}>
-              {product.inStock ? "В наличии" : "Под заказ, 1–2 недели"}
-            </p>
+            {/* Своего склада нет: технику заказываю у поставщика после
+                обращения. Писать «в наличии» по флагу из выгрузки значит
+                выдавать чужой склад за свой. */}
+            <p className={styles.stock}>Под заказ</p>
 
             <div className={styles.priceBox}>
-              <span className={styles.price}>{formatPrice(product.price)}</span>
+              <span className={styles.price}>
+                от {formatPrice(product.price)}
+              </span>
               <span className={styles.priceNote}>
                 цена оборудования
                 {install && PRICES_CONFIRMED

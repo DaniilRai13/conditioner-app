@@ -56,7 +56,7 @@ export function ProductCard({
   eager = false,
   className: extra,
 }: Props) {
-  const { image, name, brand, model, price, inStock, specs } = product;
+  const { image, name, brand, model, price, specs } = product;
 
   const cls = [
     styles.card,
@@ -86,7 +86,11 @@ export function ProductCard({
           <div className={styles.noImage} aria-hidden />
         )}
 
-        {!inStock && <span className={styles.badge}>Под заказ</span>}
+        {/* Метка стоит у всех моделей, а не только у отмеченных: своего
+            склада нет, любая техника заказывается после обращения. Поле
+            inStock из выгрузки означает наличие У ПОСТАВЩИКА и на витрине
+            больше ничего не решает. */}
+        <span className={styles.badge}>Под заказ</span>
       </div>
 
       {/* В вертикальной раскладке обёртка «прозрачна» (display: contents),
@@ -120,8 +124,12 @@ export function ProductCard({
         )}
 
         <span className={styles.footer}>
+          {/* «от», потому что цена оборудования — стартовая: итог зависит
+              от комплектации, длины трассы и монтажа. Без этой приставки
+              число читается как окончательное, и разговор начинается
+              со спора. */}
           <span className={styles.price}>
-            {formatPrice(price)}
+            от {formatPrice(price)}
             <span className={styles.priceNote}>
               {PRICE_MODE === "turnkey" ? "под ключ" : "без монтажа"}
             </span>

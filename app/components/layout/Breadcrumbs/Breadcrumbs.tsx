@@ -1,6 +1,5 @@
 import { Link } from "react-router";
 import { ChevronRight } from "lucide-react";
-import { site } from "~/config/site";
 import { breadcrumbsJsonLd, jsonLdProps } from "~/lib/json-ld";
 import styles from "./Breadcrumbs.module.scss";
 

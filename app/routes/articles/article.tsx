@@ -5,7 +5,6 @@ import { Section } from "~/components/ui/Section/Section";
 import { Button } from "~/components/ui/Button/Button";
 import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { articles, getArticle, formatDate } from "~/data/articles";
-import { site } from "~/config/site";
 import { seo } from "~/lib/seo";
 import { articleJsonLd, jsonLdProps } from "~/lib/json-ld";
 import styles from "./article.module.scss";

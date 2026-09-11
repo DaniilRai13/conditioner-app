@@ -112,7 +112,7 @@ function correctedArea(answers: QuizAnswers): number {
 
 function buildReason(area: number, needsInverter: boolean, count: number): string {
   if (count === 0) {
-    return `Под ${area} м² в наличии сейчас ничего подходящего нет — подберу под заказ.`;
+    return `Под ${area} м² в этой подборке ничего нет — подберу из полного каталога поставщика.`;
   }
   const heat = needsInverter
     ? " Все с инвертором: только он держит обогрев в мороз."
