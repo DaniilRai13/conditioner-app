@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { Phone, Clock, MapPin } from "lucide-react";
 import { Container } from "~/components/ui/Container/Container";
-import { Logo } from "../Logo/Logo";
+import { LogoFull } from "../Logo/Logo";
 import { nav, site, FEATURES } from "~/config/site";
 import styles from "./Footer.module.scss";
 
@@ -21,7 +21,11 @@ export function Footer() {
       <Container>
         <div className={styles.grid}>
           <div className={styles.brand}>
-            <Logo />
+            {/* Логотип целиком, а не эмблема с набранным названием: в подвале
+                есть вертикальное место, и знак стоит показать как он есть. */}
+            <Link to="/" aria-label={`${site.name} — на главную`}>
+              <LogoFull className={styles.logo} />
+            </Link>
             <p className={styles.about}>
               Продажа, установка и обслуживание кондиционеров в {site.region}.
               Работаю один — отвечаю за результат лично.

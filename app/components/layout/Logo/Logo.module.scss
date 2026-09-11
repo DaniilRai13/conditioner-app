@@ -10,16 +10,13 @@
   @include focus-ring;
 }
 
+// Подложки под знаком больше нет: у эмблемы прозрачный фон, и плашка
+// вокруг неё выглядела бы наклейкой поверх логотипа. Высота задана,
+// ширина считается сама — пропорции знака принадлежат знаку.
 .mark {
-  display: inline-flex;
   flex: none;
-  align-items: center;
-  justify-content: center;
-  width: 2.375rem;
-  height: 2.375rem;
-  background: var(--brand-50);
-  border-radius: var(--radius-control);
-  color: var(--brand-600);
+  width: auto;
+  height: 2.625rem;
 }
 
 .text {
