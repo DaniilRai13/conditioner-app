@@ -17,6 +17,7 @@ const FEATURED = 1;
 export function SolutionsPreview() {
   return (
     <Section
+      reveal
       title="Готовые решения по площади"
       lead="Подобрал оптимальные комплекты под разные площади. В каждом — расчёт мощности и три модели на выбор."
     >

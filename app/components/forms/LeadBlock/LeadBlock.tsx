@@ -19,6 +19,14 @@ type Props = {
   source: "home" | "product" | "solution" | "footer";
   defaultMessage?: string;
   productSlug?: string;
+
+  /**
+   * Проявляться при прокрутке. Только там, где об этом просят: блок стоит
+   * на десятке страниц, и включённое по умолчанию появление сделало бы
+   * его единственным движущимся элементом на страницах, где больше ничего
+   * не двигается, — это читается как сбой, а не как приём.
+   */
+  reveal?: boolean;
 };
 
 /**
@@ -36,9 +44,10 @@ export function LeadBlock({
   source,
   defaultMessage,
   productSlug,
+  reveal,
 }: Props) {
   return (
-    <Section id={id}>
+    <Section id={id} reveal={reveal}>
       <div className={styles.box}>
         <div className={styles.head}>
           <h2 className={styles.title}>{title}</h2>

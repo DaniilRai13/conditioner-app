@@ -5,6 +5,12 @@ import { AcUnit } from "~/components/decor/AcUnit/AcUnit";
 import { advantages } from "~/data/advantages";
 import { useQuiz } from "../useQuiz";
 import { QuizPanel } from "./QuizPanel";
+import { motion } from "framer-motion";
+import {
+  heroItemVariants,
+  heroTitleVariants,
+  heroVariants,
+} from "~/lib/animations";
 import { hero } from "~/config/site";
 import styles from "./Hero.module.scss";
 
@@ -28,7 +34,7 @@ export function Hero() {
   const { answers, step, done, choose, back, restart } = useQuiz();
 
   return (
-    <section className={styles.hero}>
+    <section className={`${styles.hero} reveal`}>
       <Container>
         {/*
           Четыре элемента сетки, а не две колонки: текст, правая часть,
@@ -38,19 +44,34 @@ export function Hero() {
           пустоту от разницы высот; в одной колонке кнопки опускаются
           под панель, чтобы кондиционер не разрывал связку с ней.
         */}
-        <div className={styles.grid}>
-          <div className={styles.content}>
+        {/*
+          Первый экран появляется сразу при загрузке, а не по прокрутке:
+          ждать прокрутки тому, что уже на экране, не нужно и некуда.
+        */}
+        <motion.div
+          className={styles.grid}
+          initial="hidden"
+          animate="visible"
+          variants={heroVariants}
+        >
+          <motion.div className={styles.content}>
             {/* Ключевая фраза остаётся в H1: это второй по весу сигнал после
                 <title>, а сайт живёт с локального поиска. */}
-            <p className={styles.kicker}>Подбор за 4 вопроса</p>
+            <motion.p className={styles.kicker} variants={heroItemVariants}>
+              Подбор за 4 вопроса
+            </motion.p>
             {/* Заголовок и вводка правятся в админке. Значения по умолчанию
                 лежат в HERO_DEFAULTS: пустое поле в базе не должно оставлять
                 первый экран без H1 — это главный текст страницы для поиска. */}
-            <h1 className={styles.title}>{hero.title}</h1>
-            <p className={styles.lead}>{hero.subtitle}</p>
-          </div>
+            <motion.h1 className={styles.title} variants={heroTitleVariants}>
+              {hero.title}
+            </motion.h1>
+            <motion.p className={styles.lead} variants={heroItemVariants}>
+              {hero.subtitle}
+            </motion.p>
+          </motion.div>
 
-          <div className={styles.side}>
+          <motion.div className={styles.side} variants={heroItemVariants}>
             <AcUnit className={styles.ac} />
             <QuizPanel
               answers={answers}
@@ -60,11 +81,11 @@ export function Hero() {
               onBack={back}
               onRestart={restart}
             />
-          </div>
+          </motion.div>
 
           {/* Кнопки «подобрать» здесь больше нет: она вела к подбору,
               который теперь стоит рядом с ней же. */}
-          <div className={styles.actions}>
+          <motion.div className={styles.actions} variants={heroItemVariants}>
             <Button to="/#lead" size="lg">
               Оставить заявку
             </Button>
@@ -76,9 +97,9 @@ export function Hero() {
             >
               Смотреть каталог
             </Button>
-          </div>
+          </motion.div>
 
-          <ul className={styles.list}>
+          <motion.ul className={styles.list} variants={heroItemVariants}>
             {advantages.map((item) => (
               <li key={item.title} className={styles.advantage}>
                 <IconBox name={item.icon} size="sm" tone="onBrand" />
@@ -88,8 +109,8 @@ export function Hero() {
                 </span>
               </li>
             ))}
-          </ul>
-        </div>
+          </motion.ul>
+        </motion.div>
       </Container>
     </section>
   );

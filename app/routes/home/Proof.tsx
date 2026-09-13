@@ -14,6 +14,7 @@ export function Proof() {
 
   return (
     <Section
+      reveal
       title="Работы и отзывы"
       lead="Примеры выполненных установок и что говорят клиенты."
     >

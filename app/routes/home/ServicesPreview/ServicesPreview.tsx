@@ -21,6 +21,7 @@ import styles from "./ServicesPreview.module.scss";
 export function ServicesPreview() {
   return (
     <Section
+      reveal
       title="Услуги"
       lead="Полный спектр работ по продаже, установке и обслуживанию кондиционеров для квартир, домов и офисов."
     >

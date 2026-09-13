@@ -47,10 +47,11 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       <QuizResult products={loaderData.products} />
       <SolutionsPreview />
       <ServicesPreview />
-      <WhyMe />
+      <WhyMe reveal />
       <Proof />
 
       <Section
+        reveal
         title="Частые вопросы"
         lead="Собрал то, о чём спрашивают чаще всего. Если вашего вопроса тут нет — напишите, отвечу лично."
       >
@@ -58,6 +59,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       </Section>
 
       <LeadBlock
+        reveal
         id="lead"
         title="Оставьте заявку"
         lead="Перезвоню, уточню детали и назову точную стоимость. Замер и консультация — бесплатно."
