@@ -7,6 +7,7 @@ import { Card } from "~/components/ui/Card/Card";
 import { Faq } from "~/components/sections/Faq/Faq";
 import { ProductCard } from "~/components/catalog/ProductCard/ProductCard";
 import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
+import { ArticleLink } from "~/components/ui/ArticleLink/ArticleLink";
 import { solutions, getSolution, areaLabel } from "~/data/solutions";
 import { getSolutionProducts } from "~/lib/queries";
 import { STANDARD_INSTALL_INCLUDES, EXTRA_CHARGES } from "~/config/pricing";
@@ -63,6 +64,14 @@ export default function SolutionPage({ loaderData }: Route.ComponentProps) {
             <p key={p.slice(0, 24)}>{p}</p>
           ))}
         </div>
+
+        {/* Здесь расчёт дан коротко, под эту площадь. Кому нужно правило
+            целиком с поправками на этаж, окна и технику — статья ровно
+            об этом, и спрашивают об этом именно тут. */}
+        <ArticleLink
+          slug="kak-vybrat-po-ploshchadi"
+          hint="Правило расчёта целиком, с поправками"
+        />
       </Section>
 
       <Section title={solution.specifics.title}>

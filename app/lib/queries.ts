@@ -1,6 +1,9 @@
 import raw from "../data/products.json";
 import { categories } from "../data/categories";
 import type { Product, ProductType } from "../types/product";
+// Относительный путь, как и остальные здесь: модуль читает
+// react-router.config.ts, а тот загружается вне Vite и алиасы не разрешает.
+import { seoProductName } from "./format";
 
 /**
  * Единственная точка доступа к каталогу.
@@ -17,6 +20,69 @@ import type { Product, ProductType } from "../types/product";
  */
 
 const all = (raw as unknown as Product[]).filter((p) => p.isPublished);
+
+/**
+ * Заголовок карточки для поиска — с гарантией, что он никому не достался
+ * дважды.
+ *
+ * `seoProductName` укладывает имя в бюджет заголовка и обрезает с конца,
+ * то есть первым выбрасывает артикул — а именно он и различает соседние
+ * исполнения одной серии. Две модели Ballu Universal DC 3 на 50 м²
+ * получали дословно один заголовок; то же у двух Gree U-MATCH на 100 м².
+ * Для поиска это две страницы, которые невозможно отличить друг от друга,
+ * и он вправе оставить в выдаче одну.
+ *
+ * Различаем только там, где столкнулись, и только тем, чем модели
+ * действительно отличаются: от артикулов отбрасывается общее начало
+ * (`GUD100PHS1/B-S` и `GUD100ZD1/B-S` → `PHS1/B-S` и `ZD1/B-S`). Добавлять
+ * артикул целиком всем подряд нельзя — он съест весь бюджет заголовка
+ * у сорока восьми карточек, которым различаться не с кем.
+ */
+const seoTitles = new Map<string, string>();
+
+{
+  const groups = new Map<string, Product[]>();
+  for (const p of all) {
+    const base = seoProductName(p.brand, p.model, p.specs.areaM2, 42);
+    groups.set(base, (groups.get(base) ?? []).concat(p));
+  }
+
+  for (const [base, group] of groups) {
+    if (group.length === 1) {
+      seoTitles.set(group[0].slug, base);
+      continue;
+    }
+
+    // Артикул — первое слово модели, которого нет в укороченном имени.
+    const articles = group.map((p) => {
+      const kept = base.replace(`${p.brand} `, "").replace(/ до .*$/, "");
+      const rest = p.model.split(/\s+/).filter((w) => !kept.includes(w) && w !== "/");
+      return rest[0] ?? p.model;
+    });
+
+    // Общее начало артикулов не различает — отбрасываем его.
+    let common = 0;
+    while (
+      articles.every((a) => a.length > common + 1 && a[common] === articles[0][common])
+    ) {
+      common++;
+    }
+
+    group.forEach((p, i) => {
+      const mark = articles[i].slice(common);
+      const [name, area] = base.split(" до ");
+      seoTitles.set(p.slug, area ? `${name} ${mark} до ${area}` : `${name} ${mark}`);
+    });
+  }
+}
+
+/** Заголовок карточки товара для `<title>`. Уникален в пределах каталога. */
+export function productSeoTitle(product: Product): string {
+  return (
+    seoTitles.get(product.slug) ??
+    seoProductName(product.brand, product.model, product.specs.areaM2, 42)
+  );
+}
 
 /**
  * Карточке не нужна полная таблица характеристик, а она тяжёлая:

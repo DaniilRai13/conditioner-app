@@ -5,6 +5,7 @@ import { Section } from "~/components/ui/Section/Section";
 import { SupplierNote } from "~/components/catalog/SupplierNote/SupplierNote";
 import { CatalogView } from "~/components/catalog/CatalogView/CatalogView";
 import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
+import { ArticleLink } from "~/components/ui/ArticleLink/ArticleLink";
 import { getCatalogProducts, getCategoriesWithCount } from "~/lib/queries";
 import { seo } from "~/lib/seo";
 import styles from "./catalog.module.scss";
@@ -53,6 +54,15 @@ export default function Catalog({ loaderData }: Route.ComponentProps) {
             </Link>
           ))}
         </nav>
+
+        {/* Над сеткой, а не под ней. Главный фильтр каталога — площадь,
+            и вопрос «сколько киловатт мне нужно» встаёт до выбора модели,
+            а не после. Под сорока четырьмя карточками эту ссылку
+            не увидел бы никто. */}
+        <ArticleLink
+          slug="kak-vybrat-po-ploshchadi"
+          hint="Не знаете, какая нужна мощность?"
+        />
 
         <CatalogView products={products} />
 

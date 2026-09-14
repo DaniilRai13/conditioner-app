@@ -6,11 +6,12 @@ import { Section } from "~/components/ui/Section/Section";
 import { Card } from "~/components/ui/Card/Card";
 import { ProductCard } from "~/components/catalog/ProductCard/ProductCard";
 import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
-import { getProductBySlug, getSimilarProducts } from "~/lib/queries";
+import { ArticleLink } from "~/components/ui/ArticleLink/ArticleLink";
+import { getProductBySlug, getSimilarProducts, productSeoTitle } from "~/lib/queries";
 import { productJsonLd, jsonLdProps } from "~/lib/json-ld";
 import { getHighlights } from "~/lib/product-view";
 import { getCategory } from "~/data/categories";
-import { formatPrice, formatArea, seoProductName } from "~/lib/format";
+import { formatPrice, formatArea } from "~/lib/format";
 import {
   installPriceFor,
   PRICES_CONFIRMED,
@@ -35,17 +36,26 @@ export function meta({ loaderData }: Route.MetaArgs) {
   const { product } = loaderData;
   // Бюджет поиска — около 60 символов. Хвост «— купить в Минске» занимает
   // 18, остальное отдаём имени модели; названия сайта здесь нет.
+  //
+  // productSeoTitle, а не seoProductName напрямую: это он же, но со сверкой
+  // по всему каталогу. Две модели одной серии на одну площадь получали
+  // дословно одинаковый заголовок — для поиска неразличимые страницы.
   return seo({
-    title: `${seoProductName(
-      product.brand,
-      product.model,
-      product.specs.areaM2,
-      42,
-    )} — купить в Минске`,
+    title: `${productSeoTitle(product)} — купить в Минске`,
     brandSuffix: false,
     description:
       product.description ||
       `${product.brand} ${product.model} — ${formatArea(product.specs.areaM2) ?? "сплит-система"}. Продажа и установка в Минске и области.`,
+    // Своя картинка ссылки — со снимком этой модели. Без неё в мессенджер
+    // уезжала общая, со знаком: человек присылает другу конкретный
+    // кондиционер, а тот видит логотип и не понимает, о чём речь.
+    //
+    // Имя выводится из пути снимка, а не хранится отдельно: карточки
+    // рисует `npm run og` из тех же файлов, и второе поле рано или поздно
+    // разошлось бы с первым. Снимка нет — остаётся общая картинка.
+    image: product.image
+      ? `/og/product/${product.image.split("/").pop()!.replace(/\.[^.]+$/, "")}.jpg`
+      : undefined,
     path: `/product/${product.slug}`,
   });
 }
@@ -123,6 +133,16 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
                 </li>
               ))}
             </ul>
+
+            {/* Только у инверторных. На модели без инвертора статья
+                про разницу между ними — не ответ на вопрос посетителя,
+                а спор с тем, что он уже выбрал. */}
+            {specs.isInverter && (
+              <ArticleLink
+                slug="invertor-ili-obychnyy"
+                hint="Что даёт инвертор и когда переплата оправдана"
+              />
+            )}
 
             <Card className={styles.installCard}>
               <b className={styles.installTitle}>Что входит в монтаж</b>

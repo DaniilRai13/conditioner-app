@@ -4,6 +4,7 @@ import type { Route } from "./+types/service";
 import { PageHeader } from "~/components/layout/PageHeader/PageHeader";
 import { Section } from "~/components/ui/Section/Section";
 import { Card } from "~/components/ui/Card/Card";
+import { ArticleLink } from "~/components/ui/ArticleLink/ArticleLink";
 import { Faq } from "~/components/sections/Faq/Faq";
 import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { services, getService } from "~/data/services";
@@ -81,6 +82,16 @@ export default function ServicePage({ loaderData }: Route.ComponentProps) {
                 </li>
               ))}
             </ol>
+
+            {/* Только на обслуживании: статья о том, когда чистить и почему
+                это не косметика. На установке или ремонте она не к месту —
+                там спрашивают о другом. */}
+            {service.slug === "obsluzhivanie" && (
+              <ArticleLink
+                slug="chistka-konditsionera"
+                hint="Как понять, что пора чистить"
+              />
+            )}
           </div>
 
           <aside className={styles.aside}>

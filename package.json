@@ -21,7 +21,8 @@
     "seed:make": "node scripts/make-seed.ts",
     "data:pull": "node scripts/fetch-data.ts",
     "check:db": "node scripts/check-db.ts",
-    "logo": "node scripts/make-logo.ts"
+    "logo": "node scripts/make-logo.ts",
+    "og": "node scripts/make-og.ts"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.3.0",

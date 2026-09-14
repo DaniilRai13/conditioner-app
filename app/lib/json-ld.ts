@@ -28,25 +28,48 @@ export function jsonLdProps(data: JsonLd) {
 }
 
 /**
- * Организация. Живёт на странице контактов, где собраны все данные
- * о бизнесе: поисковику незачем встречать её на каждой странице.
+ * Организация. Стоит на двух страницах: на главной и на контактах.
+ *
+ * На контактах — потому что там собраны все данные о бизнесе. На главной —
+ * потому что именно её поисковик связывает с названием компании и именно
+ * она претендует на попадание в блок организаций над выдачей. Рекомендация
+ * Google прямая: разметку бизнеса держать на странице, которая этот бизнес
+ * описывает, а при одном адресе это главная.
+ *
+ * Чтобы две копии не превратились в две разные организации, у обеих один
+ * `@id`. Без него поисковик вправе счесть, что на сайте два предприятия
+ * с одинаковым названием и одним телефоном.
  *
  * HVACBusiness, а не общий LocalBusiness: тип точнее, и в выдаче
  * это влияет на то, к каким запросам сайт считают подходящим.
+ *
+ * Часов работы здесь намеренно нет. В базе они лежат строкой, которую
+ * пишет заказчик («Пн–Вс, 8:00–21:00»), а schema.org ждёт вид
+ * `Mo-Su 08:00-21:00`. Разбирать русские сокращения значит однажды молча
+ * отдать поисковику неверные часы — а неверные часы хуже, чем никаких:
+ * по ним приходят к закрытой двери.
  */
 export function businessJsonLd(): JsonLd {
+  const root = site.url.replace(/\/$/, "");
+
   return {
     "@context": "https://schema.org",
     "@type": "HVACBusiness",
+    "@id": `${root}/#business`,
     name: site.name,
     description: `Продажа, установка и обслуживание кондиционеров в ${site.region}`,
     telephone: site.phone,
+    email: site.email,
     areaServed: site.region,
     address: {
       "@type": "PostalAddress",
       addressLocality: site.city,
       addressCountry: "BY",
     },
+    // Знак и картинка ссылки — те же файлы, что отдаёт сайт. Карточке
+    // организации в выдаче они нужны, и взять их больше неоткуда.
+    logo: `${root}/logo/full-480.webp`,
+    image: `${root}/og/default.png`,
     url: site.url,
   };
 }
@@ -64,35 +87,77 @@ export function businessJsonLd(): JsonLd {
  * Для этого в разметке и существует `priceSpecification` с `minPrice`.
  */
 export function productJsonLd(product: Product): JsonLd {
+  const root = site.url.replace(/\/$/, "");
+  const url = `${root}/product/${product.slug}`;
+
+  // Цена от поставщика меняется, и обещать её бессрочно нельзя. Месяц
+  // от сборки — срок, который сайт способен сдержать: каталог обновляется
+  // ночной пересборкой, и на каждой разметка пересчитывается заново.
+  // Совсем без поля поисковик считает предложение неполным.
+  const validUntil = new Date(Date.now() + 30 * 864e5).toISOString().slice(0, 10);
+
   return {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
     brand: { "@type": "Brand", name: product.brand },
     description: product.description,
+    // Без картинки расширенный сниппет товара не показывают вовсе —
+    // это единственное обязательное поле сверх названия и цены.
+    ...(product.image ? { image: `${root}${product.image}` } : {}),
+    // Наш собственный идентификатор и модель производителя. По ним
+    // поисковик сопоставляет одну и ту же модель у разных продавцов.
+    sku: product.slug,
+    ...(product.model ? { mpn: product.model } : {}),
+    url,
     offers: {
       "@type": "Offer",
+      url,
       priceCurrency: "BYN",
       price: product.price,
+      priceValidUntil: validUntil,
       priceSpecification: {
         "@type": "PriceSpecification",
         minPrice: product.price,
         priceCurrency: "BYN",
       },
       availability: "https://schema.org/BackOrder",
+      // Ссылка на ту же организацию, что размечена на главной и контактах.
+      // Так предложение принадлежит предприятию, а не висит ничьим.
+      seller: { "@id": `${root}/#business` },
     },
   };
 }
 
 export function articleJsonLd(article: Article): JsonLd {
+  const root = site.url.replace(/\/$/, "");
+
   return {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: article.h1,
     description: article.lead,
     datePublished: article.date,
+    // Равна дате публикации, и это правда: статьи с тех пор не правились.
+    // Когда появится своя дата изменения — брать её, а не подставлять
+    // время сборки: иначе каждая пересборка выдаст все статьи за свежие,
+    // и поисковик перестанет верить полю вообще.
+    dateModified: article.date,
+    mainEntityOfPage: `${root}/articles/${article.slug}`,
+    // Картинки у статей своей нет, поэтому общая для сайта. Не пустое
+    // поле: без него статью не покажут в блоках с иллюстрацией.
+    image: `${root}/og/default.png`,
     author: { "@type": "Organization", name: site.name },
-    publisher: { "@type": "Organization", name: site.name },
+    publisher: {
+      "@type": "Organization",
+      name: site.name,
+      // Знак издателя поисковик показывает рядом со статьёй; без него
+      // разметка считается неполной.
+      logo: {
+        "@type": "ImageObject",
+        url: `${root}/logo/full-480.webp`,
+      },
+    },
   };
 }
 

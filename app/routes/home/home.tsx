@@ -12,6 +12,7 @@ import { faq } from "~/data/faq";
 import { Section } from "~/components/ui/Section/Section";
 import { LeadBlock } from "~/components/forms/LeadBlock/LeadBlock";
 import { seo } from "~/lib/seo";
+import { businessJsonLd, jsonLdProps } from "~/lib/json-ld";
 
 export function loader() {
   // Подбору нужен весь каталог: он фильтрует его на клиенте по ответам.
@@ -71,6 +72,13 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           "Не подойдёт по площади — скажу сразу, а не продам лишнее",
         ]}
       />
+
+      {/* Разметка организации. Та же, что на контактах, и с тем же `@id` —
+          это одно предприятие, а не два. Здесь она нужна потому, что
+          в блок организаций над выдачей и в карточку в Картах поисковик
+          подставляет ту страницу, которая описывает бизнес, а при одном
+          адресе это главная. */}
+      <script {...jsonLdProps(businessJsonLd())} />
     </main>
   );
 }
