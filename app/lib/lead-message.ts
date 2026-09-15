@@ -58,7 +58,12 @@ const escape = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 
-/** Минское время: сервер стоит неизвестно где, а звонить будут отсюда. */
+/**
+ * Белорусское время: сервер стоит неизвестно где, а звонить будут отсюда.
+ *
+ * Идентификатор зоны так и называется — Europe/Minsk, он один на всю страну,
+ * и для Пинска он тот же. Переименовывать нечего.
+ */
 function minskTime(now: Date): string {
   return new Intl.DateTimeFormat("ru-RU", {
     timeZone: "Europe/Minsk",

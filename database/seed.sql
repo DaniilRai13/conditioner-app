@@ -870,7 +870,7 @@ values ('contacts', '{"phone":"+375 (00) 000-00-00","telegram":"","viber":"","wh
 on conflict (key) do update set label = excluded.label;
 
 insert into public.settings (key, value, label)
-values ('legal', '{"entity":"ИП Фамилия И. О.","unp":"000000000","address":"г. Минск"}'::jsonb, 'Реквизиты для подвала и политики')
+values ('legal', '{"entity":"ИП Фамилия И. О.","unp":"000000000","address":"г. Пинск"}'::jsonb, 'Реквизиты для подвала и политики')
 on conflict (key) do update set label = excluded.label;
 
 insert into public.settings (key, value, label)

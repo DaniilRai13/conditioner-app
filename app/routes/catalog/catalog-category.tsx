@@ -27,10 +27,10 @@ export function meta({ loaderData }: Route.MetaArgs) {
   if (!loaderData) return seo({ title: "Каталог", path: "/catalog" });
   const { category } = loaderData;
   return seo({
-    title: `${category.h1} в Минске`,
+    title: `${category.h1} в Пинске`,
     // Одного лида мало: у двух категорий он короче 70 символов, и в выдаче
     // строка обрывалась на полуслове описания. Хвост общий и правдивый.
-    description: `${category.lead} Подбор, доставка и установка в Минске и области.`,
+    description: `${category.lead} Подбор, доставка и установка в Пинске и районе.`,
     path: `/catalog/${category.slug}`,
   });
 }
@@ -41,7 +41,7 @@ export default function CatalogCategory({ loaderData }: Route.ComponentProps) {
   return (
     <main>
       <PageHeader
-        title={`${category.h1} в Минске`}
+        title={`${category.h1} в Пинске`}
         lead={category.lead}
         crumbs={[
           { label: "Каталог", to: "/catalog" },

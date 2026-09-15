@@ -1,4 +1,5 @@
 import { site } from "~/config/site";
+import { coverage } from "~/data/about";
 import type { Product } from "~/types/product";
 import type { Article } from "~/data/articles";
 import type { FaqItem } from "~/data/faq";
@@ -60,7 +61,13 @@ export function businessJsonLd(): JsonLd {
     description: `Продажа, установка и обслуживание кондиционеров в ${site.region}`,
     telephone: site.phone,
     email: site.email,
-    areaServed: site.region,
+    // Зона обслуживания списком, а не одной строкой. Поисковик разбирает
+    // areaServed как перечень мест и по нему решает, к каким городам
+    // предприятие относится, — «Пинск и Пинский район» одной фразой
+    // соседние райцентры в этот перечень не заводит. Список тот же, что
+    // виден человеку на контактах: два источника правды разошлись бы
+    // на первом же изменении.
+    areaServed: [site.region, ...coverage.filter((p) => !p.startsWith("Пинск"))],
     address: {
       "@type": "PostalAddress",
       addressLocality: site.city,

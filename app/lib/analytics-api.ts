@@ -23,7 +23,7 @@ import type { LeadRow } from "./admin-api";
  */
 
 export interface DayPoint {
-  /** Минская дата, `YYYY-MM-DD`. */
+  /** Дата по белорусскому времени, `YYYY-MM-DD`. */
   day: string;
   hits: number;
   visitors: number;
@@ -126,7 +126,7 @@ export interface LeadSource {
 }
 
 /**
- * Минская дата строки заявки.
+ * Дата заявки по белорусскому времени.
  *
  * Именно минская, а не UTC: заявка, оставленная в одиннадцать вечера,
  * по Гринвичу относится к следующему дню, и в графике «вчера» и «сегодня»

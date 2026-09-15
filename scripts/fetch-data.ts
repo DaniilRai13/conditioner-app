@@ -233,7 +233,7 @@ const siteData = {
   legal: asFields(settings.legal, {
     entity: "ИП Фамилия И. О.",
     unp: "000000000",
-    address: "г. Минск",
+    address: "г. Пинск",
   }),
 
   hero: asFields(settings.hero, {

@@ -34,18 +34,18 @@ export function loader({ params }: Route.LoaderArgs) {
 export function meta({ loaderData }: Route.MetaArgs) {
   if (!loaderData) return seo({ title: "Кондиционер", path: "/catalog" });
   const { product } = loaderData;
-  // Бюджет поиска — около 60 символов. Хвост «— купить в Минске» занимает
+  // Бюджет поиска — около 60 символов. Хвост «— купить в Пинске» занимает
   // 18, остальное отдаём имени модели; названия сайта здесь нет.
   //
   // productSeoTitle, а не seoProductName напрямую: это он же, но со сверкой
   // по всему каталогу. Две модели одной серии на одну площадь получали
   // дословно одинаковый заголовок — для поиска неразличимые страницы.
   return seo({
-    title: `${productSeoTitle(product)} — купить в Минске`,
+    title: `${productSeoTitle(product)} — купить в Пинске`,
     brandSuffix: false,
     description:
       product.description ||
-      `${product.brand} ${product.model} — ${formatArea(product.specs.areaM2) ?? "сплит-система"}. Продажа и установка в Минске и области.`,
+      `${product.brand} ${product.model} — ${formatArea(product.specs.areaM2) ?? "сплит-система"}. Продажа и установка в Пинске и районе.`,
     // Своя картинка ссылки — со снимком этой модели. Без неё в мессенджер
     // уезжала общая, со знаком: человек присылает другу конкретный
     // кондиционер, а тот видит логотип и не понимает, о чём речь.

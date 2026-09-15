@@ -73,7 +73,7 @@ ok("ссылка на товар есть", full.includes("/product/electrolux-m
 ok("источник подписан", full.includes("карточка товара"));
 ok("страница показана путём", full.includes(">/solutions/bedroom-20?utm_source=vk<"));
 ok("ссылка на страницу полная", full.includes(`href="https://example.by/solutions/bedroom-20`));
-ok("время по Минску", full.includes("12:30"));
+ok("белорусское время", full.includes("12:30"));
 
 // Парность тегов: телеграм не прощает незакрытых и вернёт «can't parse
 // entities», а сообщение просто не придёт.
