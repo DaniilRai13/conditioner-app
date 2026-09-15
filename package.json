@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "react-router dev",
     "build": "node scripts/fetch-data.ts && react-router build && node scripts/make-404.ts",
+    "build:snapshot": "react-router build && node scripts/make-404.ts",
     "preview": "vite preview",
     "typecheck": "react-router typegen && tsc",
     "lint": "oxlint",
