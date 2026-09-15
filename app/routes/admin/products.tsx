@@ -9,7 +9,11 @@ import {
   Star,
   X,
 } from "lucide-react";
-import { listProducts, updateProduct } from "~/lib/admin-api";
+import {
+  listProducts,
+  updateProduct,
+  updateProductPrices,
+} from "~/lib/admin-api";
 import { useRows } from "~/hooks/useRows";
 import { useSave } from "~/hooks/useSave";
 import { Drawer, useDrawer } from "~/components/admin/Drawer";
@@ -41,12 +45,17 @@ import styles from "./products.module.scss";
 /**
  * Товары: только наши поля.
  *
- * Цена, характеристики и наличие сюда не выведены и выведены не будут:
- * их перезаписывает импорт из выгрузки поставщика. Правка, которая живёт
- * до следующей выгрузки, хуже отсутствия правки — заказчик поменяет цену,
- * через неделю она вернётся, и доверие к админке пропадёт целиком.
- *
+ * Характеристики и наличие сюда не выведены и выведены не будут: их
+ * перезаписывает импорт из выгрузки поставщика. Правка, которая живёт
+ * до следующей выгрузки, хуже отсутствия правки — заказчик поменяет
+ * значение, через неделю оно вернётся, и доверие к админке пропадёт целиком.
  * Поэтому поставщиковые значения показаны, но только для чтения.
+ *
+ * Цена — исключение, и не по недосмотру: её перевели на нашу сторону
+ * (`scripts/make-seed.ts` больше её не перезаписывает). Мастер ставит свои
+ * цены, а цена поставщика служит лишь отправной точкой при первом появлении
+ * товара. Отсюда же и изменение цен пачкой: при полусотне позиций поднять
+ * их по одной — полсотни правок ради одного решения.
  *
  * Список — плитками, форма — в панели справа. Полсотни развёрнутых форм
  * подряд занимали шесть экранов прокрутки, из которых работают с одной;
@@ -80,55 +89,220 @@ const TIER_LABELS: Record<ProductTier, string> = {
 function ProductTile({
   product,
   onOpen,
+  selected,
+  onSelect,
 }: {
   product: ProductRow;
   onOpen: (product: ProductRow, trigger: HTMLElement) => void;
+  selected: boolean;
+  onSelect: (id: string, selected: boolean) => void;
 }) {
   const area = product.specs.areaM2;
 
   return (
-    <button
-      type="button"
-      className={
-        product.is_published ? styles.tile : `${styles.tile} ${styles.dimmed}`
-      }
-      onClick={(e) => onOpen(product, e.currentTarget)}
-    >
-      <span className={styles.thumb}>
-        {product.image ? (
-          <img src={product.image} alt="" loading="lazy" />
-        ) : (
-          <span className={styles.noPhoto} aria-hidden />
-        )}
+    // Обёртка нужна ради галочки. Вложить её в саму плитку нельзя: плитка —
+    // кнопка, а кнопка внутри кнопки невалидна и ломает и клавиатуру,
+    // и чтение с экрана. Поэтому галочка лежит рядом и накрывает угол.
+    <div className={selected ? `${styles.cell} ${styles.picked}` : styles.cell}>
+      <input
+        type="checkbox"
+        className={styles.pick}
+        checked={selected}
+        aria-label={`Выбрать ${product.name}`}
+        onChange={(e) => onSelect(product.id, e.target.checked)}
+      />
 
-        {/* Метки поверх снимка: в плитке нет места на отдельную строку,
+      <button
+        type="button"
+        className={
+          product.is_published ? styles.tile : `${styles.tile} ${styles.dimmed}`
+        }
+        onClick={(e) => onOpen(product, e.currentTarget)}
+      >
+        <span className={styles.thumb}>
+          {product.image ? (
+            <img src={product.image} alt="" loading="lazy" />
+          ) : (
+            <span className={styles.noPhoto} aria-hidden />
+          )}
+
+          {/* Метки поверх снимка: в плитке нет места на отдельную строку,
             а знать, что товар скрыт или отмечен хитом, нужно сразу. */}
-        <span className={styles.marks}>
-          {product.featured && (
-            <span className={styles.mark} title="Хит">
-              <Star aria-hidden />
-            </span>
-          )}
-          {!product.is_published && (
-            <span
-              className={`${styles.mark} ${styles.markOff}`}
-              title="Скрыт на сайте"
-            >
-              <EyeOff aria-hidden />
-            </span>
-          )}
+          <span className={styles.marks}>
+            {product.featured && (
+              <span className={styles.mark} title="Хит">
+                <Star aria-hidden />
+              </span>
+            )}
+            {!product.is_published && (
+              <span
+                className={`${styles.mark} ${styles.markOff}`}
+                title="Скрыт на сайте"
+              >
+                <EyeOff aria-hidden />
+              </span>
+            )}
+          </span>
         </span>
-      </span>
 
-      <span className={styles.tileName}>{product.name}</span>
+        <span className={styles.tileName}>{product.name}</span>
 
-      <span className={styles.tileMeta}>
-        {product.price} р.
-        {area ? ` · до ${area} м²` : ""}
-      </span>
+        <span className={styles.tileMeta}>
+          {product.price} р.
+          {area ? ` · до ${area} м²` : ""}
+        </span>
 
-      <span className={styles.tileTier}>{TIER_LABELS[product.tier]}</span>
-    </button>
+        <span className={styles.tileTier}>{TIER_LABELS[product.tier]}</span>
+      </button>
+    </div>
+  );
+}
+
+/**
+ * Изменение цен у выбранных товаров на процент.
+ *
+ * Показывается только когда что-то выбрано: кнопка «поднять всё» без выбора
+ * слишком легко нажимается мимо, а откатить нечем — старых цен нигде
+ * не остаётся.
+ *
+ * В два шага: сперва пересчёт с показом чисел, потом применение. Человек
+ * соглашается на результат («975 станет 1073»), а не на формулу: округление
+ * иначе он увидел бы уже постфактум, на полусотне товаров сразу.
+ */
+function BulkPrices({
+  products,
+  onApplied,
+  onClear,
+}: {
+  products: ProductRow[];
+  onApplied: (rows: { id: string; price: number }[]) => void;
+  onClear: () => void;
+}) {
+  const [percent, setPercent] = useState("");
+  const [confirming, setConfirming] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [done, setDone] = useState(0);
+
+  const pct = Number(percent);
+  const valid =
+    percent.trim() !== "" && Number.isFinite(pct) && pct !== 0 && pct > -100;
+
+  // Округление до рубля, а не до десятков: десятки выглядят опрятнее,
+  // но тогда «плюс 10%» перестаёт быть десятью процентами, и на вопрос
+  // «почему 1080, а не 1073» ответить нечем.
+  const next = useMemo(
+    () =>
+      valid
+        ? products.map((p) => ({
+            id: p.id,
+            name: p.name,
+            from: p.price,
+            price: Math.max(0, Math.round(p.price * (1 + pct / 100))),
+          }))
+        : [],
+    [products, pct, valid],
+  );
+
+  // Товары, у которых цена не сдвинулась (копеечные при малом проценте),
+  // в запрос не идут: лишний запрос, который ничего не меняет.
+  const changed = next.filter((n) => n.price !== n.from);
+
+  async function apply() {
+    setBusy(true);
+    setError(null);
+    const res = await updateProductPrices(
+      changed.map(({ id, price }) => ({ id, price })),
+    );
+    setBusy(false);
+
+    if (res.error) {
+      setError(res.error.message);
+      return;
+    }
+    onApplied(changed.map(({ id, price }) => ({ id, price })));
+    setDone(res.data ?? changed.length);
+    setConfirming(false);
+    setPercent("");
+  }
+
+  return (
+    <div className={styles.bulk}>
+      <div className={styles.bulkMain}>
+        <b className={styles.bulkCount}>Выбрано {products.length}</b>
+
+        <label className={styles.bulkField}>
+          Изменить цену на
+          <Input
+            type="number"
+            step={1}
+            inputMode="numeric"
+            className={styles.bulkInput}
+            value={percent}
+            placeholder="10"
+            aria-label="Процент изменения цены"
+            onChange={(e) => {
+              setPercent(e.target.value);
+              setConfirming(false);
+              setDone(0);
+            }}
+          />
+          %
+        </label>
+
+        {/* Минус допустим: снижать цены нужно не реже, чем поднимать,
+            а отдельная кнопка «снизить» — это второй путь к тому же. */}
+        <Button small disabled={!valid} onClick={() => setConfirming(true)}>
+          Пересчитать
+        </Button>
+
+        <Button small variant="ghost" onClick={onClear}>
+          Снять выбор
+        </Button>
+      </div>
+
+      {done > 0 && (
+        <p className={styles.bulkDone}>Цены изменены у {done} товаров.</p>
+      )}
+
+      {confirming && (
+        <div className={styles.bulkConfirm}>
+          {changed.length === 0 ? (
+            <p>При таком проценте ни одна цена не изменится.</p>
+          ) : (
+            <>
+              <p>
+                {pct > 0 ? "Поднять" : "Снизить"} цену на {Math.abs(pct)}% у{" "}
+                <b>{changed.length}</b> товаров. Например:
+              </p>
+              <ul className={styles.bulkPreview}>
+                {changed.slice(0, 3).map((n) => (
+                  <li key={n.id}>
+                    <span>{n.name}</span>
+                    <b>
+                      {n.from} → {n.price} р.
+                    </b>
+                  </li>
+                ))}
+              </ul>
+              <div className={styles.bulkActions}>
+                <Button small busy={busy} onClick={apply}>
+                  {busy ? "Меняю…" : "Применить"}
+                </Button>
+                <Button
+                  small
+                  variant="ghost"
+                  onClick={() => setConfirming(false)}
+                >
+                  Отмена
+                </Button>
+              </div>
+            </>
+          )}
+          {error && <p className={styles.error}>{error}</p>}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -147,6 +321,9 @@ function ProductEditor({
 }) {
   const { save, saveNow, saved, error } = useSave();
   const [description, setDescription] = useState(product.description);
+  // Строкой, а не числом: поле должно переживать промежуточно пустое
+  // состояние, когда старое число стёрли, а новое ещё не набрали.
+  const [price, setPrice] = useState(String(product.price));
 
   const area = product.specs.areaM2;
 
@@ -174,10 +351,6 @@ function ProductEditor({
             <dd>{TYPES[product.type] ?? product.type}</dd>
           </div>
           <div>
-            <dt>Цена</dt>
-            <dd>{product.price} р.</dd>
-          </div>
-          <div>
             <dt>Площадь</dt>
             <dd>{area ? `до ${area} м²` : "не указана"}</dd>
           </div>
@@ -189,13 +362,45 @@ function ProductEditor({
         импорте — здесь они только для справки.
       </p>
 
+      {/* Цена — наша, а не поставщика. Повторный сид её больше не
+          перезаписывает (см. scripts/make-seed.ts), поэтому правка здесь
+          держится, а не живёт до следующего импорта. */}
+      <Field
+        label="Цена, р."
+        hint="Показывается в каталоге и на странице товара"
+      >
+        <Input
+          type="number"
+          min={0}
+          step={1}
+          inputMode="numeric"
+          value={price}
+          onChange={(e) => {
+            const raw = e.target.value;
+            setPrice(raw);
+
+            // Пустое поле не сохраняем: Number("") — это ноль, и товар молча
+            // стал бы бесплатным, пока человек стирает старое число,
+            // чтобы набрать новое.
+            if (raw.trim() === "") return;
+            const next = Number(raw);
+            if (!Number.isInteger(next) || next < 0) return;
+
+            onPatch(product.id, { price: next });
+            save(() => updateProduct(product.id, { price: next }));
+          }}
+        />
+      </Field>
+
       <Field label="Описание" hint="Показывается на странице товара и в поиске">
         <Textarea
           rows={6}
           value={description}
           onChange={(e) => {
             setDescription(e.target.value);
-            save(() => updateProduct(product.id, { description: e.target.value }));
+            save(() =>
+              updateProduct(product.id, { description: e.target.value }),
+            );
           }}
         />
       </Field>
@@ -271,6 +476,20 @@ export default function ProductsPage() {
   // Открыта ли панель на узком экране. Это про показ, а не про отбор,
   // и в адресе ему делать нечего.
   const [openOnMobile, setOpenOnMobile] = useState(false);
+
+  // Выбранные товары — для изменения цен пачкой. В состоянии страницы,
+  // а не в адресе: выбор живёт минуту и делиться ссылкой на него незачем,
+  // а полсотни идентификаторов в строке адреса сделали бы её нечитаемой.
+  const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
+
+  const toggleSelected = useCallback((id: string, on: boolean) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (on) next.add(id);
+      else next.delete(id);
+      return next;
+    });
+  }, []);
 
   // Границы — по всему каталогу, а не по отфильтрованному: иначе шкала
   // цены съезжала бы от каждого движения ползунка, и вернуть её обратно
@@ -460,11 +679,30 @@ export default function ProductsPage() {
                 : `${rows.length} товаров`}
             </p>
 
+            {/* Липкая полоса действий. Выбирают, прокручивая список, и без
+                прилипания кнопка «Пересчитать» осталась бы где-то вверху,
+                за пределами экрана. */}
+            {selected.size > 0 && (
+              <BulkPrices
+                products={rows.filter((p) => selected.has(p.id))}
+                onClear={() => setSelected(new Set())}
+                onApplied={(updated) => {
+                  // Обновляем строки на месте, а не перезагружаем список:
+                  // перезагрузка сбросила бы прокрутку к началу, и человек
+                  // потерял бы место, где выбирал.
+                  for (const { id, price } of updated) patch(id, { price });
+                  setSelected(new Set());
+                }}
+              />
+            )}
+
             <div className={styles.grid}>
               {shown.map((product) => (
                 <ProductTile
                   key={product.id}
                   product={product}
+                  selected={selected.has(product.id)}
+                  onSelect={toggleSelected}
                   onOpen={(p, el) => {
                     trigger.current = el;
                     drawer.show(p.id);

@@ -149,7 +149,7 @@ async function loadUser(session: Session): Promise<ApiResponse<User>> {
 
 export async function signIn(
   email: string,
-  password: string
+  password: string,
 ): Promise<ApiResponse<User>> {
   const { data, error } = await getSupabase().auth.signInWithPassword({
     email,
@@ -194,7 +194,10 @@ export async function publish(): Promise<ApiResponse<{ at: string }>> {
   const token = data.session?.access_token;
 
   if (!token) {
-    return fail({ code: "auth/no-session", message: "Сессия истекла — войдите заново." });
+    return fail({
+      code: "auth/no-session",
+      message: "Сессия истекла — войдите заново.",
+    });
   }
 
   let res: Response;
@@ -253,7 +256,7 @@ export async function publish(): Promise<ApiResponse<{ at: string }>> {
       code: "publish/failed",
       message: "Не удалось запустить сборку.",
       details: String(res.status),
-    }
+    },
   );
 }
 
@@ -364,7 +367,6 @@ export async function getSummary(): Promise<ApiResponse<Summary>> {
   });
 }
 
-
 /**
  * Когда в базе последний раз что-то меняли.
  *
@@ -385,8 +387,16 @@ export async function getLastChange(): Promise<ApiResponse<string | null>> {
   const newest = { ascending: false } as const;
 
   const [products, prices, settings, projects, reviews] = await Promise.all([
-    db.from("products").select("updated_at").order("updated_at", newest).limit(1),
-    db.from("install_prices").select("updated_at").order("updated_at", newest).limit(1),
+    db
+      .from("products")
+      .select("updated_at")
+      .order("updated_at", newest)
+      .limit(1),
+    db
+      .from("install_prices")
+      .select("updated_at")
+      .order("updated_at", newest)
+      .limit(1),
     db
       .from("settings")
       .select("updated_at")
@@ -400,11 +410,15 @@ export async function getLastChange(): Promise<ApiResponse<string | null>> {
       .limit(1),
     // У отзывов нет updated_at: правка не отличается от создания, и для
     // вопроса «есть ли что публиковать» этого достаточно.
-    db.from("reviews").select("created_at").order("created_at", newest).limit(1),
+    db
+      .from("reviews")
+      .select("created_at")
+      .order("created_at", newest)
+      .limit(1),
   ]);
 
   const failed = [products, prices, settings, projects, reviews].find(
-    (r) => r.error
+    (r) => r.error,
   )?.error;
 
   if (failed) {
@@ -439,9 +453,12 @@ export async function listLeads(): Promise<ApiResponse<LeadRow[]>> {
 
 export async function updateLead(
   id: string,
-  patch: { status?: LeadStatus; note?: string }
+  patch: { status?: LeadStatus; note?: string },
 ): Promise<ApiResponse<null>> {
-  const { error } = await getSupabase().from("leads").update(patch).eq("id", id);
+  const { error } = await getSupabase()
+    .from("leads")
+    .update(patch)
+    .eq("id", id);
   if (error) return fail(toApiError(error, "Не удалось сохранить заявку."));
   return ok(null);
 }
@@ -460,7 +477,7 @@ export async function listPrices(): Promise<ApiResponse<InstallPriceRow[]>> {
 
 export async function updatePrice(
   id: string,
-  patch: Partial<Pick<InstallPriceRow, "price" | "is_confirmed">>
+  patch: Partial<Pick<InstallPriceRow, "price" | "is_confirmed">>,
 ): Promise<ApiResponse<null>> {
   const { error } = await getSupabase()
     .from("install_prices")
@@ -481,7 +498,9 @@ export async function listSettings(): Promise<ApiResponse<SettingRow[]>> {
 
   if (error) return fail(toApiError(error, "Не удалось загрузить настройки."));
   // У таблицы первичный ключ — key; useRows требует id, подставляем его.
-  return ok((data as Omit<SettingRow, "id">[]).map((s) => ({ ...s, id: s.key })));
+  return ok(
+    (data as Omit<SettingRow, "id">[]).map((s) => ({ ...s, id: s.key })),
+  );
 }
 
 /**
@@ -498,13 +517,13 @@ export async function listSettings(): Promise<ApiResponse<SettingRow[]>> {
  */
 export async function updateSetting(
   key: string,
-  value: unknown
+  value: unknown,
 ): Promise<ApiResponse<null>> {
   const { error } = await getSupabase()
     .from("settings")
     .upsert(
       { key, value, updated_at: new Date().toISOString() },
-      { onConflict: "key" }
+      { onConflict: "key" },
     );
 
   if (error) return fail(toApiError(error, "Не удалось сохранить настройку."));
@@ -534,13 +553,73 @@ export async function updateProduct(
   patch: Partial<
     Pick<
       ProductRow,
-      "description" | "tier" | "featured" | "sort_order" | "is_published"
+      | "description"
+      | "tier"
+      | "featured"
+      | "sort_order"
+      | "is_published"
+      // Цена правится здесь и только здесь: повторный сид её больше
+      // не перезаписывает (см. scripts/make-seed.ts). Цена поставщика
+      // служит отправной точкой при первом появлении товара, дальше
+      // хозяин цены — заказчик.
+      | "price"
     >
-  >
+  >,
 ): Promise<ApiResponse<null>> {
-  const { error } = await getSupabase().from("products").update(patch).eq("id", id);
+  const { error } = await getSupabase()
+    .from("products")
+    .update(patch)
+    .eq("id", id);
   if (error) return fail(toApiError(error, "Не удалось сохранить товар."));
   return ok(null);
+}
+
+/**
+ * Изменить цены сразу у нескольких товаров.
+ *
+ * Новые цены считаются в браузере и приезжают сюда готовыми, а не как
+ * «поднять на 10%». Так окно подтверждения показывает ровно те числа,
+ * которые будут записаны: пересчёт на стороне базы значил бы, что человек
+ * соглашается на формулу, а не на результат, и округление увидел бы
+ * уже постфактум.
+ *
+ * Запросы идут пачками. Полсотни параллельных PATCH-ов Supabase примет,
+ * но при плохой связи половина отвалится по таймауту, и пользователь
+ * останется с наполовину поднятыми ценами, не понимая, с какой именно
+ * половиной. По десять — медленнее на секунду и предсказуемо.
+ *
+ * Возвращает, сколько товаров удалось изменить: частичный успех здесь
+ * возможен, и молчать о нём нельзя.
+ */
+export async function updateProductPrices(
+  items: { id: string; price: number }[],
+): Promise<ApiResponse<number>> {
+  const CHUNK = 10;
+  let done = 0;
+
+  for (let i = 0; i < items.length; i += CHUNK) {
+    const chunk = items.slice(i, i + CHUNK);
+    const results = await Promise.all(
+      chunk.map(({ id, price }) =>
+        getSupabase().from("products").update({ price }).eq("id", id),
+      ),
+    );
+
+    const failed = results.find((r) => r.error);
+    if (failed?.error) {
+      return fail(
+        toApiError(
+          failed.error,
+          done > 0
+            ? `Изменено ${done} из ${items.length}, дальше не вышло.`
+            : "Не удалось изменить цены.",
+        ),
+      );
+    }
+    done += chunk.length;
+  }
+
+  return ok(done);
 }
 
 // --- отзывы ------------------------------------------------------------
@@ -557,7 +636,7 @@ export async function listReviews(): Promise<ApiResponse<ReviewRow[]>> {
 }
 
 export async function saveReview(
-  review: Partial<ReviewRow> & { id?: string }
+  review: Partial<ReviewRow> & { id?: string },
 ): Promise<ApiResponse<null>> {
   const { id, ...fields } = review;
   const db = getSupabase();
@@ -580,8 +659,8 @@ export async function deleteReview(id: string): Promise<ApiResponse<null>> {
 export const PORTFOLIO_BUCKET = "portfolio";
 
 function publicUrl(storagePath: string): string {
-  return getSupabase().storage.from(PORTFOLIO_BUCKET).getPublicUrl(storagePath).data
-    .publicUrl;
+  return getSupabase().storage.from(PORTFOLIO_BUCKET).getPublicUrl(storagePath)
+    .data.publicUrl;
 }
 
 export async function listProjects(): Promise<ApiResponse<PortfolioRow[]>> {
@@ -603,18 +682,21 @@ export async function listProjects(): Promise<ApiResponse<PortfolioRow[]>> {
       images: portfolio_images
         .map((img) => ({ ...img, url: publicUrl(img.storage_path) }))
         .sort((a, b) => a.sort_order - b.sort_order),
-    }))
+    })),
   );
 }
 
 export async function saveProject(
-  project: Partial<PortfolioRow> & { id?: string }
+  project: Partial<PortfolioRow> & { id?: string },
 ): Promise<ApiResponse<string>> {
   const { id, images: _images, ...fields } = project;
   const db = getSupabase();
 
   if (id) {
-    const { error } = await db.from("portfolio_projects").update(fields).eq("id", id);
+    const { error } = await db
+      .from("portfolio_projects")
+      .update(fields)
+      .eq("id", id);
     if (error) return fail(toApiError(error, "Не удалось сохранить работу."));
     return ok(id);
   }
@@ -640,7 +722,7 @@ export async function deleteProject(id: string): Promise<ApiResponse<null>> {
     .eq("project_id", id);
 
   const paths = (images ?? []).map(
-    (i) => (i as { storage_path: string }).storage_path
+    (i) => (i as { storage_path: string }).storage_path,
   );
   if (paths.length) await db.storage.from(PORTFOLIO_BUCKET).remove(paths);
 
@@ -652,7 +734,7 @@ export async function deleteProject(id: string): Promise<ApiResponse<null>> {
 export async function uploadImage(
   projectId: string,
   file: File,
-  sortOrder: number
+  sortOrder: number,
 ): Promise<ApiResponse<null>> {
   const db = getSupabase();
 
@@ -673,7 +755,11 @@ export async function uploadImage(
 
   const { error } = await db
     .from("portfolio_images")
-    .insert({ project_id: projectId, storage_path: path, sort_order: sortOrder });
+    .insert({
+      project_id: projectId,
+      storage_path: path,
+      sort_order: sortOrder,
+    });
 
   if (error) {
     // Строка не создалась — файл остался бы сиротой.
@@ -686,7 +772,7 @@ export async function uploadImage(
 
 export async function deleteImage(
   id: string,
-  storagePath: string
+  storagePath: string,
 ): Promise<ApiResponse<null>> {
   const db = getSupabase();
   const { error } = await db.from("portfolio_images").delete().eq("id", id);

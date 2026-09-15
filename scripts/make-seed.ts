@@ -76,9 +76,14 @@ lines.push(`-- =================================================================
 lines.push(`
 -- Товары: ${products.length} позиций из выгрузки поставщика.
 --
--- on conflict обновляет только колонки поставщика. description, tier,
--- featured, sort_order и is_published не тронуты специально: их ведут
--- руками, и повторный сид не должен стирать чужую работу.`);
+-- on conflict обновляет только то, что приходит от поставщика и чего
+-- никто не правит руками. Вне списка намеренно: description, tier, featured,
+-- sort_order, is_published и price.
+--
+-- Цена там же, потому что её ведёт заказчик. При первом появлении товара
+-- в базе она берётся у поставщика — из insert выше — и дальше служит лишь
+-- отправной точкой. Повторный сид не должен молча возвращать чужие числа:
+-- это та же ошибка, что стереть описание, только заметить её труднее.`);
 
 for (const [i, p] of products.entries()) {
   lines.push(
@@ -92,7 +97,6 @@ on conflict (slug) do update set
   brand      = excluded.brand,
   model      = excluded.model,
   type       = excluded.type,
-  price      = excluded.price,
   in_stock   = excluded.in_stock,
   image      = excluded.image,
   specs      = excluded.specs,
