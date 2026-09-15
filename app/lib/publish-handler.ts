@@ -1,3 +1,4 @@
+import { resolveSupabase, type SupabaseEnv } from "./server-env.ts";
 // С расширением .ts: этот модуль запускает и Node напрямую — плагин
 // dev-сервера и локальный сервер, — а он без расширения импорт не находит.
 
@@ -16,7 +17,7 @@
  * ещё не выбран (PLAN.md §10).
  */
 
-export type PublishEnv = {
+export type PublishEnv = SupabaseEnv & {
   /**
    * Секретный адрес сборки от хостинга.
    *
@@ -31,9 +32,6 @@ export type PublishEnv = {
    */
   BUILD_HOOK_URL?: string;
 
-  /** Проверка, что кнопку нажал вошедший в админку, а не кто угодно. */
-  SUPABASE_URL?: string;
-  SUPABASE_ANON_KEY?: string;
   /** Для отметки времени публикации — она пишется мимо RLS. */
   SUPABASE_SERVICE_ROLE_KEY?: string;
 };
@@ -67,7 +65,7 @@ async function lastPublish(env: PublishEnv): Promise<number> {
           apikey: env.SUPABASE_SERVICE_ROLE_KEY!,
           Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
         },
-      }
+      },
     );
 
     if (!res.ok) return 0;
@@ -139,8 +137,9 @@ async function signedIn(request: Request, env: PublishEnv): Promise<boolean> {
 
 export async function handlePublish(
   request: Request,
-  env: PublishEnv
+  rawEnv: PublishEnv,
 ): Promise<Response> {
+  const env = resolveSupabase(rawEnv);
   if (request.method !== "POST") {
     return json({ error: "method_not_allowed" }, 405);
   }
@@ -165,8 +164,11 @@ export async function handlePublish(
     const since = Date.now() - (await lastPublish(env));
     if (since < COOLDOWN_MS) {
       return json(
-        { error: "too_soon", waitSeconds: Math.ceil((COOLDOWN_MS - since) / 1000) },
-        429
+        {
+          error: "too_soon",
+          waitSeconds: Math.ceil((COOLDOWN_MS - since) / 1000),
+        },
+        429,
       );
     }
   }

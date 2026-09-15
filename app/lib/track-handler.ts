@@ -1,3 +1,4 @@
+import { resolveSupabase, type SupabaseEnv } from "./server-env.ts";
 // С расширением .ts: этот модуль запускает и Node напрямую — локальный
 // сервер scripts/serve.ts и плагин dev-сервера, — а он без расширения
 // импорт не находит.
@@ -21,9 +22,7 @@
  * из них выходит в три строки — хостинг ещё не выбран (PLAN.md §10).
  */
 
-export type TrackEnv = {
-  /** Адрес проекта Supabase. */
-  SUPABASE_URL?: string;
+export type TrackEnv = SupabaseEnv & {
   /**
    * Сервисный ключ. Обходит RLS — поэтому живёт ТОЛЬКО на сервере
    * и никогда не получает префикс VITE_: с ним он уехал бы в браузер,
@@ -41,9 +40,11 @@ export type TrackEnv = {
 /** Роботы. Список не исчерпывающий и не должен быть: он отделяет
  * известных краулеров, а не защищает от подделки — подделывать
  * счётчик посещений незачем. */
-const BOT = /bot|crawl|spider|slurp|bingpreview|yandex\.com\/bots|headless|lighthouse|curl|wget|python-requests/i;
+const BOT =
+  /bot|crawl|spider|slurp|bingpreview|yandex\.com\/bots|headless|lighthouse|curl|wget|python-requests/i;
 
-const MOBILE = /android|iphone|ipod|windows phone|iemobile|blackberry|opera mini/i;
+const MOBILE =
+  /android|iphone|ipod|windows phone|iemobile|blackberry|opera mini/i;
 const TABLET = /ipad|tablet|playbook|silk|android(?!.*mobile)/i;
 
 function deviceOf(ua: string): "mobile" | "tablet" | "desktop" {
@@ -64,7 +65,11 @@ function deviceOf(ua: string): "mobile" | "tablet" | "desktop" {
  * а не людей: пришедший дважды за неделю посчитан дважды. Складывать их
  * и называть результат людьми нельзя, и в админке он так и подписан.
  */
-async function fingerprint(ip: string, ua: string, salt: string): Promise<string> {
+async function fingerprint(
+  ip: string,
+  ua: string,
+  salt: string,
+): Promise<string> {
   const day = new Date().toISOString().slice(0, 10);
   const data = new TextEncoder().encode(`${ip}|${ua}|${day}|${salt}`);
   const digest = await crypto.subtle.digest("SHA-256", data);
@@ -122,8 +127,9 @@ const noContent = () =>
 
 export async function handleTrack(
   request: Request,
-  env: TrackEnv
+  rawEnv: TrackEnv,
 ): Promise<Response> {
+  const env = resolveSupabase(rawEnv);
   if (request.method !== "POST") {
     return new Response(null, { status: 405 });
   }
@@ -131,7 +137,9 @@ export async function handleTrack(
   if (!env.SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY || !env.TRACK_SALT) {
     // Молча: ненастроенный счётчик не повод ломать страницу. В журнале
     // видно, а посетитель не должен знать о нём вообще.
-    console.error("Счётчик не настроен: нет SUPABASE_URL, ключа или TRACK_SALT");
+    console.error(
+      "Счётчик не настроен: нет SUPABASE_URL, ключа или TRACK_SALT",
+    );
     return noContent();
   }
 
@@ -154,7 +162,7 @@ export async function handleTrack(
     visitor_hash: await fingerprint(clientIp(request), ua, env.TRACK_SALT),
     referrer_host: referrerHost(
       typeof body.ref === "string" ? body.ref : "",
-      siteHost
+      siteHost,
     ),
     device: deviceOf(ua),
     is_bot: BOT.test(ua),
@@ -174,7 +182,10 @@ export async function handleTrack(
     });
 
     if (!res.ok) {
-      console.error(`Счётчик: Supabase ответил ${res.status}`, await res.text());
+      console.error(
+        `Счётчик: Supabase ответил ${res.status}`,
+        await res.text(),
+      );
     }
   } catch (error) {
     console.error("Счётчик: запрос к Supabase не прошёл", error);

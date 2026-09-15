@@ -1,6 +1,7 @@
 // С расширением .ts: этот модуль запускает и Node напрямую — локальный
 // сервер scripts/serve.ts, — а он без расширения импорт не находит.
 // Сборщикам явное расширение не мешает (tsconfig: allowImportingTsExtensions).
+import { resolveSupabase, type SupabaseEnv } from "./server-env.ts";
 import { leadSchema, type LeadInput } from "./lead-schema.ts";
 import { formatLeadMessage } from "./lead-message.ts";
 
@@ -23,14 +24,12 @@ import { formatLeadMessage } from "./lead-message.ts";
  * обращение к чужому уронило бы модуль ещё на импорте.
  */
 
-export type LeadEnv = {
+export type LeadEnv = SupabaseEnv & {
   TELEGRAM_BOT_TOKEN?: string;
   TELEGRAM_CHAT_ID?: string;
   /** Адрес сайта для ссылки на товар в сообщении. */
   SITE_URL?: string;
 
-  /** Проект Supabase — чтобы заявка осталась в базе, а не только в чате. */
-  SUPABASE_URL?: string;
   /**
    * Сервисный ключ. Обходит RLS — поэтому живёт ТОЛЬКО на сервере и никогда
    * не получает префикс VITE_: с ним он уехал бы в браузер, и любой желающий
@@ -58,7 +57,7 @@ async function saveLead(lead: LeadInput, env: LeadEnv): Promise<void> {
   if (!env.SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY) {
     console.error(
       "Заявка не сохранена: нет SUPABASE_URL или SUPABASE_SERVICE_ROLE_KEY.\n" +
-        "В телеграм она ушла, но в админке её не будет."
+        "В телеграм она ушла, но в админке её не будет.",
     );
     return;
   }
@@ -84,7 +83,10 @@ async function saveLead(lead: LeadInput, env: LeadEnv): Promise<void> {
     });
 
     if (!res.ok) {
-      console.error(`Заявка не сохранена: Supabase ${res.status}`, await res.text());
+      console.error(
+        `Заявка не сохранена: Supabase ${res.status}`,
+        await res.text(),
+      );
     }
   } catch (error) {
     console.error("Заявка не сохранена: запрос к Supabase не прошёл", error);
@@ -99,8 +101,10 @@ const json = (body: unknown, status: number) =>
 
 export async function handleLead(
   request: Request,
-  env: LeadEnv,
+  rawEnv: LeadEnv,
 ): Promise<Response> {
+  // Публичные имена переменных сводятся к каноническим один раз, здесь.
+  const env = resolveSupabase(rawEnv);
   if (request.method !== "POST") {
     return json({ error: "method_not_allowed" }, 405);
   }
