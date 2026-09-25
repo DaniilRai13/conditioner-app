@@ -8,6 +8,7 @@ import {
   kb,
   type RawImage,
 } from "./lib/images.ts";
+import { loadLogoParts } from "./lib/logo.ts";
 
 /**
  * Веб-версии логотипа из assets/logo.png.
@@ -17,21 +18,26 @@ import {
  * ещё могут прислать в векторе или поправить, и тогда всё пересобирается
  * одной командой, а не вспоминается по крупицам полгода спустя.
  *
+ * Исходник — лист, на котором два актива стоят рядом: слева знак
+ * с надписью, справа одна эмблема. Режет их `lib/logo.ts`, он же
+ * отрезает набранную внутри картинки подпись: на маленьком размере
+ * она превращается в серую полоску, а живой текст рядом читается всегда
+ * и правится в одном месте.
+ *
  * Что получается:
  *
  *   public/logo/mark-*.avif|webp    — эмблема без надписи, для шапки
- *   public/logo/full-*.avif|webp    — весь знак с надписью, для подвала
+ *   public/logo/full-*.avif|webp    — знак с надписью, для подвала
  *   public/apple-touch-icon.png     — плитка 180×180 для экрана айфона
  *   public/icon-192.png, icon-512.png — то же для Android и манифеста
+ *   public/favicon-16|32|48.png     — значки вкладки
  *
- * Значок вкладки здесь не трогается: public/favicon.svg нарисован руками
- * вектором. Растр в шестнадцать точек превращается в грязь, а вектор
- * остаётся чётким и на мониторе, и на телефоне.
+ * Значки вкладки и плитки берутся из assets/icon.png — отдельного файла
+ * с эмблемой, если заказчик его прислал. Иначе эмблема вырезается из листа.
  *
  * Запуск: npm run logo
  */
 
-const SOURCE = "assets/logo.png";
 const OUT = "public/logo";
 
 await initCodecs();
@@ -41,93 +47,68 @@ await initPngEnc(
   )
 );
 
-const logo = await decodeImage(await readFile(SOURCE));
-console.log(`Исходник: ${logo.width}×${logo.height}`);
-
-// --- обрезка по непрозрачному -------------------------------------------
+// Разбор листа — в общем модуле: им же пользуется make-og.ts, а две копии
+// этой логики разошлись бы на первом же новом файле от заказчика.
+const { mark, lockup: full } = await loadLogoParts();
 
 /**
- * Границы видимого. У присланного файла по краям прозрачные поля, и без
- * обрезки они приезжают в вёрстку отступами, которых никто не задавал:
- * знак «не прилегает» к тексту, а поправить это в CSS нельзя — поля
- * внутри картинки.
+ * Эмблема для значков. Отдельный файл заказчика, если он есть, иначе
+ * вырезанная из листа.
+ *
+ * Отдельный лучше: на листе эмблема соседствует со знаком, и её границы
+ * приходится угадывать по прозрачности. Присланный отдельно файл — это
+ * то, что нарисовал дизайнер, без посредников.
  */
-function trim(image: RawImage, top = 0, bottom = image.height): RawImage {
-  const { data, width } = image;
-  let minX = width, maxX = -1, minY = bottom, maxY = -1;
+const icon = await (async () => {
+  try {
+    const own = await decodeImage(await readFile("assets/icon.png"));
+    console.log(`Иконка: assets/icon.png, ${own.width}×${own.height}`);
+    return own;
+  } catch {
+    console.log("Иконка: отдельного файла нет, беру эмблему из листа");
+    return mark;
+  }
+})();
 
-  for (let y = top; y < bottom; y++) {
+console.log(`Эмблема: ${mark.width}×${mark.height}`);
+console.log(`Знак с надписью: ${full.width}×${full.height}`);
+
+/**
+ * Нерезкое маскирование: усиливаем разницу с размытой копией.
+ *
+ * Нужно только значкам вкладки. Уменьшение усредняет по площади, и на
+ * шестнадцати точках от знака остаётся мягкое пятно: край пламени
+ * размазывается, петля бледнеет до фона. Лёгкая резкость возвращает им
+ * границу, не давая ореолов, — 0.8 подобрано сравнением на 16 точках,
+ * дальше начинает звенеть.
+ */
+function sharpen(img: RawImage, amount: number): RawImage {
+  const { data, width, height } = img;
+  const out = new Uint8ClampedArray(data.length);
+
+  const at = (x: number, y: number, c: number) =>
+    data[
+      (Math.min(height - 1, Math.max(0, y)) * width +
+        Math.min(width - 1, Math.max(0, x))) *
+        4 +
+        c
+    ];
+
+  for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
-      if (data[(y * width + x) * 4 + 3] > 24) {
-        if (x < minX) minX = x;
-        if (x > maxX) maxX = x;
-        if (y < minY) minY = y;
-        if (y > maxY) maxY = y;
+      const i = (y * width + x) * 4;
+      for (let c = 0; c < 4; c++) {
+        let blur = 0;
+        for (let dy = -1; dy <= 1; dy++) {
+          for (let dx = -1; dx <= 1; dx++) blur += at(x + dx, y + dy, c);
+        }
+        out[i + c] = data[i + c] + (data[i + c] - blur / 9) * amount;
       }
     }
   }
 
-  const w = maxX - minX + 1;
-  const h = maxY - minY + 1;
-  const out = new Uint8ClampedArray(w * h * 4);
-
-  for (let y = 0; y < h; y++) {
-    const from = ((minY + y) * width + minX) * 4;
-    out.set(data.subarray(from, from + w * 4), y * w * 4);
-  }
-
-  return { data: out, width: w, height: h };
+  return { data: out, width, height };
 }
-
-/**
- * Где заканчивается эмблема и начинается надпись.
- *
- * По пустой строке пикселей между ними, но искать её нужно только в тех
- * столбцах, где стоит сама эмблема. Наивный поиск «первая пустая строка
- * сверху» промахивается: у «Й» в слове «ЛАЙН» есть галочка, она
- * поднимается выше остальных букв и стоит правее эмблемы — рез уходил
- * ниже, и в вырезанный знак приезжал кусок надписи отдельной кляксой.
- * На маленькой плитке он читался как грязь на значке.
- *
- * Числом границу задавать нельзя: пришлют логотип с другими пропорциями,
- * и рез пройдёт по буквам.
- */
-function emblemBottom(image: RawImage): number {
-  const { data, width, height } = image;
-  const opaque = (x: number, y: number) => data[(y * width + x) * 4 + 3] > 24;
-
-  // Столбцы эмблемы: то, что занято в верхней трети. Надписи там заведомо
-  // нет, поэтому лишнего в этот диапазон не попадёт.
-  let left = width;
-  let right = -1;
-  for (let y = 0; y < Math.floor(height / 3); y++) {
-    for (let x = 0; x < width; x++) {
-      if (!opaque(x, y)) continue;
-      if (x < left) left = x;
-      if (x > right) right = x;
-    }
-  }
-
-  if (right < 0) throw new Error("верхняя треть пустая — это не логотип");
-
-  let seen = false;
-  for (let y = 0; y < height; y++) {
-    let filled = false;
-    for (let x = left; x <= right && !filled; x++) filled = opaque(x, y);
-
-    if (filled) seen = true;
-    else if (seen) return y;
-  }
-
-  throw new Error("не нашёл разрыв между эмблемой и надписью");
-}
-
-const cut = emblemBottom(logo);
-const mark = trim(logo, 0, cut);
-const full = trim(logo);
-
-console.log(`Эмблема: ${mark.width}×${mark.height} (рез на ${cut})`);
-console.log(`Полный знак: ${full.width}×${full.height}`);
 
 // --- версии для сайта ----------------------------------------------------
 
@@ -161,10 +142,10 @@ async function tile(size: number, file: string): Promise<number> {
   const pad = Math.round(size * 0.14);
   const box = size - pad * 2;
 
-  const scale = Math.min(box / mark.width, box / mark.height);
-  const w = Math.max(1, Math.round(mark.width * scale));
-  const h = Math.max(1, Math.round(mark.height * scale));
-  const small = downscale(mark, w, h);
+  const scale = Math.min(box / icon.width, box / icon.height);
+  const w = Math.max(1, Math.round(icon.width * scale));
+  const h = Math.max(1, Math.round(icon.height * scale));
+  const small = downscale(icon, w, h);
 
   const out = new Uint8ClampedArray(size * size * 4);
 
@@ -211,4 +192,47 @@ let tileBytes = 0;
 for (const [size, file] of tiles) tileBytes += await tile(size, file);
 
 console.log(`Плитки: ${tiles.length} шт., ${kb(tileBytes)}`);
-console.log("Значок вкладки не трогали — public/favicon.svg рисуется руками.");
+
+// --- значки вкладки ------------------------------------------------------
+
+/**
+ * Значок вкладки нужного размера.
+ *
+ * С прозрачным фоном, в отличие от плиток: браузер ставит его на свою
+ * полосу вкладок, цвет которой меняется от темы, и залитый квадрат
+ * выглядел бы на ней наклейкой. Эмблема яркая — оранжевое с синим
+ * читается и на светлой полосе, и на тёмной.
+ *
+ * Размеров три, потому что браузер берёт ближайший и досматривать его
+ * уменьшением не станет: 16 — обычная вкладка, 32 — плотный экран
+ * и панель закладок, 48 — плитка быстрого доступа.
+ */
+async function favicon(size: number, file: string): Promise<number> {
+  const scale = Math.min(size / icon.width, size / icon.height);
+  const small = downscale(
+    icon,
+    Math.max(1, Math.round(icon.width * scale)),
+    Math.max(1, Math.round(icon.height * scale))
+  );
+
+  const crisp = sharpen(small, 0.8);
+  const png = await encodePng({
+    data: crisp.data,
+    width: crisp.width,
+    height: crisp.height,
+  } as ImageData);
+
+  await writeFile(file, Buffer.from(png));
+  return png.byteLength;
+}
+
+const favicons = [
+  [16, "public/favicon-16.png"],
+  [32, "public/favicon-32.png"],
+  [48, "public/favicon-48.png"],
+] as const;
+
+let favBytes = 0;
+for (const [size, file] of favicons) favBytes += await favicon(size, file);
+
+console.log(`Значки вкладки: ${favicons.length} шт., ${kb(favBytes)}`);

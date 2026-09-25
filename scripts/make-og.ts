@@ -2,6 +2,7 @@ import { readFile, writeFile, mkdir, rm } from "node:fs/promises";
 import { basename } from "node:path";
 import encodePng, { init as initPngEncode } from "@jsquash/png/encode.js";
 import encodeJpeg, { init as initJpegEncode } from "@jsquash/jpeg/encode.js";
+import { loadLogoParts } from "./lib/logo.ts";
 import {
   decodeImage,
   downscale,
@@ -206,8 +207,10 @@ await mkdir("public/og", { recursive: true });
 // Картинка по умолчанию: знак на фирменном фоне
 // =============================================================================
 
-const logoStacked = await decodeImage(await readFile("assets/logo.png"));
-const mark = fit(logoStacked, 430, 330);
+// Знак с надписью. Тот же разбор листа, что у make-logo: если резать
+// здесь по-своему, два скрипта разойдутся на первом же новом файле.
+const { lockup } = await loadLogoParts();
+const mark = fit(lockup, 700, 300);
 
 const lightTop = ARC_BASE - ARC_RISE;
 {
@@ -232,8 +235,9 @@ const lightTop = ARC_BASE - ARC_RISE;
 // =============================================================================
 
 // Знак поуже: справа стоит снимок, и полноразмерная версия с ним спорит.
-const logoWide = await decodeImage(await readFile("assets/logo-wide.png"));
-const wideMark = fit(logoWide, 390, 150);
+// Тот же знак, но уже: справа стоит снимок, и полноразмерная версия
+// с ним спорит.
+const wideMark = fit(lockup, 400, 150);
 
 const products = JSON.parse(
   await readFile("app/data/products.json", "utf8"),

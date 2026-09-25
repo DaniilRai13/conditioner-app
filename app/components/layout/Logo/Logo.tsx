@@ -37,8 +37,11 @@ export function LogoMark({ className }: { className?: string }) {
         className={className}
         src="/logo/mark-96.webp"
         alt=""
+        // Пропорции нового знака: эмблема почти квадратная, 442×461.
+        // Числа обязаны совпадать с файлом — по ним браузер держит место
+        // до загрузки, и расхождение даёт скачок вёрстки.
         width={96}
-        height={84}
+        height={100}
         // Знак в шапке — первое, что видно: ждать его в очереди с картинками
         // ниже сгиба нельзя.
         loading="eager"
@@ -48,23 +51,45 @@ export function LogoMark({ className }: { className?: string }) {
   );
 }
 
+/**
+ * Знак в шапке.
+ *
+ * Тот же знак, что в подвале, — с фирменным начертанием «Климат Лайн»
+ * из самого файла. Раньше здесь стояла эмблема, а название набиралось
+ * шрифтом сайта: в шапке и в подвале получались два разных логотипа
+ * на одной странице.
+ *
+ * Подпись под ним — живым текстом, как и в подвале: в присланном файле
+ * она набрана внутри картинки и на такой высоте нечитаема.
+ */
 export function Logo() {
   return (
     <Link to="/" className={styles.logo} aria-label={`${site.name} — на главную`}>
-      <LogoMark className={styles.mark} />
-      <span className={styles.text}>
-        <b className={styles.name}>{site.name}</b>
-        <span className={styles.tagline}>{site.tagline}</span>
-      </span>
+      {/* eager: знак в шапке — первое, что видно, и ждать его в очереди
+          с картинками ниже сгиба нельзя. */}
+      <LogoFull className={styles.lockup} eager />
+      <span className={styles.tagline}>{site.tagline}</span>
     </Link>
   );
 }
 
 /**
- * Логотип целиком, с надписью из самого файла. Для мест, где есть
- * вертикальное место и незачем пересобирать знак из частей.
+ * Знак с фирменным начертанием «Климат Лайн» — как оно нарисовано
+ * в присланном файле. Для мест, где есть место показать знак целиком.
+ *
+ * Подписи под ним здесь нет: в исходнике она набрана внутри картинки,
+ * и `scripts/lib/logo.ts` её отрезает. Подпись рисует тот, кто ставит
+ * этот знак, — живым текстом из `site.tagline`. Так она читается
+ * на любом размере и остаётся одна на весь сайт.
  */
-export function LogoFull({ className }: { className?: string }) {
+export function LogoFull({
+  className,
+  eager = false,
+}: {
+  className?: string;
+  /** Загружать сразу. Для шапки — она выше сгиба; подвал ждёт своей очереди. */
+  eager?: boolean;
+}) {
   return (
     <picture>
       <source
@@ -79,9 +104,11 @@ export function LogoFull({ className }: { className?: string }) {
         className={className}
         src="/logo/full-240.webp"
         alt={site.name}
+        // 1052×373 — знак без набранной внутри подписи: её отрезает
+        // scripts/lib/logo.ts, а под знаком встаёт живой текст.
         width={240}
-        height={176}
-        loading="lazy"
+        height={85}
+        loading={eager ? "eager" : "lazy"}
         decoding="async"
       />
     </picture>
