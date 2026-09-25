@@ -13,7 +13,7 @@ import styles from "./contacts.module.scss";
 export const meta: MetaFunction = () =>
   seo({
     title: "Контакты",
-    description: `Телефон, мессенджеры и часы работы. Установка и обслуживание кондиционеров в ${site.region}.`,
+    description: `Телефон, мессенджеры и часы работы. Установка и обслуживание кондиционеров в ${site.regionIn}.`,
     path: "/contacts",
   });
 
@@ -60,8 +60,8 @@ export default function Contacts() {
                 ))}
               </ul>
               <span className={styles.hint}>
-                Выезд за МКАД обсуждается отдельно — расстояние влияет на
-                стоимость
+                Выезд за пределы района обсуждается отдельно — расстояние
+                влияет на стоимость
               </span>
             </Card>
 

@@ -58,7 +58,7 @@ export function businessJsonLd(): JsonLd {
     "@type": "HVACBusiness",
     "@id": `${root}/#business`,
     name: site.name,
-    description: `Продажа, установка и обслуживание кондиционеров в ${site.region}`,
+    description: `Продажа, установка и обслуживание кондиционеров в ${site.regionIn}`,
     telephone: site.phone,
     email: site.email,
     // Зона обслуживания списком, а не одной строкой. Поисковик разбирает
