@@ -25,12 +25,28 @@ export default [
     route("services/:slug", "routes/services/service.tsx"),
     route("price", "routes/price/price.tsx"),
 
+    // Юрлица — своей страницей, а не блоком: «кондиционер по безналу»
+    // и «установка кондиционера в офис» это отдельные запросы, и занять
+    // их может только страница со своим заголовком и адресом.
+    route("business", "routes/business/business.tsx"),
+
     route("articles", "routes/articles/articles.tsx"),
     route("articles/:slug", "routes/articles/article.tsx"),
 
     route("about", "routes/about/about.tsx"),
     route("contacts", "routes/contacts/contacts.tsx"),
     route("privacy", "routes/privacy/privacy.tsx"),
+
+    // Черновая витрина выбора: четыре тёплых цвета под будущий раздел
+    // про обогрев. Внутри общего обрамления, а не рядом с ним, — цвет
+    // выбирается на настоящей странице, с шапкой и подвалом, иначе
+    // непонятно, как он живёт рядом с остальным сайтом.
+    //
+    // В пререндер /dev/ не попадает (react-router.config.ts), на самой
+    // странице стоит noindex. Удаляется вместе с решением.
+    route("dev/heat", "routes/dev/heat.tsx"),
+    route("dev/marks", "routes/dev/marks.tsx"),
+    route("dev/cta", "routes/dev/cta.tsx"),
 
     // «Страница не найдена» — тоже страница сайта: с шапкой, подвалом
     // и ссылками, по которым можно уйти дальше.

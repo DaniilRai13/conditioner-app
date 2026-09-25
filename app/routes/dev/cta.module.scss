@@ -1,0 +1,329 @@
+@use "mixins" as *;
+
+// --- обвязка витрины ---
+
+.list,
+.leads {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.item,
+.lead {
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+
+  &:first-child {
+    padding-top: 0;
+    border-top: none;
+  }
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+
+.num {
+  color: var(--brand-600);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.name {
+  margin: 0;
+  color: var(--ink-900);
+
+  @include text-preset(h3);
+}
+
+.why {
+  max-width: 82ch;
+  margin: 0 0 1.25rem;
+  color: var(--ink-600);
+
+  @include text-preset(caption);
+}
+
+.states {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+
+  @include mq(lg) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.state {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.stateLabel {
+  color: var(--ink-400);
+
+  @include text-preset(label);
+}
+
+// Подложка — та же, что в блоке «с чего начать» на странице юрлиц.
+.band {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  background: var(--deep-700);
+  border-radius: var(--radius-banner);
+}
+
+.bandText {
+  margin: 0;
+  color: rgb(255 255 255 / 88%);
+
+  @include text-preset(caption);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  align-items: center;
+}
+
+// --- кнопки ---
+//
+// Через .row, и это обязательно: в модуле кнопки наведение записано как
+// `.primary:hover:not(:disabled)` — три класса веса. Одиночный селектор
+// проигрывает, и кнопка на наведении возвращается к фирменному синему.
+//
+// Класс `.on` включает те же правила, что и `:hover`: витрина показывает
+// оба состояния рядом, и держать их в двух разных наборах правил значило
+// бы сравнивать не то, что получится.
+
+.row .btnFade,
+.row .btnShadow,
+.row .btnLift,
+.row .btnBright,
+.row .btnSwap {
+  background: #fff;
+  border-color: #fff;
+  color: var(--ink-900);
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition),
+    transform var(--transition);
+}
+
+// 01, 03, 05 — гашение.
+.row .btnFade {
+  &:hover:not(:disabled),
+  &.on {
+    background: rgb(255 255 255 / 88%);
+    border-color: rgb(255 255 255 / 88%);
+    color: var(--ink-900);
+  }
+}
+
+// 02 — тень: кнопка отрывается от подложки, оттенок не меняется.
+.row .btnShadow {
+  &:hover:not(:disabled),
+  &.on {
+    background: #fff;
+    box-shadow: 0 10px 24px rgb(9 12 26 / 45%);
+    color: var(--ink-900);
+  }
+}
+
+// 04 — подъём на точку вместе с тенью.
+.row .btnLift {
+  &:hover:not(:disabled),
+  &.on {
+    background: #fff;
+    box-shadow: 0 8px 18px rgb(9 12 26 / 40%);
+    color: var(--ink-900);
+    transform: translateY(-1px);
+  }
+}
+
+// 06 — наоборот: в покое кнопка чуть притушена, на наведении чистый белый.
+.row .btnBright {
+  background: rgb(255 255 255 / 92%);
+  border-color: rgb(255 255 255 / 92%);
+
+  &:hover:not(:disabled),
+  &.on {
+    background: #fff;
+    border-color: #fff;
+    color: var(--ink-900);
+  }
+}
+
+// 07 — кнопка отдаёт заливку ссылке и остаётся рамкой.
+.row .btnSwap {
+  &:hover:not(:disabled),
+  &.on {
+    background: transparent;
+    border-color: rgb(255 255 255 / 60%);
+    color: #fff;
+  }
+}
+
+// --- ссылки ---
+
+.row a {
+  display: inline-flex;
+  gap: 0.375rem;
+  align-items: center;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition),
+    text-decoration-color var(--transition);
+
+  @include text-preset(body);
+
+  svg {
+    flex: none;
+    transition: transform var(--transition);
+  }
+}
+
+// 01 — подчёркивание появляется на наведении.
+.linkUnderline {
+  &:hover,
+  &.on {
+    text-decoration: underline;
+  }
+}
+
+// 02 — подчёркивания нет вовсе, работает стрелка.
+.linkArrow {
+  &:hover svg,
+  &.on svg {
+    transform: translateX(4px);
+  }
+}
+
+// 03 — линия стоит всегда, на наведении разгорается.
+//
+// Через .row, иначе линии не будет вовсе: правило `.row a` выше снимает
+// подчёркивание и весит класс плюс тег, а одиночный `.linkAlways` —
+// только класс, и проигрывает. У остальных вариантов линия появляется
+// на `:hover`, то есть уже двумя классами, и туда это не пролезло.
+//
+// text-underline-offset обязателен: у Manrope нижние выносные букв
+// «р» и «у» упираются в линию, и подчёркивание вплотную выглядит грязью.
+.row .linkAlways {
+  text-decoration: underline;
+  text-decoration-color: rgb(255 255 255 / 40%);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+
+  &:hover,
+  &.on {
+    text-decoration-color: #fff;
+  }
+}
+
+// 04 — плашка под ссылкой. Отрицательные поля, чтобы плашка появлялась
+// вокруг текста, а не раздвигала соседей по строке.
+.linkPill {
+  margin: -0.4375rem -0.875rem;
+  padding: 0.4375rem 0.875rem;
+  border-radius: var(--radius-pill);
+
+  &:hover,
+  &.on {
+    background: rgb(255 255 255 / 14%);
+  }
+}
+
+// 05 — сразу вторая кнопка: рамка есть всегда, заливка появляется.
+.linkOutline {
+  padding: 0.6875rem 1.25rem;
+  border: 1px solid rgb(255 255 255 / 45%);
+  border-radius: var(--radius-control);
+
+  &:hover,
+  &.on {
+    background: rgb(255 255 255 / 14%);
+    border-color: #fff;
+  }
+}
+
+// 06 — полоса вырастает из левого края.
+//
+// Псевдоэлемент, а не text-decoration: подчёркивание нельзя анимировать
+// по ширине, у него нет собственной геометрии.
+.linkGrow {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -0.25rem;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #fff;
+    transition: width var(--transition);
+  }
+
+  &:hover::after,
+  &.on::after {
+    width: 100%;
+  }
+}
+
+// 07 — ссылка забирает заливку себе.
+.linkSwap {
+  margin: -0.4375rem -0.875rem;
+  padding: 0.4375rem 0.875rem;
+  border-radius: var(--radius-pill);
+
+  &:hover,
+  &.on {
+    background: #fff;
+    color: var(--ink-900);
+  }
+}
+
+// --- вводки ---
+
+.leadBand {
+  padding: 1.75rem 2rem;
+  background: var(--deep-900);
+  border-radius: var(--radius-banner);
+
+  @include mq(sm) {
+    padding: 1.25rem 1.5rem;
+  }
+}
+
+.leadTitle {
+  display: block;
+  margin-bottom: 0.625rem;
+  color: #fff;
+
+  @include text-preset(h2);
+}
+
+// Ширина как у настоящей вводки в шапке страницы: на всю колонку она
+// читается иначе, и выбирать пришлось бы не то, что увидишь на сайте.
+.leadText {
+  max-width: 54ch;
+  margin: 0;
+  color: rgb(255 255 255 / 78%);
+
+  @include text-preset(body);
+}

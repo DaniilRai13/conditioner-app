@@ -1,0 +1,453 @@
+@use "mixins" as *;
+
+// --- откуда берётся цвет ---
+
+.origin {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.75rem;
+  align-items: start;
+  padding: 1.5rem;
+
+  @include card;
+
+  @include mq(sm) {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}
+
+.mark {
+  width: 7.5rem;
+  height: auto;
+}
+
+.originText {
+  min-width: 0;
+
+  p {
+    max-width: 72ch;
+    margin: 0;
+    color: var(--ink-600);
+
+    @include text-preset(body);
+  }
+
+  p + p {
+    margin-top: 1rem;
+  }
+}
+
+// Пробы, снятые со знака. С числами, а не на глаз: цвет отсюда поедет
+// в токены, и подбирать его потом заново по картинке никто не станет.
+.sampled {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1.25rem 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 0 0.625rem;
+    align-items: center;
+  }
+
+  span {
+    grid-row: span 2;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-control);
+  }
+
+  b {
+    align-self: end;
+    color: var(--ink-900);
+    font-variant-numeric: tabular-nums;
+
+    @include text-preset(caption);
+  }
+
+  small {
+    align-self: start;
+    color: var(--ink-400);
+
+    @include text-preset(caption);
+  }
+}
+
+// --- рамки ---
+
+.rules {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    max-width: 82ch;
+    padding: 1rem 1.25rem;
+    color: var(--ink-600);
+
+    @include card;
+    @include text-preset(caption);
+  }
+
+  b {
+    color: var(--ink-900);
+  }
+
+  code {
+    padding: 0.0625rem 0.25rem;
+    background: var(--bg-alt);
+    border-radius: 4px;
+    font-size: 0.8125rem;
+  }
+}
+
+// --- обвязка витрины ---
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+.item {
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+
+  &:first-child {
+    padding-top: 0;
+    border-top: none;
+  }
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: baseline;
+  margin-bottom: 1rem;
+}
+
+.num {
+  color: var(--brand-600);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.name {
+  margin: 0;
+  color: var(--ink-900);
+
+  @include text-preset(h3);
+}
+
+.ratio {
+  color: var(--ink-400);
+  font-variant-numeric: tabular-nums;
+
+  @include text-preset(caption);
+}
+
+// Шкала с ролью каждой ступени. Роль подписана рядом с числом, потому что
+// весь смысл разбиения — в том, что ступени НЕ взаимозаменяемы: яркой
+// нельзя набрать текст, тёмной бессмысленно рисовать полосу.
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: grid;
+    grid-template-columns: auto;
+    gap: 0.125rem;
+    min-width: 9rem;
+  }
+
+  span {
+    height: 2.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-control);
+  }
+
+  b {
+    margin-top: 0.25rem;
+    color: var(--ink-900);
+    font-variant-numeric: tabular-nums;
+
+    @include text-preset(caption);
+  }
+
+  code {
+    color: var(--ink-600);
+    font-size: 0.75rem;
+  }
+
+  small {
+    color: var(--ink-400);
+    font-size: 0.75rem;
+  }
+}
+
+.why {
+  max-width: 82ch;
+  margin: 0 0 0.5rem;
+  color: var(--ink-600);
+
+  @include text-preset(caption);
+}
+
+.risk {
+  max-width: 82ch;
+  margin: 0 0 1.5rem;
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+
+  b {
+    color: var(--ink-600);
+  }
+}
+
+// --- демо ---
+//
+// Написано один раз и целиком через var(--heat-*). Варианты отличаются
+// только значениями на обёртке, поэтому четыре блока ниже — буквально
+// одна и та же вёрстка, а не четыре похожие.
+
+.demo {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-banner);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: start;
+
+  @include mq(lg) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.375rem;
+  padding: 1.25rem;
+
+  @include card;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-bottom: 0.25rem;
+}
+
+// Тёплая метка и синяя метка в одной строке — так они и встретятся
+// на витрине. Если тёплый цвет с фирменным дерутся, видно здесь.
+.tagHeat,
+.tagBrand {
+  display: inline-flex;
+  gap: 0.25rem;
+  align-items: center;
+  padding: 0.1875rem 0.5rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.tagHeat {
+  background: var(--heat-50);
+  color: var(--heat-600);
+}
+
+.tagBrand {
+  background: var(--brand-50);
+  color: var(--brand-600);
+}
+
+.cardTitle {
+  color: var(--ink-900);
+
+  @include text-preset(h3);
+}
+
+.spec {
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}
+
+.price {
+  margin-top: 0.25rem;
+  color: var(--ink-900);
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.tiles {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+// Плитки различаются ровно одним: цветом полосы сверху и подложки иконки.
+// Всё остальное одинаково — иначе сравнивались бы две разные плитки,
+// а не два цвета.
+.tileHeat,
+.tileBrand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.375rem;
+  padding: 1.125rem 1.25rem;
+  border-top: 4px solid;
+
+  @include card;
+}
+
+.tileHeat {
+  border-top-color: var(--heat-500);
+}
+
+.tileBrand {
+  border-top-color: var(--brand-600);
+}
+
+// Подложка иконки — светлая ступень, глиф — рабочая: на светлой подложке
+// она даёт не меньше 4.5, то есть иконка читается как знак, а не пятно.
+// Яркой ступенью глиф красить нельзя: на белом она даёт около 2.7.
+.iconHeat,
+.iconBrand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-bottom: 0.25rem;
+  border-radius: var(--radius-control);
+}
+
+.iconHeat {
+  background: var(--heat-50);
+  color: var(--heat-600);
+}
+
+.iconBrand {
+  background: var(--brand-50);
+  color: var(--brand-600);
+}
+
+.tileTitle {
+  color: var(--ink-900);
+
+  @include text-preset(h3);
+}
+
+.tileText {
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}
+
+// Тёплый двойник --surface-accent: тёмная заливка под белым текстом.
+// Проверена на 7:1 и выше — на такой площади цвет самый заметный,
+// и экономить на контрасте тут нельзя.
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  background: var(--heat-deep);
+  border-radius: var(--radius-card);
+  color: #fff;
+}
+
+.panelTitle {
+  @include text-preset(h3);
+}
+
+.panelText {
+  color: rgb(255 255 255 / 82%);
+
+  @include text-preset(caption);
+}
+
+.panelLink {
+  margin-top: 0.25rem;
+  font-weight: 700;
+
+  @include text-preset(caption);
+}
+
+// Строка мелочи — главное место страницы: чип, кнопка, ссылка и подпись
+// стоят вплотную, и именно здесь становится видно, спорит ли тёплый
+// с синей кнопкой за внимание.
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+}
+
+.chip,
+.chipOn {
+  padding: 0.4375rem 0.875rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+
+  @include text-preset(caption);
+}
+
+.chip {
+  background: var(--surface);
+  color: var(--ink-600);
+}
+
+.chipOn {
+  background: var(--heat-600);
+  border-color: var(--heat-600);
+  color: #fff;
+  font-weight: 600;
+}
+
+.link {
+  color: var(--heat-600);
+  font-weight: 600;
+  text-decoration: none;
+
+  @include text-preset(caption);
+
+  &:hover {
+    color: var(--heat-700);
+    text-decoration: underline;
+  }
+}
+
+.note {
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+}

@@ -1,0 +1,259 @@
+@use "mixins" as *;
+
+// --- что в данных ---
+
+.facts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    max-width: 82ch;
+    padding: 1rem 1.25rem;
+    color: var(--ink-600);
+
+    @include card;
+    @include text-preset(caption);
+  }
+
+  b {
+    color: var(--ink-900);
+  }
+
+  code {
+    padding: 0.0625rem 0.25rem;
+    background: var(--bg-alt);
+    border-radius: 4px;
+    font-size: 0.8125rem;
+  }
+}
+
+// --- обвязка витрины ---
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+.item {
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+
+  &:first-child {
+    padding-top: 0;
+    border-top: none;
+  }
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: baseline;
+  margin-bottom: 0.75rem;
+}
+
+.num {
+  color: var(--brand-600);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.name {
+  margin: 0;
+  color: var(--ink-900);
+
+  @include text-preset(h3);
+}
+
+.why {
+  max-width: 82ch;
+  margin: 0 0 0.5rem;
+  color: var(--ink-600);
+
+  @include text-preset(caption);
+}
+
+.risk {
+  max-width: 82ch;
+  margin: 0 0 1.5rem;
+  color: var(--ink-400);
+
+  @include text-preset(caption);
+
+  b {
+    color: var(--ink-600);
+  }
+}
+
+// Два случая рядом. Ширина карточки — 273 точки, ровно как в каталоге
+// на десктопе: метка, которая помещается на 320, на реальной витрине
+// может и не поместиться.
+.pair2 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.case {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 17.0625rem;
+}
+
+.caseLabel {
+  color: var(--ink-400);
+
+  @include text-preset(label);
+}
+
+// Обёртка карточки: нужна только варианту с полосой сверху, остальным
+// она ничего не делает.
+.slot {
+  display: flex;
+  flex-direction: column;
+}
+
+// --- метки ---
+
+// Подвал карточки: слева цена, справа метки. Перенос разрешён намеренно,
+// чтобы на витрине было видно, когда ряд не помещается, — это главный
+// довод против первого варианта, и прятать его нельзя.
+.marks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  justify-content: flex-end;
+}
+
+// Пилюли того же вида, что «Инвертор» на настоящей карточке: подложка
+// светлой ступени, текст рабочей. У обеих контраст выше 4.5 —
+// синяя 4.62 на --brand-50, янтарная 4.61 на --heat-50.
+.cold,
+.hot {
+  display: inline-flex;
+  gap: 0.25rem;
+  align-items: center;
+  padding: 0.1875rem 0.5rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.cold {
+  background: var(--brand-50);
+  color: var(--brand-600);
+}
+
+.hot {
+  background: var(--heat-50);
+  color: var(--heat-600);
+}
+
+// Сдвоенная метка: две половины в одной оболочке. Скругление снаружи,
+// стык внутри — поэтому она читается одним предметом, а не двумя
+// сдвинутыми пилюлями.
+.pair,
+.pairOne {
+  display: inline-flex;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.pairCold,
+.pairHot {
+  padding: 0.1875rem 0.5rem;
+}
+
+.pairCold {
+  background: var(--brand-50);
+  color: var(--brand-600);
+}
+
+.pairHot {
+  background: var(--heat-50);
+  color: var(--heat-600);
+}
+
+// Значки без слов.
+.glyphs {
+  display: inline-flex;
+  gap: 0.375rem;
+  align-items: center;
+}
+
+.glyphCold {
+  color: var(--brand-600);
+}
+
+.glyphHot {
+  color: var(--heat-600);
+}
+
+// Подпись для тех, кто слушает страницу: значок без текста
+// не произносится вообще никак.
+.srOnly {
+  position: absolute;
+  overflow: hidden;
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  white-space: nowrap;
+}
+
+// Угол снимка. Справа, потому что слева стоит «Под заказ».
+.corner {
+  position: absolute;
+  top: 0.375rem;
+  right: 0.375rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: flex-end;
+}
+
+// Одна метка в углу — без колонки: она тут единственная, и выстраивать
+// нечего. Отдельный класс, а не .corner: тот раскладывает столбиком,
+// и одинокая метка в нём получала бы лишний повод переноситься.
+.cornerOne {
+  position: absolute;
+  top: 0.375rem;
+  right: 0.375rem;
+}
+
+// Полоса над карточкой. Скругление только сверху — снизу она
+// упирается в карточку и должна с ней сливаться.
+.barBoth,
+.barCold {
+  height: 4px;
+  border-radius: var(--radius-control) var(--radius-control) 0 0;
+}
+
+.barCold {
+  background: var(--brand-600);
+}
+
+// Стык без растяжки: градиент с двумя жёсткими остановками, а не
+// плавный переход. Переход читался бы как третий, грязный цвет.
+.barBoth {
+  background: linear-gradient(
+    to right,
+    var(--brand-600) 0 50%,
+    var(--heat-500) 50% 100%
+  );
+}
+
+// Строка характеристик про тепло. Значок рабочей ступенью, как
+// на странице товара: он тут единственный знак строки.
+.specHot svg {
+  color: var(--heat-600);
+}
