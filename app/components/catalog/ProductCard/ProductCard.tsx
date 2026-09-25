@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { Snowflake, Wifi, Volume2 } from "lucide-react";
+import { Snowflake, Flame, Wifi, Volume2 } from "lucide-react";
 import type { CatalogProduct } from "~/lib/queries";
 import { formatPrice, formatArea, formatKw } from "~/lib/format";
 import { PRICE_MODE } from "~/config/pricing";
@@ -106,6 +106,22 @@ export function ProductCard({
                 <Snowflake size={14} aria-hidden />
                 {formatArea(specs.areaM2)}
                 {specs.coolingKw ? ` · ${formatKw(specs.coolingKw)}` : ""}
+              </li>
+            )}
+            {/* Обогрев — строкой, а не отдельной меткой поверх карточки.
+                Пометка стоит там же, где остальные свойства модели, и не
+                спорит с «Под заказ» на снимке и с ценой в подвале: тем
+                двоим места и так впритык.
+
+                Без числа, хотя нижняя граница в данных есть у большинства.
+                Она есть не у всех, а у двух товаров разобрана неверно —
+                и подпись пришлось бы делать двух видов. Одна на всех
+                честнее: «греет» — это про выбор, «до скольки» человек
+                прочитает на странице товара, где ей и место. */}
+            {specs.heats && (
+              <li className={styles.heat}>
+                <Flame size={14} aria-hidden />
+                с обогревом
               </li>
             )}
             {specs.noiseDb && (

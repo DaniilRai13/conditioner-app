@@ -43,17 +43,18 @@ export function useCatalogFilters(products: CatalogProduct[]) {
     noise: Number(params.get("noise")) || null,
     comp: params.get("comp"),
     wifi: params.get("wifi") === "1",
+    heat: params.get("heat") === "1",
   };
 
   const sort = params.get("sort") ?? "";
-  const { area, priceFrom, priceTo, noise, comp, wifi } = filters;
+  const { area, priceFrom, priceTo, noise, comp, wifi, heat } = filters;
 
   const filtered = useMemo(
     () => applySort(applyFilters(products, filters, bounds), sort),
     // Зависимости перечислены значениями, а не объектом filters: тот
     // пересоздаётся на каждом рендере, и useMemo не давал бы ничего.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [products, bounds, area, priceFrom, priceTo, noise, comp, wifi, sort]
+    [products, bounds, area, priceFrom, priceTo, noise, comp, wifi, heat, sort]
   );
 
   const [shown, setShown] = useState(PAGE);
@@ -64,7 +65,7 @@ export function useCatalogFilters(products: CatalogProduct[]) {
   //
   // Сравнение прямо в теле, а не в эффекте: эффект дал бы лишний рендер
   // со старым `shown` — список успел бы мигнуть длинным.
-  const filterKey = `${area}|${priceFrom}|${priceTo}|${noise}|${comp}|${wifi}|${sort}`;
+  const filterKey = `${area}|${priceFrom}|${priceTo}|${noise}|${comp}|${wifi}|${heat}|${sort}`;
   const [prevKey, setPrevKey] = useState(filterKey);
   if (prevKey !== filterKey) {
     setPrevKey(filterKey);

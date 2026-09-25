@@ -106,6 +106,16 @@ export type CatalogProduct = {
     isInverter?: boolean;
     hasWifi?: boolean;
     noiseDb?: number;
+    /**
+     * Умеет ли греть. Признак, а не мощность: карточке нужно ответить
+     * «да или нет», а не показать киловатты — их негде и незачем читать
+     * в списке из полусотни плиток.
+     *
+     * Заодно это отсекает дыры в выгрузке. Нижняя граница обогрева есть
+     * не у всех греющих моделей, а у двух товаров она разобрана неверно
+     * (−153 °C) — признак от этого не зависит вовсе.
+     */
+    heats?: boolean;
   };
 };
 
@@ -127,6 +137,7 @@ function toCatalog(p: Product): CatalogProduct {
       isInverter: p.specs.isInverter,
       hasWifi: p.specs.hasWifi,
       noiseDb: p.specs.noiseDb,
+      heats: Boolean(p.specs.heatingKw),
     },
   };
 }

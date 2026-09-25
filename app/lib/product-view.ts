@@ -26,6 +26,14 @@ export type Highlight = {
   icon: LucideIcon;
   label: string;
   value: string;
+  /**
+   * Характеристика про тепло, а не про холод.
+   *
+   * Метка, а не готовый цвет: какой именно — дело оформления, здесь же
+   * только факт. Иначе цвет пришлось бы менять в двух местах, а модуль
+   * без разметки внезапно начал бы знать про палитру.
+   */
+  heat?: true;
 };
 
 export function getHighlights(specs: Product["specs"]): Highlight[] {
@@ -37,7 +45,12 @@ export function getHighlights(specs: Product["specs"]): Highlight[] {
       ? { icon: Wind, label: "Охлаждение", value: formatKw(specs.coolingKw)! }
       : null,
     specs.heatingKw
-      ? { icon: Flame, label: "Обогрев", value: formatKw(specs.heatingKw)! }
+      ? {
+          icon: Flame,
+          label: "Обогрев",
+          value: formatKw(specs.heatingKw)!,
+          heat: true,
+        }
       : null,
     specs.noiseDb
       ? { icon: Volume2, label: "Шум", value: `от ${specs.noiseDb} дБ` }
@@ -49,6 +62,7 @@ export function getHighlights(specs: Product["specs"]): Highlight[] {
           icon: Thermometer,
           label: "Обогрев до",
           value: `${specs.minHeatTemp} °C`,
+          heat: true,
         }
       : null,
     specs.hasWifi ? { icon: Wifi, label: "Wi-Fi", value: "есть" } : null,

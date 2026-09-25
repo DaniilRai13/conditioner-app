@@ -28,6 +28,8 @@ export type Filterable = {
     isInverter?: boolean;
     hasWifi?: boolean;
     noiseDb?: number;
+    /** Умеет ли греть. У строк админки поля нет — условие там выключено. */
+    heats?: boolean;
   };
 };
 
@@ -45,6 +47,7 @@ export type ProductFilters = {
   noise: number | null;
   comp: string | null;
   wifi: boolean;
+  heat: boolean;
 };
 
 /** Пороги шума. Числа не выдуманы: у нас разброс 19–54.8 дБ, и 25 дБ —
@@ -123,6 +126,12 @@ export function applyFilters<T extends Filterable>(
   if (f.comp === "on-off") list = list.filter((p) => !p.specs.isInverter);
   if (f.wifi) list = list.filter((p) => p.specs.hasWifi);
 
+  // Модели без признака отсекаем, а не пропускаем, — в отличие от площади.
+  // Там дырка в данных означала «неизвестно», и прятать товар было бы
+  // хуже, чем показать лишний раз. Здесь признак выводится из мощности
+  // обогрева: её отсутствие и означает «не греет», а не «не указано».
+  if (f.heat) list = list.filter((p) => p.specs.heats);
+
   return list;
 }
 
@@ -152,6 +161,7 @@ export function countActive(f: ProductFilters, bounds: ProductBounds): number {
     (f.priceFrom > bounds.priceMin || f.priceTo < bounds.priceMax ? 1 : 0) +
     (f.noise ? 1 : 0) +
     (f.comp ? 1 : 0) +
-    (f.wifi ? 1 : 0)
+    (f.wifi ? 1 : 0) +
+    (f.heat ? 1 : 0)
   );
 }

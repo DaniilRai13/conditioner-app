@@ -124,7 +124,7 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
 
             <ul className={styles.highlights}>
               {highlights.map((h) => (
-                <li key={h.label}>
+                <li key={h.label} className={h.heat ? styles.heat : undefined}>
                   <h.icon size={18} aria-hidden />
                   <span>
                     <b>{h.value}</b>

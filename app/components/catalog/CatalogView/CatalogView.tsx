@@ -25,7 +25,7 @@ type Props = {
 export function CatalogView({ products }: Props) {
   const {
     bounds,
-    filters: { area, priceFrom, priceTo, noise, comp, wifi, sort },
+    filters: { area, priceFrom, priceTo, noise, comp, wifi, heat, sort },
     filtered,
     shown,
     rest,
@@ -193,6 +193,18 @@ export function CatalogView({ products }: Props) {
             </button>
           </div>
         </div>
+
+        {/* Обогрев выше Wi-Fi: он решает, годится ли модель вместо
+            обогревателя зимой, а Wi-Fi — приятная мелочь. Порядок
+            условий в панели и есть их важность. */}
+        <label className={styles.check}>
+          <input
+            type="checkbox"
+            checked={heat}
+            onChange={(e) => update({ heat: e.target.checked ? "1" : null })}
+          />
+          Только с обогревом
+        </label>
 
         <label className={styles.check}>
           <input
