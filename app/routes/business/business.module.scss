@@ -1,0 +1,223 @@
+@use "mixins" as *;
+
+// --- что получает организация ---
+
+.points {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include mq(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.point {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1.5rem;
+
+  @include card;
+}
+
+.pointTitle {
+  margin-top: 0.25rem;
+  color: var(--ink-900);
+
+  @include text-preset(h3);
+}
+
+.pointText {
+  margin: 0;
+  color: var(--ink-600);
+
+  @include text-preset(caption);
+}
+
+// --- типовые объекты ---
+
+// В две колонки, а не в одну: шесть коротких строк столбиком выглядят
+// длиннее, чем весь список на самом деле, и человек не дочитывает
+// до своего помещения.
+.objects {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.625rem 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include mq(sm) {
+    grid-template-columns: 1fr;
+  }
+
+  li {
+    display: flex;
+    gap: 0.625rem;
+    align-items: center;
+    color: var(--ink-600);
+
+    @include text-preset(body);
+  }
+
+  svg {
+    flex: none;
+    color: var(--brand-600);
+  }
+}
+
+// Сноска к списку, а не ещё один пункт.
+//
+// Была на --bg-alt и таяла ровно так же, как блок «с чего начать»:
+// светлые токены палитры отличаются от фона на считаные проценты.
+// Белая подложка отделяется не цветом, а тенью — так на сайте читаются
+// все карточки, — а синяя полоса слева говорит, что это примечание,
+// а не карточка в общем ряду.
+.note {
+  max-width: 72ch;
+  margin: 1.5rem 0 0;
+  padding: 1rem 1.25rem;
+  background: var(--surface);
+  border-radius: var(--radius-card);
+  box-shadow:
+    inset 3px 0 0 var(--brand-600),
+    var(--shadow-card);
+  color: var(--ink-600);
+
+  @include text-preset(caption);
+}
+
+// --- оплата частями ---
+//
+// Тёплый цвет здесь не используется: он закреплён за обогревом,
+// и рассрочка им красилась бы просто потому, что цвет есть.
+
+.ways {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include mq(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.way {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1.5rem;
+
+  @include card;
+}
+
+.wayTitle {
+  margin-top: 0.25rem;
+  color: var(--ink-900);
+
+  @include text-preset(h3);
+}
+
+.wayText {
+  margin: 0;
+  color: var(--ink-600);
+
+  @include text-preset(caption);
+}
+
+// Точные условия — отдельной строкой и заметнее текста: это то,
+// ради чего человек и читал карточку.
+.wayTerms {
+  margin: 0.25rem 0 0;
+  color: var(--ink-900);
+  font-weight: 600;
+
+  @include text-preset(caption);
+}
+
+// --- с чего начать ---
+
+// Акцентная подложка, а не --bg-alt.
+//
+// Тот отличается от фона страницы по яркости в 1.13 раза — на глаз это
+// не отличие вовсе, и блок таял в странице. Светлого токена, который
+// читался бы подложкой, в палитре нет: --brand-50 даёт 1.07, белый 1.04.
+// Поэтому блок уходит в тёмное: 9.31 к фону, мимо не пройдёшь.
+//
+// --deep-700, а не --surface-accent: вторым на этой странице стоит тёмная
+// панель формы, и она как раз --surface-accent. Два одинаковых индиго
+// подряд читались бы одним блоком, разорванным заголовком посередине.
+//
+// Заодно это расставляет силы на странице: выше — белые карточки
+// с условиями, тут — единственное место, где просят действия.
+.cta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 2rem;
+  background: var(--deep-700);
+  border-radius: var(--radius-banner);
+
+  @include mq(sm) {
+    padding: 1.5rem;
+  }
+}
+
+// Без ограничения по ширине: строка тут одна, и обрывать её на середине
+// блока незачем — справа оставалась пустая половина подложки.
+.ctaText {
+  margin: 0;
+  color: rgb(255 255 255 / 88%);
+
+  @include text-preset(body);
+}
+
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  align-items: center;
+}
+
+// Кнопка белая, а не фирменная синяя: на индиго синий даёт 1.91 — кнопка
+// просто растворилась бы в подложке. Белая даёт 9.73, а тёмный текст
+// на ней 17.9. Приём тот же, что у стеклянной кнопки в первом экране:
+// вариант кнопки не заводим, переопределяем классом по месту.
+//
+// Через родителя, и это обязательно, а не для красоты. В модуле кнопки
+// наведение записано как `.primary:hover:not(:disabled)` — три класса
+// веса. Одиночный `.ctaBtn:hover` весит два, проигрывает, и кнопка
+// на наведении возвращалась к фирменному синему прямо на индиго.
+.ctaRow .ctaBtn {
+  background: #fff;
+  border-color: #fff;
+  color: var(--ink-900);
+
+  &:hover:not(:disabled) {
+    background: rgb(255 255 255 / 88%);
+    border-color: rgb(255 255 255 / 88%);
+    color: var(--ink-900);
+  }
+}
+
+.ctaLink {
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+
+  @include text-preset(body);
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

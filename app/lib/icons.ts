@@ -8,6 +8,9 @@ import {
   Headphones,
   Sparkles,
   Timer,
+  FileText,
+  CreditCard,
+  Landmark,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -28,6 +31,12 @@ export const icons = {
   headphones: Headphones,
   sparkles: Sparkles,
   timer: Timer,
+  // Добавлены для страницы юрлиц: документы, карта рассрочки, банк.
+  // Раньше под них брались ближайшие по смыслу — щит и гаечный ключ, —
+  // и «кредит в банке» получал значок ремонта.
+  file: FileText,
+  card: CreditCard,
+  bank: Landmark,
 } satisfies Record<string, LucideIcon>;
 
 export type IconName = keyof typeof icons;

@@ -5,6 +5,7 @@ import { Hero } from "./Hero/Hero";
 import { QuizResult } from "./QuizResult/QuizResult";
 import { SolutionsPreview } from "./SolutionsPreview/SolutionsPreview";
 import { ServicesPreview } from "./ServicesPreview/ServicesPreview";
+import { BusinessPreview } from "./BusinessPreview/BusinessPreview";
 import { WhyMe } from "~/components/sections/WhyMe/WhyMe";
 import { Proof } from "./Proof";
 import { Faq } from "~/components/sections/Faq/Faq";
@@ -48,6 +49,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       <QuizResult products={loaderData.products} />
       <SolutionsPreview />
       <ServicesPreview />
+      <BusinessPreview />
       <WhyMe reveal />
       <Proof />
 

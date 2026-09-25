@@ -38,6 +38,7 @@ const STATIC_PATHS = [
   "/solutions",
   "/services",
   "/price",
+  "/business",
   "/articles",
   "/about",
   "/contacts",

@@ -257,3 +257,66 @@
   margin-top: 0.25rem;
   color: var(--ink-400);
 }
+
+// --- оплата частями ---
+//
+// Карточки без иконок, в отличие от страницы юрлиц: там блок —
+// самостоятельный раздел, а тут он идёт после двух таблиц и длинного
+// списка, и ещё один ряд значков превратил бы низ страницы в рябь.
+
+.ways {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include mq(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.way {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1.5rem;
+
+  @include card;
+}
+
+.wayTitle {
+  color: var(--ink-900);
+
+  @include text-preset(h3);
+}
+
+.wayText {
+  margin: 0;
+  color: var(--ink-600);
+
+  @include text-preset(caption);
+}
+
+// Точные условия заметнее текста: ради них карточку и читали.
+.wayTerms {
+  margin: 0.25rem 0 0;
+  color: var(--ink-900);
+  font-weight: 600;
+
+  @include text-preset(caption);
+}
+
+.wayNote {
+  margin: 1.25rem 0 0;
+  color: var(--ink-600);
+
+  @include text-preset(caption);
+
+  a {
+    color: var(--brand-600);
+    font-weight: 600;
+  }
+}

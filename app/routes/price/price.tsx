@@ -10,6 +10,7 @@ import {
   STANDARD_INSTALL_INCLUDES,
   EXTRA_CHARGES,
 } from "~/config/pricing";
+import { PAY_WAYS, INSTALLMENT_CONFIRMED } from "~/data/business";
 import { getSolutionPriceFrom } from "~/lib/queries";
 import { formatPrice } from "~/lib/format";
 import { site } from "~/config/site";
@@ -182,6 +183,34 @@ export default function Price() {
             </ul>
           </div>
         </div>
+      </Section>
+
+      {/* Оплата частями — на странице цен, а не только у юрлиц: человек,
+          который дочитал таблицу до конца, как раз досчитал сумму, и это
+          единственный момент, когда «можно частями» ему нужно. */}
+      <Section
+        id="pay"
+        title="Можно платить частями"
+        lead={
+          INSTALLMENT_CONFIRMED
+            ? "Три способа разнести оплату по времени."
+            : "Три способа разнести оплату по времени. Точные условия зависят от банка и суммы — назову их вместе со сметой."
+        }
+      >
+        <ul className={styles.ways}>
+          {PAY_WAYS.map((w) => (
+            <li key={w.key} className={styles.way}>
+              <b className={styles.wayTitle}>{w.title}</b>
+              <p className={styles.wayText}>{w.text}</p>
+              {w.terms && <p className={styles.wayTerms}>{w.terms}</p>}
+            </li>
+          ))}
+        </ul>
+
+        <p className={styles.wayNote}>
+          Организациям — ещё и отсрочка по договору:{" "}
+          <Link to="/business">условия для юрлиц</Link>.
+        </p>
       </Section>
 
       <LeadBlock
