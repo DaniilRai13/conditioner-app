@@ -1,4 +1,5 @@
 import { useEffect, useRef, type RefObject } from "react";
+import { scrollToElement } from "~/lib/scroll";
 
 /**
  * Прокручивает к элементу в тот момент, когда `done` впервые становится
@@ -12,9 +13,6 @@ import { useEffect, useRef, type RefObject } from "react";
  * по готовой ссылке со всеми ответами в адресе. Он подбор не проходил,
  * прыжка не ждёт, и увозить ему страницу вниз — то же самое, что
  * встретить гостя, утащив его из прихожей в дальнюю комнату.
- *
- * Системное «меньше движения» уважается: плавная прокрутка становится
- * мгновенной, но происходит — иначе итог просто не покажется.
  */
 export function useScrollIntoViewOnce(
   done: boolean,
@@ -30,14 +28,9 @@ export function useScrollIntoViewOnce(
       return;
     }
 
-    if (done && !wasDone.current) {
-      const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)")
-        .matches;
-      ref.current?.scrollIntoView({
-        behavior: smooth ? "smooth" : "auto",
-        block: "start",
-      });
-    }
+    // К началу, а не минимальным сдвигом: итог длинный, и показывать его
+    // с середины бессмысленно.
+    if (done && !wasDone.current) scrollToElement(ref.current, "start");
 
     wasDone.current = done;
   }, [done, ref]);

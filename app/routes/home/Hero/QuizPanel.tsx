@@ -4,6 +4,13 @@ import { useRovingFocus } from "~/hooks/useRovingFocus";
 import { QUIZ_QUESTIONS, type QuizAnswers } from "~/lib/quiz";
 import styles from "./Hero.module.scss";
 
+/**
+ * Якорь панели. Нужен блоку результата: его «пройти заново» стоит далеко
+ * внизу страницы и обязано вернуть человека к вопросам, а достать сюда ref
+ * через полстраницы разметки нечем.
+ */
+export const QUIZ_PANEL_ID = "quiz-panel";
+
 type Props = {
   answers: QuizAnswers;
   step: number;
@@ -45,6 +52,7 @@ export function QuizPanel({
   if (done) {
     return (
       <div
+        id={QUIZ_PANEL_ID}
         className={styles.panel}
         role="group"
         aria-labelledby="hero-question"
@@ -71,7 +79,12 @@ export function QuizPanel({
   }
 
   return (
-    <div className={styles.panel} role="group" aria-labelledby="hero-question">
+    <div
+      id={QUIZ_PANEL_ID}
+      className={styles.panel}
+      role="group"
+      aria-labelledby="hero-question"
+    >
       <div className={styles.bar} aria-hidden>
         <span
           className={styles.barFill}

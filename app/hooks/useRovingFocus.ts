@@ -35,7 +35,14 @@ export function useRovingFocus<T extends HTMLElement>(options: {
       return;
     }
     // Без этого после ответа приходится табать через всю панель заново.
-    ref.current?.querySelector<HTMLButtonElement>("button")?.focus();
+    //
+    // preventScroll обязателен: браузер по умолчанию подтягивает к фокусу
+    // экран, и на этом держалась случайная прокрутка к вопросам — та самая,
+    // которой не было, если группа до этого на экране не появлялась.
+    // Прокрутку теперь делает тот, кто её задумал, а хук занят фокусом.
+    ref.current
+      ?.querySelector<HTMLButtonElement>("button")
+      ?.focus({ preventScroll: true });
   }, [step, disabled]);
 
   function onKeyDown(e: KeyboardEvent<T>) {
